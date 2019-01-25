@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="viewModel" type="alex.orobinsk.vortex.ui.viewModel.SplashViewModel" />
+    </data>
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:background="#0099cc"
+                 tools:context=".ui.view.SplashActivity">
+        <com.flaviofaria.kenburnsview.KenBurnsView
+                android:id="@+id/splashView"
+                android:layout_width="match_parent"
+                android:src="@{viewModel.SPLASH_IMAGE}"
+                android:layout_height="match_parent"
+        />
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@{viewModel.SPLASH_LOGO}"
+                bounceAnimate="@{viewModel.bounceAnimate}"
+        />
+    </FrameLayout>
+</layout>
