@@ -80,6 +80,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlinVersion"
 
+    implementation "com.github.felixgail:gplaymusic:0.3.6"
     //UI
     implementation "com.flaviofaria:kenburnsview:$rootProject.kenburnsVersion"
     // Testing dependencies
