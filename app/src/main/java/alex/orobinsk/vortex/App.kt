@@ -15,7 +15,7 @@ class App: Application(), KodeinAware {
     }
     override val kodein = Kodein {
         import(AppModule.module)
-        bind<Application>() with singleton { this@App }
+        bind<App>() with singleton { this@App }
         bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(this@App) }
     }
 

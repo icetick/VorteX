@@ -1,19 +1,16 @@
 package alex.orobinsk.vortex.ui.viewModel
 
 import alex.orobinsk.vortex.App
+import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.util.ValidationType.*
 import alex.orobinsk.vortex.util.isValid
 import android.provider.Settings.Secure
-import android.text.TextWatcher
 import android.view.View
-import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import com.github.felixgail.gplaymusic.api.GPlayMusic
 import com.github.felixgail.gplaymusic.util.TokenProvider
 import org.kodein.di.generic.instance
-import android.text.Editable
-import androidx.databinding.adapters.TextViewBindingAdapter.setPassword
 
 
 class LoginViewModel : BaseViewModel() {
@@ -21,6 +18,8 @@ class LoginViewModel : BaseViewModel() {
     val androidID: MutableLiveData<String> = MutableLiveData()
     val userName: MutableLiveData<String> = MutableLiveData()
     val password: MutableLiveData<String> = MutableLiveData()
+
+    val screenBackground = R.drawable.vortex
 
     init {
         androidID.postValue(Secure.getString(application.contentResolver, Secure.ANDROID_ID))

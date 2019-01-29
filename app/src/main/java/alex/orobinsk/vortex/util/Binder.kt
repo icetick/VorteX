@@ -8,7 +8,6 @@ import android.app.Activity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
 

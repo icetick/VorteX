@@ -2,7 +2,7 @@ package alex.orobinsk.vortex.util.animation
 
 import android.view.animation.Interpolator
 
-class BounceInterpolator(amplitude: Double = 0.02, frequency: Double = 20.toDouble()) : Interpolator {
+class BounceInterpolator(amplitude: Double = 0.2, frequency: Double = 20.toDouble()) : Interpolator {
     private var mAmplitude = amplitude
     private var mFrequency = frequency
 
