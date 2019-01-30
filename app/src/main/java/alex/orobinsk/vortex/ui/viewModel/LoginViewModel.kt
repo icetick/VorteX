@@ -19,8 +19,6 @@ class LoginViewModel : BaseViewModel() {
     val userName: MutableLiveData<String> = MutableLiveData()
     val password: MutableLiveData<String> = MutableLiveData()
 
-    val screenBackground = R.drawable.vortex
-
     init {
         androidID.postValue(Secure.getString(application.contentResolver, Secure.ANDROID_ID))
     }

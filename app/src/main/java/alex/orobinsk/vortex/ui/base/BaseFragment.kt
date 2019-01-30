@@ -1,6 +1,5 @@
 package alex.orobinsk.vortex.ui.base
 
-import alex.orobinsk.vortex.util.Binder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

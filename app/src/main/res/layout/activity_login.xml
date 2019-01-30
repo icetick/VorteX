@@ -19,11 +19,12 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@{viewModel.screenBackground}"
+            android:src="@drawable/nebula"
+            android:transitionName="@string/background"
             app:piv_enablePanoramaMode="true"
             app:piv_invertScrollDirection="false"
             app:piv_show_scrollbar="false"
-            tools:src="@drawable/vortex"/>
+            tools:src="@drawable/nebula"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -38,9 +39,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:scaleType="centerInside"
-                android:transitionName="@string/vortex_logo"
-                android:src="@drawable/logo" />
+                android:src="@{@drawable/logo}"
+                android:transitionName="@string/vortex_logo"/>
 
             <LinearLayout
                 android:id="@+id/credentials_block"
@@ -52,7 +52,6 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginEnd="0dp"
                 android:orientation="vertical">
-
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>

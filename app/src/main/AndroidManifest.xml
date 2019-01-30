@@ -9,7 +9,6 @@
         android:name=".App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:largeHeap="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/FullscreenTheme"
         android:supportsRtl="true">
         <activity

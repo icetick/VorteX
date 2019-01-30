@@ -12,21 +12,23 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#0099cc"
         tools:context=".ui.view.SplashActivity">
 
         <com.flaviofaria.kenburnsview.KenBurnsView
             android:id="@+id/splashView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@{viewModel.SPLASH_IMAGE}" />
+            android:transitionName="@string/background"
+            android:src="@{@drawable/nebula}" />
 
         <ImageView
             android:id="@+id/logo_iv"
-            bounceAnimate="@{viewModel.bounceAnimate}"
+            bounceAnimate="@{true}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@{viewModel.SPLASH_LOGO}"
+            android:layout_marginStart="@dimen/margin_login"
+            android:layout_marginEnd="@dimen/margin_login"
+            android:src="@{@drawable/logo}"
             android:transitionName="@string/vortex_logo" />
     </FrameLayout>
 </layout>

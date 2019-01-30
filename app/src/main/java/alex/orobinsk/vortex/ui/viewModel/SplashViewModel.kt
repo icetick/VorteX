@@ -12,12 +12,7 @@ import kotlinx.coroutines.launch
 //@ObservableVM //Automatically creates observable class for all livedata members
 class SplashViewModel : BaseViewModel() {
     private val SPLASH_END_TIME: Long = 6000
-    val bounceAnimate = true
     val endSplash = MutableLiveData<Boolean>()
-
-    val SPLASH_IMAGE = R.drawable.vortex
-    val SPLASH_LOGO = R.drawable.logo
-    val filterColor = R.color.splash_filter_color
 
     init {
         endSplash.postValue(false)
