@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -18,17 +19,98 @@
             android:id="@+id/splashView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:transitionName="@string/background"
-            android:src="@{@drawable/nebula}" />
+            android:src="@{@drawable/nebula}"
+            android:transitionName="@string/background" />
+
+        <FrameLayout
+            app:overlayReveal="@{viewModel.flag}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_overlay" />
 
         <ImageView
             android:id="@+id/logo_iv"
-            bounceAnimate="@{true}"
+            app:bounceAnimate="@{viewModel.flag}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_login"
-            android:layout_marginEnd="@dimen/margin_login"
+            android:layout_marginStart="@dimen/margin_logo"
+            android:layout_marginEnd="@dimen/margin_logo"
             android:src="@{@drawable/logo}"
             android:transitionName="@string/vortex_logo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_login"
+            android:layout_marginEnd="@dimen/margin_login"
+            android:layout_marginBottom="@dimen/margin_login"
+            android:layout_marginTop="@dimen/margin_login_top"
+            android:orientation="vertical">
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                app:fieldReveal="@{viewModel.flag}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mtf_openKeyboardOnFocus="true"
+                app:mtf_cardCollapsedHeight="2dp"
+                app:mtf_backgroundColor="@color/white"
+                android:layout_marginTop="@dimen/margin_fields"
+                app:mtf_labelColor="@color/white"
+                app:mtf_image="@drawable/ic_email">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#000"
+                    android:textSize="12sp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                app:fieldReveal="@{viewModel.flag}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mtf_openKeyboardOnFocus="true"
+                app:mtf_cardCollapsedHeight="2dp"
+                app:mtf_labelColor="@color/white"
+                android:layout_marginTop="@dimen/margin_fields"
+                app:mtf_backgroundColor="@color/white"
+                app:mtf_image="@drawable/ic_lock">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:textColor="#000"
+                    android:textSize="12sp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                app:fieldReveal="@{viewModel.flag}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mtf_openKeyboardOnFocus="true"
+                app:mtf_cardCollapsedHeight="2dp"
+                app:mtf_labelColor="@color/white"
+                app:mtf_backgroundColor="@color/white"
+                android:layout_marginTop="@dimen/margin_fields"
+                app:mtf_image="@drawable/ic_lock">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat"
+                    android:hint="Confirm password"
+                    android:textColor="#000"
+                    android:inputType="textPassword"
+                    android:textSize="12sp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+
+        </LinearLayout>
     </FrameLayout>
 </layout>

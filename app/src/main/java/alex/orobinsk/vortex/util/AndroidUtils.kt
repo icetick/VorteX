@@ -23,6 +23,11 @@ fun Activity.hideKeyboard()  {
     }
 }
 
+suspend fun delay(time: Long, action: ()->Unit){
+    kotlinx.coroutines.delay(time)
+    action()
+}
+
 inline fun <reified T: Activity> Activity.startActivity(extra: Bundle? = null, vararg views: View) {
     val intent = Intent(this, T::class.java)
     extra?.let {

@@ -2,9 +2,9 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android" android:duration="3000" android:fillAfter="true">
     <scale
         android:fromXScale="1"
-        android:toXScale="0.3"
+        android:toXScale="0.4"
         android:fromYScale="1"
-        android:toYScale="0.3"
+        android:toYScale="0.4"
         android:pivotX="50%" />
     <translate
         android:fromXDelta="0"
