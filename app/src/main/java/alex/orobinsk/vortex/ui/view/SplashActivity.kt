@@ -9,7 +9,7 @@ class SplashActivity : BaseActivity() {
     override fun init() {
         binder.bind<SplashActivity, SplashViewModel>(layoutId = R.layout.activity_splash) {
             it.apply {
-                endSplash.observeForever { ended ->
+                splashEnded.observeForever { ended ->
                     if(ended) {
                        //startActivity<LoginActivity>(null, logo_iv, splashView)
                     }

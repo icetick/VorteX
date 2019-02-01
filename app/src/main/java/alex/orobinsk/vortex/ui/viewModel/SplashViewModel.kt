@@ -1,20 +1,15 @@
 package alex.orobinsk.vortex.ui.viewModel
 
 import alex.orobinsk.vortex.App
-import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.util.ValidationType
 import alex.orobinsk.vortex.util.delay
 import alex.orobinsk.vortex.util.isValid
-import android.os.Handler
 import android.provider.Settings
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import com.github.felixgail.gplaymusic.api.GPlayMusic
-import com.github.felixgail.gplaymusic.util.TokenProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.generic.instance
 
@@ -26,25 +21,31 @@ class SplashViewModel : BaseViewModel() {
     val androidID: MutableLiveData<String> = MutableLiveData()
     val userName: MutableLiveData<String> = MutableLiveData()
     val password: MutableLiveData<String> = MutableLiveData()
-    val endSplash = MutableLiveData<Boolean>()
-    val flag = MutableLiveData<Boolean>()
+    val splashEnded = MutableLiveData<Boolean>().apply { value = false }
+    val afterLogoAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
+    val progressBarAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
 
     init {
         androidID.postValue(Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID))
-        flag.value = false
-        endSplash.postValue(false)
         GlobalScope.launch(Dispatchers.IO) {
             delay(SPLASH_END_TIME) {
-                endSplash.postValue(true)
+                splashEnded.postValue(true)
             }
         }
     }
 
     fun onSignInClicked() = View.OnClickListener {
-        if (validateFields()) {
+        progressBarAnimationEnabled.value = true
+
+        GlobalScope.launch(Dispatchers.IO) {
+            delay(SPLASH_END_TIME) {
+                progressBarAnimationEnabled.postValue(false)
+            }
+        }
+        /*if (validateFields()) {
             val authToken = TokenProvider.provideToken(userName.value, password.value, androidID.value)
             val api = GPlayMusic.Builder().setAuthToken(authToken).build()
-        }
+        }*/
     }
 
     private fun validateFields(): Boolean {

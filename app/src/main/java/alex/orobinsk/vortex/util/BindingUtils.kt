@@ -1,20 +1,13 @@
 package alex.orobinsk.vortex.util
 
-import alex.orobinsk.vortex.util.animation.*
-import alex.orobinsk.vortex.util.animation.Animations.Companion.bounce
-import alex.orobinsk.vortex.util.animation.Animations.Companion.bounceInterpolator
-import alex.orobinsk.vortex.util.animation.Animations.Companion.scaleTranslateUp
-import alex.orobinsk.vortex.util.animation.Animations.Companion.translateUp
+import alex.orobinsk.vortex.ui.widgets.VortexProgress
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.ViewTreeObserver
-import android.view.animation.LinearInterpolator
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
@@ -23,43 +16,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-
-@BindingAdapter("bounceAnimate")
-fun setBounceAnimation(view: ImageView, flag: MutableLiveData<Boolean>) {
-    flag.value?.let {
-        if (!it) {
-            view.chainAnimation {
-                bounce() and scaleTranslateUp() and scaleTranslateUp() interpolator bounceInterpolator() then { flag.postValue(true) }
-            }
-        }
-    }
-}
-
-@BindingAdapter("overlayReveal")
-fun setOverlayreveal(view: View, flag: MutableLiveData<Boolean>) {
-    view.visibility = View.INVISIBLE
-    flag.observeForever {
-        if (it) {
-            view.chainAnimation {
-                translateUp() interpolator bounceInterpolator()
-            }
-            view.visibility = View.VISIBLE
-        }
-    }
-}
-
-@BindingAdapter("fieldReveal")
-fun setFieldReveal(view: View, flag: MutableLiveData<Boolean>) {
-    view.visibility = View.INVISIBLE
-    flag.observeForever {
-        if (it) {
-            view.chainAnimation {
-                translateUp() interpolator bounceInterpolator()
-            }
-            view.visibility = View.VISIBLE
-        }
-    }
-}
 
 @BindingAdapter("textWatcher")
 fun setText(view: EditText, textField: MutableLiveData<String>) {
@@ -74,6 +30,11 @@ fun setText(view: EditText, textField: MutableLiveData<String>) {
         override fun afterTextChanged(s: Editable) {
         }
     })
+}
+
+@BindingAdapter("progressField")
+fun progressField(view: VortexProgress, progressFlag: MutableLiveData<Boolean>) {
+    progressFlag.observeForever { field -> if(field) view.showProgressBar() else view.hideProgressBar()  }
 }
 
 @BindingAdapter("android:src")

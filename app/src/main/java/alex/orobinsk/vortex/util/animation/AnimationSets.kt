@@ -3,10 +3,7 @@ package alex.orobinsk.vortex.util.animation
 import alex.orobinsk.vortex.App
 import alex.orobinsk.vortex.R
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.Interpolator
-import android.view.animation.LinearInterpolator
+import android.view.animation.*
 import org.kodein.di.Kodein
 import org.kodein.di.generic.instance
 import java.util.*
@@ -78,7 +75,12 @@ class Animations {
 
         fun bounce(): () -> Animation? = { AnimationUtils.loadAnimation(app, R.anim.bounce) }
         fun scaleTranslateUp(): () -> Animation? = { AnimationUtils.loadAnimation(app, R.anim.scale_and_move) }
-        fun translateUp(): () -> Animation? = { AnimationUtils.loadAnimation(app, R.anim.slide_up_fade).apply { interpolator = LinearInterpolator() } }
+        fun vortexAnimation(): () -> Animation? = { AnimationUtils.loadAnimation(app, R.anim.vortex_animation) }
+        fun scaleDown(): () -> Animation? = { AnimationUtils.loadAnimation(app, R.anim.scale_down) }
+        fun translateUp(): () -> Animation? = { AnimationUtils.loadAnimation(app, R.anim.slide_up_fade) }
         fun bounceInterpolator() = BounceInterpolator()
+        fun linearInterpolator() = LinearInterpolator()
+        fun accelerateInterpolator() = AccelerateInterpolator()
+        fun accelDecelerateInterpolator() = AccelerateDecelerateInterpolator()
     }
 }

@@ -23,14 +23,14 @@
             android:transitionName="@string/background" />
 
         <FrameLayout
-            app:overlayReveal="@{viewModel.flag}"
+            app:overlayReveal="@{viewModel.afterLogoAnimationEnabled}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/black_overlay" />
 
         <ImageView
             android:id="@+id/logo_iv"
-            app:bounceAnimate="@{viewModel.flag}"
+            app:bounceAnimate="@{viewModel.afterLogoAnimationEnabled}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_logo"
@@ -47,70 +47,82 @@
             android:layout_marginTop="@dimen/margin_login_top"
             android:orientation="vertical">
 
-            <com.github.florent37.materialtextfield.MaterialTextField
-                app:fieldReveal="@{viewModel.flag}"
+            <com.google.android.material.textfield.TextInputLayout
+                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:mtf_openKeyboardOnFocus="true"
-                app:mtf_cardCollapsedHeight="2dp"
-                app:mtf_backgroundColor="@color/white"
-                android:layout_marginTop="@dimen/margin_fields"
-                app:mtf_labelColor="@color/white"
-                app:mtf_image="@drawable/ic_email">
+                android:textColorHint="@color/white"
+                android:backgroundTint="@color/white"
+                android:layout_marginTop="@dimen/margin_fields">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:textColor="#000"
-                    android:textSize="12sp" />
-            </com.github.florent37.materialtextfield.MaterialTextField>
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.github.florent37.materialtextfield.MaterialTextField
-                app:fieldReveal="@{viewModel.flag}"
+            <com.google.android.material.textfield.TextInputLayout
+                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
                 android:layout_width="match_parent"
+                android:textColorHint="@color/white"
+                android:backgroundTint="@color/white"
                 android:layout_height="wrap_content"
-                app:mtf_openKeyboardOnFocus="true"
-                app:mtf_cardCollapsedHeight="2dp"
-                app:mtf_labelColor="@color/white"
-                android:layout_marginTop="@dimen/margin_fields"
-                app:mtf_backgroundColor="@color/white"
-                app:mtf_image="@drawable/ic_lock">
+                android:layout_marginTop="@dimen/margin_fields">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat"
                     android:hint="Password"
                     android:inputType="textPassword"
-                    android:textColor="#000"
-                    android:textSize="12sp" />
-            </com.github.florent37.materialtextfield.MaterialTextField>
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.github.florent37.materialtextfield.MaterialTextField
-                app:fieldReveal="@{viewModel.flag}"
+            <com.google.android.material.textfield.TextInputLayout
+                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
                 android:layout_width="match_parent"
+                android:textColorHint="@color/white"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/montserrat"
                 android:layout_height="wrap_content"
-                app:mtf_openKeyboardOnFocus="true"
-                app:mtf_cardCollapsedHeight="2dp"
-                app:mtf_labelColor="@color/white"
-                app:mtf_backgroundColor="@color/white"
-                android:layout_marginTop="@dimen/margin_fields"
-                app:mtf_image="@drawable/ic_lock">
+                android:layout_marginTop="@dimen/margin_fields">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat"
                     android:hint="Confirm password"
-                    android:textColor="#000"
+                    android:textColor="@color/white"
                     android:inputType="textPassword"
-                    android:textSize="12sp" />
-            </com.github.florent37.materialtextfield.MaterialTextField>
+                    android:backgroundTint="@color/white"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-
+            <Button
+                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_fields_button"
+                android:background="@drawable/rounded_button"
+                android:textColor="@color/white"
+                android:onClick="@{viewModel.onSignInClicked()}"
+                android:text="Sign in"
+                android:textSize="13sp" />
         </LinearLayout>
+        <alex.orobinsk.vortex.ui.widgets.VortexProgress
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:visibility="gone"
+            android:indeterminateDrawable="@drawable/vortex_progress"
+            app:progressField="@{viewModel.progressBarAnimationEnabled}" />
     </FrameLayout>
 </layout>

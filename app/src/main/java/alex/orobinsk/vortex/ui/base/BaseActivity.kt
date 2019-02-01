@@ -1,5 +1,6 @@
 package alex.orobinsk.vortex.ui.base
 
+import alex.orobinsk.vortex.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
     override fun onDestroy() {
         super.onDestroy()
         onReleaseResources()
+        this.overridePendingTransition(0, R.anim.vortex_animation)
     }
 
     override fun onStop() {
