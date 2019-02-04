@@ -17,6 +17,7 @@ import org.kodein.di.generic.instance
 class SplashViewModel : BaseViewModel() {
     val application: App by instance()
     private val SPLASH_END_TIME: Long = 6000
+    var duration: Long = 20000
 
     val androidID: MutableLiveData<String> = MutableLiveData()
     val userName: MutableLiveData<String> = MutableLiveData()

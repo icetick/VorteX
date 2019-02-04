@@ -11,7 +11,8 @@ class SplashActivity : BaseActivity() {
             it.apply {
                 splashEnded.observeForever { ended ->
                     if(ended) {
-                       //startActivity<LoginActivity>(null, logo_iv, splashView)
+
+                        //startActivity<LoginActivity>(null, logo_iv, splashView)
                     }
                 }
             }

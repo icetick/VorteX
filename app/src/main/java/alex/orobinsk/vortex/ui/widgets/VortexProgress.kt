@@ -1,18 +1,15 @@
 package alex.orobinsk.vortex.ui.widgets
 
-import alex.orobinsk.vortex.util.animation.Animations.Companion.bounce
-import alex.orobinsk.vortex.util.animation.Animations.Companion.bounceInterpolator
-import alex.orobinsk.vortex.util.animation.Animations.Companion.linearInterpolator
-import alex.orobinsk.vortex.util.animation.Animations.Companion.scaleDown
-import alex.orobinsk.vortex.util.animation.Animations.Companion.vortexAnimation
-import alex.orobinsk.vortex.util.animation.and
+import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.bounceInterpolator
+import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.linearInterpolator
+import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.scaleDown
+import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.vortexAnimation
 import alex.orobinsk.vortex.util.animation.chainAnimation
 import alex.orobinsk.vortex.util.animation.interpolator
 import alex.orobinsk.vortex.util.animation.then
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ProgressBar
 
 class VortexProgress: ProgressBar {

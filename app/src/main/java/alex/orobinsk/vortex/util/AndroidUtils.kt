@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 
 fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -26,6 +28,17 @@ fun Activity.hideKeyboard()  {
 suspend fun delay(time: Long, action: ()->Unit){
     kotlinx.coroutines.delay(time)
     action()
+}
+
+inline fun<reified T: View> ViewGroup.findViewsByType(): Array<T> {
+     var childsByType = ArrayList<T>()
+     for(index in 0..childCount) {
+         val currentItem = getChildAt(index)
+         if(currentItem is T) {
+             childsByType.add(currentItem)
+         }
+     }
+     return childsByType.toTypedArray()
 }
 
 inline fun <reified T: Activity> Activity.startActivity(extra: Bundle? = null, vararg views: View) {

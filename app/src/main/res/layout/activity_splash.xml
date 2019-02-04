@@ -20,13 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@{@drawable/nebula}"
+            app:kenBurnsDuration="@{viewModel.duration}"
             android:transitionName="@string/background" />
 
         <FrameLayout
-            app:overlayReveal="@{viewModel.afterLogoAnimationEnabled}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black_overlay" />
+            android:background="@color/black_overlay"
+            app:overlayReveal="@{viewModel.afterLogoAnimationEnabled}" />
 
         <ImageView
             android:id="@+id/logo_iv"
@@ -39,90 +40,89 @@
             android:transitionName="@string/vortex_logo" />
 
         <LinearLayout
+            android:id="@+id/field_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/margin_login"
+            app:animateChilds="@{viewModel.splashEnded}"
+            android:layout_marginTop="@dimen/margin_login_top"
             android:layout_marginEnd="@dimen/margin_login"
             android:layout_marginBottom="@dimen/margin_login"
-            android:layout_marginTop="@dimen/margin_login_top"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/white"
+                android:layout_marginTop="@dimen/margin_fields"
                 android:backgroundTint="@color/white"
-                android:layout_marginTop="@dimen/margin_fields">
+                android:textColorHint="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
                     android:fontFamily="@font/montserrat"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:backgroundTint="@color/white"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_fields">
+                android:layout_marginTop="@dimen/margin_fields"
+                android:backgroundTint="@color/white"
+                android:textColorHint="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
                     android:fontFamily="@font/montserrat"
                     android:hint="Password"
                     android:inputType="textPassword"
-                    android:backgroundTint="@color/white"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_fields"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/montserrat"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_fields">
+                android:textColorHint="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
                     android:fontFamily="@font/montserrat"
                     android:hint="Confirm password"
-                    android:textColor="@color/white"
                     android:inputType="textPassword"
-                    android:backgroundTint="@color/white"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                app:fieldReveal="@{viewModel.afterLogoAnimationEnabled}"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_fields_button"
                 android:background="@drawable/rounded_button"
-                android:textColor="@color/white"
                 android:onClick="@{viewModel.onSignInClicked()}"
                 android:text="Sign in"
-                android:textSize="13sp" />
+                android:textColor="@color/white"
+                android:textSize="13sp"/>
         </LinearLayout>
+
         <alex.orobinsk.vortex.ui.widgets.VortexProgress
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:visibility="gone"
             android:indeterminateDrawable="@drawable/vortex_progress"
+            android:visibility="gone"
             app:progressField="@{viewModel.progressBarAnimationEnabled}" />
     </FrameLayout>
 </layout>

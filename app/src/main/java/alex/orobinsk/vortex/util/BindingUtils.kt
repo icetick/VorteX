@@ -1,11 +1,15 @@
 package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.ui.widgets.VortexProgress
+import alex.orobinsk.vortex.util.animation.BounceInterpolator
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.ViewTreeObserver
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.Interpolator
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
@@ -16,6 +20,8 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.flaviofaria.kenburnsview.KenBurnsView
+import com.flaviofaria.kenburnsview.RandomTransitionGenerator
 
 @BindingAdapter("textWatcher")
 fun setText(view: EditText, textField: MutableLiveData<String>) {
@@ -30,6 +36,23 @@ fun setText(view: EditText, textField: MutableLiveData<String>) {
         override fun afterTextChanged(s: Editable) {
         }
     })
+}
+
+@BindingAdapter("kenBurnsDuration")
+fun setKenBurnsTransitor(view: ImageView, duration: Long) {
+   // (view as KenBurnsView).setTransitionGenerator(RandomTransitionGenerator(duration, AccelerateDecelerateSlowInterpolator()))
+}
+
+class HesitateInterpolator : Interpolator {
+    override fun getInterpolation(t: Float): Float {
+        val x = 2.0f * t - 1.0f
+        return 0.5f * (x/2)
+    }
+}
+class AccelerateDecelerateSlowInterpolator : Interpolator {
+    override fun getInterpolation(t: Float): Float {
+        return (Math.cos((t + 1) * Math.PI) / 3.0f).toFloat()
+    }
 }
 
 @BindingAdapter("progressField")
@@ -52,7 +75,6 @@ fun setImageSrc(view: ImageView, drawable: Drawable?) {
             })
             .into(view)
 }
-
 
 private fun scheduleStartPostponedTransition(imageView: ImageView) {
     imageView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
