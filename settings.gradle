@@ -1,1 +1,1 @@
-include ':app', ':annotation', ':codeGeneration'
+include ':app', ':annotation', ':codeGeneration', ':Deezer'

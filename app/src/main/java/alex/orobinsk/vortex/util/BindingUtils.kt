@@ -23,8 +23,8 @@ import com.bumptech.glide.request.target.Target
 import com.flaviofaria.kenburnsview.KenBurnsView
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator
 
-@BindingAdapter("textWatcher")
-fun setText(view: EditText, textField: MutableLiveData<String>) {
+@BindingAdapter("setTextField")
+fun setTextField(view: EditText, textField: MutableLiveData<String>) {
     view.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
         }
@@ -34,6 +34,22 @@ fun setText(view: EditText, textField: MutableLiveData<String>) {
         }
 
         override fun afterTextChanged(s: Editable) {
+        }
+    })
+}
+@BindingAdapter("setPasswordValidateField")
+fun setPasswordValidator(view: EditText, textField: MutableLiveData<String>) {
+    view.addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        }
+
+        override fun afterTextChanged(s: Editable) {
+            if(s.toString() != textField.value) {
+                view.error = "Password is not correct"
+            }
         }
     })
 }

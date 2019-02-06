@@ -35,9 +35,15 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
         def apiKey = properties.getProperty("API_KEY", "")
         def apiEndpoint = properties.getProperty("API_ENDPOINT", "")
+        def secretKey = properties.getProperty("SECRET_KEY", "")
+        def defaultPassword = properties.getProperty("DEF_PASS", "")
+        def defaultEmail = properties.getProperty("DEF_EMAIL", "")
 
-        it.buildConfigField 'String', "API_KEY", apiKey
+        it.buildConfigField 'String', "DEEZER_APPLICATION_ID", apiKey
         it.buildConfigField 'String', "API_ENDPOINT", apiEndpoint
+        it.buildConfigField 'String', "SECRET_KEY", secretKey
+        it.buildConfigField 'String', "DEFAULT_PASSWORD", defaultPassword
+        it.buildConfigField 'String', "DEFAULT_EMAIL", defaultEmail
 
         it.resValue 'string', "api_key", apiKey
     }
@@ -51,10 +57,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlinVersion"
     implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
@@ -72,7 +77,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
-
     implementation "org.kodein.di:kodein-di-generic-jvm:$rootProject.kodeinVersion"
     implementation "org.kodein.di:kodein-di-framework-android-x:$rootProject.kodeinVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitConverter"
@@ -82,9 +86,11 @@ dependencies {
 
     //UI
     implementation "com.flaviofaria:kenburnsview:$rootProject.kenburnsVersion"
-    implementation "com.github.felixgail:gplaymusic:0.3.6"
+    implementation 'com.github.felixgail:gplaymusic:0.3.6'
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'com.github.florent37:materialtextfield:1.0.7'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
     // Testing dependencies
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$rootProject.espressoVersion"
@@ -94,5 +100,6 @@ dependencies {
     testImplementation "junit:junit:$rootProject.junitVersion"
     implementation "com.google.firebase:firebase-firestore:$rootProject.firebaseVersion"
     implementation project(':annotation')
-    kapt project (':codeGeneration')
+    kapt project(':codeGeneration')
+    implementation project(':Deezer')
 }

@@ -4,5 +4,6 @@
     <dimen name="margin_logo">40dp</dimen>
     <dimen name="margin_fields">7dp</dimen>
     <dimen name="margin_login_top">160dp</dimen>
-    <dimen name="margin_fields_button">15dp</dimen>
+    <dimen name="margin_fields_button">20dp</dimen>
+    <dimen name="button_height_login">45dp</dimen>
 </resources>

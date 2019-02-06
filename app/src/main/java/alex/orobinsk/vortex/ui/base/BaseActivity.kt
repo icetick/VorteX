@@ -14,6 +14,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 
     abstract fun init()
     abstract fun onReleaseResources()
+    open fun requestPermissions() {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,10 +1,14 @@
 package alex.orobinsk.vortex.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -22,6 +26,24 @@ fun Activity.hideKeyboard()  {
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     window.currentFocus?.let {
         imm.hideSoftInputFromWindow(it.windowToken, 0)
+    }
+}
+fun View.hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(windowToken, 0)
+}
+
+@SuppressLint("HardwareIds")
+fun Context.getImei(): String? {
+    val telephonyMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+    return if(checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE)==PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            telephonyMgr.imei
+        } else {
+            telephonyMgr.deviceId
+        }
+    } else {
+        null
     }
 }
 

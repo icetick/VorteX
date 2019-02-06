@@ -1,5 +1,6 @@
 package alex.orobinsk.vortex.modules
 
+import alex.orobinsk.vortex.BuildConfig
 import alex.orobinsk.vortex.domain.Repository
 import alex.orobinsk.vortex.domain.model.Track
 import alex.orobinsk.vortex.domain.networking.MusicAPI
@@ -8,6 +9,7 @@ import alex.orobinsk.vortex.domain.repository.MusicRepository
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.ui.viewModel.SplashViewModel
 import alex.orobinsk.vortex.util.ViewModelFactory
+import com.deezer.sdk.network.connect.DeezerConnect
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.provider

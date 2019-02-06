@@ -10,6 +10,7 @@ import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.scaleTranslat
 import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.translateUp
 import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.vortexAnimation
 import alex.orobinsk.vortex.util.findViewsByType
+import alex.orobinsk.vortex.util.hideKeyboard
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
@@ -31,6 +32,7 @@ fun setBounceAnimation(view: ImageView, startState: MutableLiveData<Boolean>) {
 
 @BindingAdapter("overlayReveal")
 fun setOverlayreveal(view: View, startState: MutableLiveData<Boolean>) {
+    view.setOnTouchListener { v, event -> v.hideKeyboard(); false }
     view.visibility = View.INVISIBLE
     startState.observeForever {
         if (it) {
@@ -62,28 +64,28 @@ fun setAnimateInsiders(view: ViewGroup, startState: MutableLiveData<Boolean>) {
 
     animatedFields.forEach { it.visibility = View.INVISIBLE }
     animatedButtons.forEach { it.visibility = View.INVISIBLE }
+
     startState.observeForever {
-
-        animatedFields.forEach { item ->
-            item.chainAnimation {
-                translateUp() interpolator accelerateInterpolator() then {
-                    if(it)
-                    item.visibility = View.VISIBLE
+        if (it) {
+            animatedFields.forEach { item ->
+                item.chainAnimation {
+                    translateUp() interpolator accelerateInterpolator() then {
+                            item.visibility = View.VISIBLE
+                    }
                 }
             }
-        }
 
-        animatedButtons.forEach { item ->
-            item.chainAnimation {
-                translateUp() interpolator accelerateInterpolator() then {
-                    if(it)
-                    item.visibility = View.VISIBLE
+            animatedButtons.forEach { item ->
+                item.chainAnimation {
+                    translateUp() interpolator accelerateInterpolator() then {
+                            item.visibility = View.VISIBLE
+                    }
                 }
             }
-        }
-        /*scaleTranslateUp().invoke()?.animateViewChain(*animatedViews, *animatedButtons) then {
+            /*scaleTranslateUp().invoke()?.animateViewChain(*animatedViews, *animatedButtons) then {
             view.visibility = View.VISIBLE
         }*/
+        }
     }
 }
 

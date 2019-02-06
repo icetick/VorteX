@@ -5,4 +5,8 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="vortex_logo">logo_transitor</string>
     <string name="background">background_transition</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="sign_in">Sign in</string>
 </resources>
