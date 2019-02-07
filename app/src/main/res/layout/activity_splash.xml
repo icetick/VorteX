@@ -7,13 +7,13 @@
 
         <variable
                 name="viewModel"
-                type="alex.orobinsk.vortex.ui.viewModel.SplashViewModel"/>
+                type="alex.orobinsk.vortex.ui.viewModel.SplashLoginViewModel"/>
     </data>
 
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.view.SplashActivity">
+            tools:context=".ui.view.SplashLoginActivity">
 
         <com.flaviofaria.kenburnsview.KenBurnsView
                 android:id="@+id/splashView"

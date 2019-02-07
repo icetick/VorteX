@@ -2,25 +2,23 @@ package alex.orobinsk.vortex.ui.view
 
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.base.BaseActivity
-import alex.orobinsk.vortex.ui.viewModel.SplashViewModel
+import alex.orobinsk.vortex.ui.viewModel.SplashLoginViewModel
 import alex.orobinsk.vortex.util.getImei
+import alex.orobinsk.vortex.util.startActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 
 
-class SplashActivity : BaseActivity() {
+class SplashLoginActivity : BaseActivity() {
     private var androidID: String? = null
 
     override fun init() {
         requestPermissions()
 
-        binder.bind<SplashActivity, SplashViewModel>(R.layout.activity_splash, this) {
+        binder.bind<SplashLoginActivity, SplashLoginViewModel>(R.layout.activity_splash, this) {
             it.apply {
                 androidID.postValue(getImei())
-                splashEnded.observeForever { ended ->
-                    if(ended) {
-
-                        //startActivity<LoginActivity>(null, logo_iv, splashView)
-                    }
+                loginSucceeded.observeForever{
+                    startActivity<MainActivity>()
                 }
             }
         }

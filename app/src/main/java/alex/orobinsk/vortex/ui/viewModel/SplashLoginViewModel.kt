@@ -5,40 +5,36 @@ import alex.orobinsk.vortex.BuildConfig
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.util.*
-import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.deezer.sdk.model.Permissions
 import com.deezer.sdk.network.connect.DeezerConnect
-import com.deezer.sdk.network.connect.event.DialogListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.kodein.di.generic.instance
 
 
 //@ObservableVM //Automatically creates observable class for all livedata members
-class SplashViewModel : BaseViewModel() {
+class SplashLoginViewModel : BaseViewModel() {
     val application: App by instance()
     val deezerConnectInstance: DeezerConnect by instance()
     val preferences: PreferencesStorage by instance()
-
-    private val SPLASH_END_TIME: Long = 3100
-    var duration: Long = 20000
-
     val androidID: MutableLiveData<String> = MutableLiveData()
     val userName: MutableLiveData<String> = MutableLiveData()
     val password: MutableLiveData<String> = MutableLiveData()
     val splashEnded = MutableLiveData<Boolean>().apply { value = false }
     val afterLogoAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
     val progressBarAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
+    val loginSucceeded = MutableLiveData<Boolean>()
 
     val defaultEmail = BuildConfig.DEFAULT_EMAIL
     val defaultPassword = BuildConfig.DEFAULT_PASSWORD
+    private val SPLASH_END_TIME: Long = 3100
+    var duration: Long = 20000
+
     init {
-        //TODO: Get androidID
+        //TODO: Get androidID for Google Play Music(?)
         //androidID.postValue(Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID))
         GlobalScope.launch(Dispatchers.IO) {
             delay(SPLASH_END_TIME) {
@@ -50,14 +46,16 @@ class SplashViewModel : BaseViewModel() {
     fun onSignInClicked() = View.OnClickListener {
         progressBarAnimationEnabled.value = true
         it.hideKeyboard()
-        GlobalScope.launch(Dispatchers.IO) {
-            delay(SPLASH_END_TIME) {
-                progressBarAnimationEnabled.postValue(false)
-            }
-        }
+
         if (!validateFields()) {
-            DeezerAuthenticationHelper.with(it.context).authenticate(defaultEmail, defaultPassword)
-            { code -> preferences.storeToken(code); Toast.makeText(it.context, code, Toast.LENGTH_SHORT).show() }
+            val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
+            deezerAuthenticator.authenticate(defaultEmail, defaultPassword) { authenticationCode ->
+                GlobalScope.launch(Dispatchers.Main) {
+                    deezerAuthenticator.removeWebView()
+                    val token = withContext(Dispatchers.IO) { deezerAuthenticator.getToken(authenticationCode) }
+                    onLoginSucceded(token)
+                }
+            }
 
             //TODO: Implement GOOGLE Play Music feature
             /*GlobalScope.launch(Dispatchers.Main) {
@@ -70,17 +68,24 @@ class SplashViewModel : BaseViewModel() {
         }
     }
 
+    fun onLoginSucceded(token: String) {
+        preferences.storeToken(token)
+        progressBarAnimationEnabled.postValue(false)
+        loginSucceeded.postValue(true)
+    }
+
     fun onLongClick() = View.OnLongClickListener { v ->
         progressBarAnimationEnabled.value = true
         v.hideKeyboard()
-        GlobalScope.launch(Dispatchers.IO) {
-            delay(SPLASH_END_TIME) {
-                progressBarAnimationEnabled.postValue(false)
-            }
-        }
         if (!validateFields()) {
-            DeezerAuthenticationHelper.with(v.context).showAlertAuthentication()
-            //{ code -> preferences.storeToken(code); Toast.makeText(v.context, code, Toast.LENGTH_SHORT).show() }
+            val deezerAuthenticator = DeezerAuthenticationHelper.with(v.context)
+            deezerAuthenticator.showAlertAuthentication { code ->
+                GlobalScope.launch(Dispatchers.Main) {
+                    deezerAuthenticator.removeWebView()
+                    val token = withContext(Dispatchers.IO) { deezerAuthenticator.getToken(code) }
+                    onLoginSucceded(token)
+                }
+            }
         }
         false
     }
