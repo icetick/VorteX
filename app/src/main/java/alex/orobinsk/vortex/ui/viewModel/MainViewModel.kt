@@ -17,7 +17,8 @@ class MainViewModel: BaseViewModel() {
     val onPlayClick = View.OnClickListener {
         val player = MediaPlayer()
         player.setDataSource(trackList.poll())
-        player.prepare()
+        player.setOnCompletionListener { it.setDataSource(trackList.poll()); it.prepareAsync(); it.start() }
+        player.prepareAsync()
         player.start()
     }
 
