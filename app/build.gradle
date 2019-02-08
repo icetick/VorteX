@@ -90,6 +90,8 @@ dependencies {
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'com.github.florent37:materialtextfield:1.0.7'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation 'com.tbuonomo:morph-bottom-navigation:1.0.1'
+    implementation 'com.xgc1986.android:parallaxpagertransformer:1.0.4'
 
     // Testing dependencies
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"

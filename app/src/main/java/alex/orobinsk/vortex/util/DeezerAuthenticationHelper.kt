@@ -120,12 +120,12 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
 
         override fun onPageFinished(view: WebView?, url: String?) {
             val jsInjectedLogin = "javascript:(function() {" +
-                    "document.getElementsByName('continue')[0].click();" +
+                    "if(document.getElementsByName('continue').length!=0) { document.getElementsByName('continue')[0].click(); } else {" +
                     "document.getElementById('login_mail').value='${BuildConfig.DEFAULT_EMAIL}';" +
                     "document.getElementById('login_password').value='${BuildConfig.DEFAULT_PASSWORD}';" +
                     "document.getElementById('login_mail').dispatchEvent(new Event('input'));" +
                     "document.getElementById('login_password').dispatchEvent(new Event('input'));" +
-                    "document.getElementById('login_form_submit').click();"+"})()"
+                    "document.getElementById('login_form_submit').click(); }"+"})()"
             view?.loadUrl(jsInjectedLogin)
             super.onPageFinished(view, url)
         }

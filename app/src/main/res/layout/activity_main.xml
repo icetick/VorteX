@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
                 name="viewModel"
                 type="alex.orobinsk.vortex.ui.viewModel.MainViewModel"/>
     </data>
-    <FrameLayout
+    <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <com.flaviofaria.kenburnsview.KenBurnsView
-            android:id="@+id/splashView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@{@drawable/nebula}"
-            android:transitionName="@string/background"/>
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/play"
-            android:onClick="@{viewModel.onPlayClick}"
-            android:layout_gravity="center"
-            android:scaleY="0.5"
-            android:scaleX="0.5"
-            />
-    </FrameLayout>
+                android:id="@+id/splashView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@{@drawable/nebula}"
+                android:transitionName="@string/background"/>
+        <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_above="@+id/bottomNavigationView"
+                android:layout_alignParentTop="true"
+                app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_height="match_parent" />
+        <com.tbuonomo.morphbottomnavigation.MorphBottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:menu="@menu/menu_bottom_navigation"
+                app:backgroundTint="@color/colorPrimary"
+                app:morphCornerRadius="128dp"
+                app:morphItemRadius="64dp"
+                app:morphVerticalOffset="8dp"/>
+    </RelativeLayout>
 </layout>

@@ -1,11 +1,13 @@
 package alex.orobinsk.vortex.util
 
+import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.widgets.VortexProgress
 import alex.orobinsk.vortex.util.animation.BounceInterpolator
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.ViewParent
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -14,7 +16,10 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.MutableLiveData
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -22,6 +27,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.flaviofaria.kenburnsview.KenBurnsView
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator
+import com.xgc1986.parallaxPagerTransformer.ParallaxPagerTransformer
 
 @BindingAdapter("setTextField")
 fun setTextField(view: EditText, textField: MutableLiveData<String>) {
@@ -37,6 +43,12 @@ fun setTextField(view: EditText, textField: MutableLiveData<String>) {
         }
     })
 }
+@BindingAdapter("parallaxViewPagerAdapter")
+fun setAdapter(viewPager: ViewPager, pageradapter: FragmentStatePagerAdapter) {
+    viewPager.setPageTransformer(false, ParallaxPagerTransformer(R.id.background))
+    viewPager.adapter = pageradapter
+}
+
 @BindingAdapter("setPasswordValidateField")
 fun setPasswordValidator(view: EditText, textField: MutableLiveData<String>) {
     view.addTextChangedListener(object : TextWatcher {
