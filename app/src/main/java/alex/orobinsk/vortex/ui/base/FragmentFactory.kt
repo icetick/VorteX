@@ -1,7 +1,5 @@
 package alex.orobinsk.vortex.ui.base
 
-import android.os.Bundle
-import android.text.PrecomputedText
 import androidx.core.os.bundleOf
 
 class FragmentFactory {

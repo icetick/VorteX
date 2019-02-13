@@ -1,10 +1,9 @@
 package alex.orobinsk.vortex.ui.viewModel
 
 import alex.orobinsk.vortex.App
-import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.util.ValidationType.*
-import alex.orobinsk.vortex.util.isValid
+import alex.orobinsk.vortex.util.isValidAs
 import android.provider.Settings.Secure
 import android.view.View
 import androidx.lifecycle.MutableLiveData
@@ -14,12 +13,14 @@ import org.kodein.di.generic.instance
 
 
 class LoginViewModel : BaseViewModel() {
+
+
     val application: App by instance()
     val androidID: MutableLiveData<String> = MutableLiveData()
     val userName: MutableLiveData<String> = MutableLiveData()
     val password: MutableLiveData<String> = MutableLiveData()
 
-    init {
+    override fun onCreated() {
         androidID.postValue(Secure.getString(application.contentResolver, Secure.ANDROID_ID))
     }
 
@@ -31,7 +32,7 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun validateFields(): Boolean {
-        if (userName isValid EMAIL && androidID isValid ANDROID_ID && password isValid PASSWORD) {
+        if (userName isValidAs EMAIL && androidID isValidAs ANDROID_ID && password isValidAs PASSWORD) {
             return true
         }
         return false

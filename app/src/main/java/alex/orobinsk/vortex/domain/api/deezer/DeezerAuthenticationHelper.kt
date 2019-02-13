@@ -1,7 +1,8 @@
-package alex.orobinsk.vortex.util
+package alex.orobinsk.vortex.domain.api.deezer
 
 import alex.orobinsk.vortex.BuildConfig
 import alex.orobinsk.vortex.R
+import alex.orobinsk.vortex.domain.api.AuthenticationHelper
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
@@ -9,14 +10,10 @@ import android.text.TextUtils
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import okhttp3.OkHttpClient
 import java.io.*
 import java.net.*
-import io.grpc.internal.ReadableBuffers.openStream
-import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 
@@ -24,7 +21,8 @@ import java.lang.Exception
  * This class is used to prevent deezer login to user. In out application we need to use internal login/password field, but deezer requires
  * to use their own interface. In this case we are making workaround to pass login/password to deezer login webpage
  */
-class DeezerAuthenticationHelper private constructor(private val context: Context){
+class DeezerAuthenticationHelper private constructor(private val context: Context) :
+    AuthenticationHelper<DeezerTokenResponse> {
     val BASE_URL = "https://connect.deezer.com/oauth/auth.php"
     val BASE_URL_GET_TOKEN = "https://connect.deezer.com/oauth/access_token.php"
     val REDIRECT_URL = "http://www.alexorovortex.com"
@@ -43,14 +41,20 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
 
     @SuppressLint("SetJavaScriptEnabled")
     @Throws(IOException::class)
-    fun authenticate(email: String, password: String, listener: (String)-> Unit) {
-           webView = WebView(context).apply {
-                settings.javaScriptEnabled = true
-                webViewClient = DeezerAuthenticationWebClient(listener, email, password)
-                loadUrl("$BASE_URL?app_id=${BuildConfig.DEEZER_APPLICATION_ID}&redirect_uri=$REDIRECT_URL&perms=$APPLICATION_PERMISSIONS") }
+    override fun authenticate(email: String, password: String, listener: (String) -> Unit) {
+        webView = WebView(context).apply {
+            settings.javaScriptEnabled = true
+            webViewClient =
+                DeezerAuthenticationWebClient(
+                    listener,
+                    email,
+                    password
+                )
+            loadUrl("$BASE_URL?app_id=${BuildConfig.DEEZER_APPLICATION_ID}&redirect_uri=$REDIRECT_URL&perms=$APPLICATION_PERMISSIONS")
+        }
     }
 
-    fun setDeezerCookie(connection: URLConnection) {
+    override fun setCookie(connection: URLConnection) {
         val headerFields = connection.headerFields
         val cookiesHeader = headerFields[COOKIES_HEADER]
         if (cookiesHeader != null) {
@@ -65,8 +69,12 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
         webView = null
     }
 
-    fun getToken(code: String): String {
-        val urlConnection = URL("$BASE_URL_GET_TOKEN?app_id=${BuildConfig.DEEZER_APPLICATION_ID}&secret=${BuildConfig.SECRET_KEY}&code=$code").openConnection()
+    override fun getTokenResponse(vararg additionalParams: String?): DeezerTokenResponse {
+        val urlConnection = URL(
+            "$BASE_URL_GET_TOKEN?app_id=" +
+                    "${BuildConfig.DEEZER_APPLICATION_ID}&secret=" +
+                    "${BuildConfig.SECRET_KEY}&code=${additionalParams.first()}"
+        ).openConnection()
         urlConnection.connect()
         val inputStream = DataInputStream(urlConnection.getInputStream())
         var htmlCode = ""
@@ -74,15 +82,26 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
             val reader = BufferedReader(InputStreamReader(inputStream, "UTF-8"))
             while (true) {
                 val line = reader.readLine() ?: break
-                htmlCode+=line
+                htmlCode += line
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
 
-        return htmlCode.split("access_token=", "&expires=")[1]
+        return DeezerTokenResponse(htmlCode)
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun refreshToken(listener: (String) -> Unit) {
+        Handler(context.mainLooper).post {
+            webView = WebView(context).apply {
+                settings.javaScriptEnabled = true
+                webViewClient =
+                        DeezerAuthenticationWebClient(listener)
+                loadUrl("$BASE_URL?app_id=${BuildConfig.DEEZER_APPLICATION_ID}&redirect_uri=$REDIRECT_URL&perms=$APPLICATION_PERMISSIONS")
+            }
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     fun showAlertAuthentication(listener: (String) -> Unit) {
@@ -90,25 +109,31 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
         alert.setTitle(context.getString(R.string.authorization))
         webView = WebView(context).apply {
             settings.javaScriptEnabled = true
-            webViewClient = DeezerAuthenticationWebClient(listener)
-            loadUrl("$BASE_URL?app_id=${BuildConfig.DEEZER_APPLICATION_ID}&redirect_uri=$REDIRECT_URL&perms=$APPLICATION_PERMISSIONS") }
-        alert.setView(webView).setNegativeButton(context.getString(R.string.close)) {
-                dialog, _ -> dialog?.dismiss(); webView?.destroy()  }
+            webViewClient =
+                DeezerAuthenticationWebClient(listener)
+            loadUrl("$BASE_URL?app_id=${BuildConfig.DEEZER_APPLICATION_ID}&redirect_uri=$REDIRECT_URL&perms=$APPLICATION_PERMISSIONS")
+        }
+        alert.setView(webView)
+            .setNegativeButton(context.getString(R.string.close)) { dialog, _ -> dialog?.dismiss(); webView?.destroy() }
         alert.show()
     }
 
     fun getDeezerCookie(connection: URLConnection) {
         if (msCookieManager.cookieStore.cookies.size > 0) {
             // While joining the Cookies, use ',' or ';' as needed. Most of the servers are using ';'
-            connection.setRequestProperty("Cookie", TextUtils.join(";",  msCookieManager.cookieStore.cookies))
+            connection.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.cookieStore.cookies))
         }
     }
 
-    class DeezerAuthenticationWebClient(var loadListener: ((String) -> Unit), var email: String? = null, var password: String? = null): WebViewClient() {
+    class DeezerAuthenticationWebClient(
+        var loadListener: ((String) -> Unit),
+        var email: String? = null,
+        var password: String? = null
+    ) : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
             url.let { unwrappedUrl ->
-                if(unwrappedUrl.contains("code=")) {
+                if (unwrappedUrl.contains("code=")) {
                     val code = unwrappedUrl.split("code=")[1]
                     loadListener.invoke(code)
                     return false
@@ -125,7 +150,7 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
                     "document.getElementById('login_password').value='${BuildConfig.DEFAULT_PASSWORD}';" +
                     "document.getElementById('login_mail').dispatchEvent(new Event('input'));" +
                     "document.getElementById('login_password').dispatchEvent(new Event('input'));" +
-                    "document.getElementById('login_form_submit').click(); }"+"})()"
+                    "document.getElementById('login_form_submit').click(); }" + "})()"
             view?.loadUrl(jsInjectedLogin)
             super.onPageFinished(view, url)
         }

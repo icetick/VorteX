@@ -28,6 +28,7 @@ class Binder {
         viewModel = ViewModelFactory().create(T::class.java)
         viewModel?.bindedActivity = activity
         viewModel = callback.invoke(viewModel as T)
+        viewModel?.onCreated()
         binding?.setVariable(BR.viewModel, viewModel as T)
         binding?.executePendingBindings()
         return this

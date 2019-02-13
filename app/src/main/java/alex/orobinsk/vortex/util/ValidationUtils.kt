@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 
 private val minimumLength = 2
 
-infix fun MutableLiveData<String>.isValid(type: ValidationType): Boolean {
+infix fun MutableLiveData<String>.isValidAs(type: ValidationType): Boolean {
     var validationResult = false
     this.value?.let { value ->
         validationResult = when (type) {

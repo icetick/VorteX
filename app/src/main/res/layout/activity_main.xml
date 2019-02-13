@@ -15,7 +15,7 @@
                 android:layout_height="match_parent"
                 android:src="@{@drawable/nebula}"
                 android:transitionName="@string/background"/>
-        <androidx.viewpager.widget.ViewPager
+        <androidx.viewpager2.widget.ViewPager2
                 android:layout_width="match_parent"
                 android:layout_above="@+id/bottomNavigationView"
                 android:layout_alignParentTop="true"
@@ -30,6 +30,7 @@
                 app:menu="@menu/menu_bottom_navigation"
                 app:backgroundTint="@color/colorPrimary"
                 app:morphCornerRadius="128dp"
+                android:visibility="gone"
                 app:morphItemRadius="64dp"
                 app:morphVerticalOffset="8dp"/>
     </RelativeLayout>

@@ -17,17 +17,19 @@ class RadioViewModel : BaseViewModel() {
     val onPlayClick = View.OnClickListener {
         val player = MediaPlayer()
         player.setDataSource(trackList.poll())
-        player.setOnCompletionListener { it.setDataSource(trackList.poll()); it.prepareAsync(); it.start() }
+        player.setOnPreparedListener {
+            player.start()
+        }
+        player.setOnCompletionListener { it.setDataSource(trackList.poll()); it.prepareAsync(); }
         player.prepareAsync()
-        player.start()
     }
 
-    init {
+    override fun onCreated() {
         deezerRepository.getData<RadioResponse> { response ->
             radioResponse.value = response
         }
         radioResponse.observeForever {
-            if(it.data.isNotEmpty()) {
+            if (it.data.isNotEmpty()) {
                 deezerRepository.getData<TracksResponse>(it.data[0].id.toString()) {
                     it.data.forEach { trackList.add(it.preview) }
                 }

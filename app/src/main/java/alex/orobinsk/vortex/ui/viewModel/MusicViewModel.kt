@@ -4,4 +4,7 @@ import alex.orobinsk.vortex.ui.base.BaseViewModel
 import com.github.felixgail.gplaymusic.util.TokenProvider
 
 class MusicViewModel: BaseViewModel() {
+    override fun onCreated() {
+
+    }
 }

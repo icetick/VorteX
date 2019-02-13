@@ -2,16 +2,16 @@ package alex.orobinsk.vortex.ui.adapter.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class MainScreenAdapter(fragmentManager: FragmentManager?): FragmentStatePagerAdapter(fragmentManager) {
+class MainScreenAdapter(fragmentManager: FragmentManager): FragmentStateAdapter(fragmentManager) {
     private val fragments = ArrayList<Fragment>()
 
     override fun getItem(position: Int): Fragment {
         return fragments[position]
     }
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
        return fragments.size
     }
 

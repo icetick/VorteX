@@ -8,4 +8,5 @@ import org.kodein.di.KodeinAware
 abstract class BaseViewModel: ViewModel(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
     var bindedActivity: BaseActivity? = null
+    abstract fun onCreated() 
 }
