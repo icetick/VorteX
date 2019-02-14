@@ -24,7 +24,7 @@ class ServiceGenerator {
         fun <S> createService(serviceClass: Class<S>, authToken: String?): S {
             authToken?.let {
                 if (!TextUtils.isEmpty(authToken)) {
-                    val interceptor = AuthenticationInterceptor(authToken)
+                    val interceptor = DeezerAuthInterceptor(authToken)
 
                     if (!httpClient.interceptors().contains(interceptor)) {
                         httpClient.addInterceptor(interceptor)

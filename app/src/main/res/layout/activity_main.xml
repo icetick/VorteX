@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="viewModel"
+                type="alex.orobinsk.vortex.ui.viewModel.MainViewModel"/>
+    </data>
+    <alex.orobinsk.vortex.ui.widgets.ResideLayout
+            android:id="@+id/reside_layout"
+            android:layout_width="match_parent"
+            app:resideListener="@{viewModel.resideListener}"
+            android:layout_height="match_parent">
+
+        <FrameLayout android:layout_width="match_parent"
+                     android:layout_height="match_parent">
+
+            <com.flaviofaria.kenburnsview.KenBurnsView
+                    android:id="@+id/splashView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@{@drawable/nebula}"
+                    android:transitionName="@string/background"/>
+            <ListView
+                    android:id="@+id/menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:resideAdapter="@{viewModel.resideAdapter}" />
+
+        </FrameLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@{@drawable/vortex}"/>
+
+            <androidx.viewpager2.widget.ViewPager2
+                    android:layout_width="match_parent"
+                    android:layout_alignParentTop="true"
+                    app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:layout_height="match_parent" />
+
+        </RelativeLayout>
+    </alex.orobinsk.vortex.ui.widgets.ResideLayout>
+</layout>

@@ -1,11 +1,11 @@
 package alex.orobinsk.vortex.ui.base
 
-import alex.orobinsk.vortex.util.Binder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.gms.common.internal.BaseGmsClient
 
 abstract class BaseFragment: Fragment(), BaseView {
     val binder by Binder()
@@ -21,6 +21,14 @@ abstract class BaseFragment: Fragment(), BaseView {
         binder with this
         init()
         return binder.binding?.root
+    }
+
+    companion object {
+        inline fun<reified T: BaseFragment> newInstance(items: Bundle?): T {
+            val fragment = T::class.java.newInstance()
+            fragment.arguments = items
+            return fragment
+        }
     }
 
     override fun onDestroy() {

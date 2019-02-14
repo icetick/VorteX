@@ -1,13 +1,13 @@
 package alex.orobinsk.vortex.domain.networking
 
-import alex.orobinsk.vortex.domain.model.Track
-import com.google.gson.JsonObject
-import com.squareup.okhttp.ResponseBody
+import alex.orobinsk.vortex.domain.model.RadioResponse
+import alex.orobinsk.vortex.domain.model.TracksResponse
 import kotlinx.coroutines.Deferred
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface MusicAPI {
-    @GET("music/")
+    /*@GET("music/")
     fun getMusicFeed(): Deferred<MutableList<Track>>
 
     @POST("")
@@ -27,5 +27,10 @@ interface MusicAPI {
     fun deleteAllTracks(): Deferred<ResponseBody>
 
     @POST("/users/login")
-    fun login(@Body body: JsonObject): Deferred<ResponseBody>
+    fun login(@Body body: JsonObject): Deferred<ResponseBody>*/
+    @GET("radio")
+    fun getRadioSets(): Deferred<RadioResponse>
+
+    @GET("radio/{id}/tracks")
+    fun getRadioTracks(@Path("id") id: String): Deferred<TracksResponse>
 }
