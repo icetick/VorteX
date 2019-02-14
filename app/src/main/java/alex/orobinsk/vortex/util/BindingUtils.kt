@@ -2,6 +2,7 @@ package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.widgets.ParallaxTransformer
+import alex.orobinsk.vortex.ui.widgets.ResideLayout
 import alex.orobinsk.vortex.ui.widgets.VortexProgress
 import android.app.Activity
 import android.graphics.drawable.Drawable
@@ -9,16 +10,18 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ListView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
@@ -33,9 +36,26 @@ fun setTextField(view: EditText, textField: MutableLiveData<String>) {
         }
 
         override fun afterTextChanged(s: Editable) {
+
         }
     })
 }
+
+@BindingAdapter("resideAdapter"/*, "navigator"*/)
+fun setResideMenu(view: ListView, resideMenuAdapter: ArrayAdapter<String>?/*, navigator: ActivityNavigator*/) {
+    view.adapter = resideMenuAdapter
+    view.divider = null
+    view.dividerHeight = 0
+    view.setOnItemClickListener { parent, view, position, id ->
+        /*navigator.navigate(ActivityNavigatorDestinationBuilder)*/
+    }
+}
+
+@BindingAdapter("resideListener")
+fun onRevealUnrevealMenu(view: ResideLayout, resideListener: ResideLayout.PanelSlideListener) {
+    view.setPanelSlideListener(resideListener)
+}
+
 @BindingAdapter("parallaxViewPagerAdapter")
 fun setAdapter(viewPager: ViewPager2, pageradapter: FragmentStateAdapter) {
     viewPager.setPageTransformer(ParallaxTransformer(R.id.background))

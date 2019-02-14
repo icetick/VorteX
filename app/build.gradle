@@ -92,6 +92,7 @@ dependencies {
     implementation 'com.github.florent37:materialtextfield:1.0.7'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation 'com.tbuonomo:morph-bottom-navigation:1.0.1'
+    implementation 'devlight.io:navigationtabbar:1.2.5'
 
     // Testing dependencies
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"

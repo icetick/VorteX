@@ -5,33 +5,47 @@
                 name="viewModel"
                 type="alex.orobinsk.vortex.ui.viewModel.MainViewModel"/>
     </data>
-    <RelativeLayout
-            android:orientation="vertical"
+    <alex.orobinsk.vortex.ui.widgets.ResideLayout
+            android:id="@+id/reside_layout"
             android:layout_width="match_parent"
+            app:resideListener="@{viewModel.resideListener}"
             android:layout_height="match_parent">
-        <com.flaviofaria.kenburnsview.KenBurnsView
-                android:id="@+id/splashView"
+
+        <FrameLayout android:layout_width="match_parent"
+                     android:layout_height="match_parent">
+
+            <com.flaviofaria.kenburnsview.KenBurnsView
+                    android:id="@+id/splashView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@{@drawable/nebula}"
+                    android:transitionName="@string/background"/>
+            <ListView
+                    android:id="@+id/menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:resideAdapter="@{viewModel.resideAdapter}" />
+
+        </FrameLayout>
+
+        <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@{@drawable/nebula}"
-                android:transitionName="@string/background"/>
-        <androidx.viewpager2.widget.ViewPager2
-                android:layout_width="match_parent"
-                android:layout_above="@+id/bottomNavigationView"
-                android:layout_alignParentTop="true"
-                app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:layout_height="match_parent" />
-        <com.tbuonomo.morphbottomnavigation.MorphBottomNavigationView
-                android:id="@+id/bottomNavigationView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:menu="@menu/menu_bottom_navigation"
-                app:backgroundTint="@color/colorPrimary"
-                app:morphCornerRadius="128dp"
-                android:visibility="gone"
-                app:morphItemRadius="64dp"
-                app:morphVerticalOffset="8dp"/>
-    </RelativeLayout>
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@{@drawable/vortex}"/>
+
+            <androidx.viewpager2.widget.ViewPager2
+                    android:layout_width="match_parent"
+                    android:layout_alignParentTop="true"
+                    app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:layout_height="match_parent" />
+
+        </RelativeLayout>
+    </alex.orobinsk.vortex.ui.widgets.ResideLayout>
 </layout>
