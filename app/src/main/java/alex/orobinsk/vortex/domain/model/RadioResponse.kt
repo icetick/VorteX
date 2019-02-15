@@ -2,7 +2,7 @@ package alex.orobinsk.vortex.domain.model
 
 class RadioResponse(var data: List<Data>) {
     data class Data(
-        val id: Int,
+        val id: String,
         val picture: String,
         val picture_big: String,
         val picture_medium: String,

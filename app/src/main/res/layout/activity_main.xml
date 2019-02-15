@@ -1,51 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-                name="viewModel"
-                type="alex.orobinsk.vortex.ui.viewModel.MainViewModel"/>
+            name="viewModel"
+            type="alex.orobinsk.vortex.ui.viewModel.MainViewModel" />
+        <variable
+            name="toolbarModel"
+            type="alex.orobinsk.vortex.ui.widgets.ToolbarModel" />
+        <import type="android.view.View"/>
     </data>
     <alex.orobinsk.vortex.ui.widgets.ResideLayout
-            android:id="@+id/reside_layout"
+        android:id="@+id/reside_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:resideListener="@{viewModel.resideListener}">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            app:resideListener="@{viewModel.resideListener}"
             android:layout_height="match_parent">
 
-        <FrameLayout android:layout_width="match_parent"
-                     android:layout_height="match_parent">
-
             <com.flaviofaria.kenburnsview.KenBurnsView
-                    android:id="@+id/splashView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@{@drawable/nebula}"
-                    android:transitionName="@string/background"/>
+                android:id="@+id/backgroundView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@{@drawable/nebula}"
+                android:transitionName="@string/background" />
+
             <ListView
-                    android:id="@+id/menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:resideAdapter="@{viewModel.resideAdapter}" />
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/radio_card_height"
+                app:resideAdapter="@{viewModel.resideAdapter}" />
 
         </FrameLayout>
 
-        <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
-            <ImageView
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.viewpager2.widget.ViewPager2
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@{@drawable/vortex}"/>
-
-            <androidx.viewpager2.widget.ViewPager2
-                    android:layout_width="match_parent"
                     android:layout_alignParentTop="true"
-                    app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    android:layout_height="match_parent" />
+                    app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}" />
 
-        </RelativeLayout>
+            </RelativeLayout>
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:visibility="@{toolbarModel!=null ? View.VISIBLE : View.GONE}">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:contentInsetStart="0dp"
+                    app:layout_scrollFlags="scroll|enterAlways">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
+                            android:background="#0000"
+                            android:onClickListener="@{toolbarModel.listenerLeft}"
+                            android:src="@{toolbarModel.leftIcon}"
+                            tools:src="@drawable/ic_menu" />
+
+                        <TextView
+                            style="@style/TextBlackOutline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text='@{toolbarModel.toolbarTitle ?? ""}'
+                            tools:text="TITLE" />
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/margin_card_text_title_horizontal"
+                            android:background="#0000"
+                            android:onClickListener="@{toolbarModel.listenerRight}"
+                            android:src="@{toolbarModel.leftIcon}"
+                            tools:src="@drawable/ic_search" />
+                    </RelativeLayout>
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.AppBarLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </alex.orobinsk.vortex.ui.widgets.ResideLayout>
 </layout>

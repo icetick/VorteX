@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+
     <data>
+
         <variable
-                name="viewModel"
-                type="alex.orobinsk.vortex.ui.viewModel.RadioViewModel"/>
+            name="viewModel"
+            type="alex.orobinsk.vortex.ui.viewModel.RadioViewModel" />
     </data>
-    <FrameLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <com.flaviofaria.kenburnsview.KenBurnsView
-                android:id="@+id/background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@{@drawable/nebula}"
-                android:transitionName="@string/background"/>
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/play"
-                android:onClick="@{viewModel.onPlayClick}"
-                android:layout_gravity="center"
-                android:scaleY="0.5"
-                android:scaleX="0.5"
-        />
-    </FrameLayout>
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@{@drawable/nebula_stars}"
+            android:transitionName="@string/background"
+            tools:src="@drawable/nebula_stars" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
+            android:layout_marginEnd="@dimen/margin_card_text_title_horizontal"
+            android:layout_marginBottom="@dimen/margin_login"
+            android:clipToPadding="false" />
+    </RelativeLayout>
 </layout>

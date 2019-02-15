@@ -32,7 +32,6 @@ class SplashLoginViewModel : BaseViewModel() {
     val defaultEmail = BuildConfig.DEFAULT_EMAIL
     val defaultPassword = BuildConfig.DEFAULT_PASSWORD
     private val SPLASH_END_TIME: Long = 3100
-    var duration: Long = 20000
 
     override fun onCreated() {
         //TODO: Get androidID for Google Play Music(?)

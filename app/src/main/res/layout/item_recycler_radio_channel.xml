@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="alex.orobinsk.vortex.domain.model.RadioResponse.Data" />
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/radio_card_height"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_fields_button"
+        android:weightSum="10">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/margin_fields"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            android:layout_weight="9">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:srcUrl="@{viewModel.picture_big}"
+                    tools:src="@drawable/nebula_stars" />
+
+                <TextView
+                    android:id="@+id/title_tv"
+                    style="@style/TextBlackOutline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
+                    android:layout_marginTop="@dimen/margin_card_text_title_vertical"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.title) ? View.GONE : View.VISIBLE}"
+                    android:text='@{viewModel.title ?? ""}'
+                    tools:text="Title" />
+
+                <TextView
+                    android:id="@+id/description_info_tv"
+                    style="@style/TextBlackOutline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
+                    android:layout_marginBottom="@dimen/margin_card_text_title_vertical"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.id) ? View.GONE : View.VISIBLE}"
+                    android:text='@{viewModel.id ?? ""}'
+                    tools:text="Description" />
+
+                <TextView
+                    android:id="@+id/descrption_additional"
+                    style="@style/TextBlackOutline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="@dimen/margin_card_text_title_horizontal"
+                    android:layout_marginBottom="@dimen/margin_card_text_title_vertical"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.type) ? View.GONE : View.VISIBLE}"
+                    android:text='@{viewModel.type ?? ""}'
+                    tools:text="Description" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_fields"
+            android:layout_marginEnd="@dimen/margin_fields"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:visibility="@{TextUtils.isEmpty(viewModel.tracklist) ? View.GONE : View.VISIBLE}"
+                android:text='@{viewModel.tracklist ?? ""}'
+                tools:text="Description"
+                android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
+                style="@style/TextWhiteOutline"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>
