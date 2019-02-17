@@ -28,12 +28,12 @@ class ViewModelCallbackGenerator: AbstractProcessor() {
             val variables = ElementFilter.fieldsIn(enclosedElements)
 
             val fileName = "${className}CallBack"
-            val fileContent = ViewModelCallbackBuilder(fileName, className, pack, variables).getContent()
+          //  val fileContent = ViewModelCallbackBuilder(fileName, className, pack, variables).getContent()
 
             val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
             val file = File(kaptKotlinGeneratedDir, "$fileName.kt")
 
-            file.writeText(fileContent)
+          //  file.writeText(fileContent)
         }
     }
 

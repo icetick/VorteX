@@ -33,19 +33,19 @@ android {
     buildTypes.each {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
-        def apiKey = properties.getProperty("API_KEY", "")
+        def appId = properties.getProperty("DEEZER_APPLICATION_ID", "")
         def apiEndpoint = properties.getProperty("API_ENDPOINT", "")
         def secretKey = properties.getProperty("SECRET_KEY", "")
-        def defaultPassword = properties.getProperty("DEF_PASS", "")
-        def defaultEmail = properties.getProperty("DEF_EMAIL", "")
+        def defaultPassword = properties.getProperty("DEFAULT_PASSWORD", "")
+        def defaultEmail = properties.getProperty("DEFAULT_EMAIL", "")
 
-        it.buildConfigField 'String', "DEEZER_APPLICATION_ID", apiKey
+        it.buildConfigField 'String', "DEEZER_APPLICATION_ID", appId
         it.buildConfigField 'String', "API_ENDPOINT", apiEndpoint
         it.buildConfigField 'String', "SECRET_KEY", secretKey
         it.buildConfigField 'String', "DEFAULT_PASSWORD", defaultPassword
         it.buildConfigField 'String', "DEFAULT_EMAIL", defaultEmail
 
-        it.resValue 'string', "api_key", apiKey
+        it.resValue 'string', "api_key", appId
     }
     dataBinding {
         enabled = true

@@ -9,4 +9,5 @@
     <dimen name="radio_card_height">260dp</dimen>
     <dimen name="margin_card_text_title_horizontal">15dp</dimen>
     <dimen name="margin_card_text_title_vertical">10dp</dimen>
+    <dimen name="margin_menu">100dp</dimen>
 </resources>

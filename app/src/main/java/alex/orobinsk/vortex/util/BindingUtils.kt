@@ -1,6 +1,9 @@
 package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.R
+import alex.orobinsk.vortex.databinding.ActivityMainBinding
+import alex.orobinsk.vortex.domain.model.TracksResponse
+import alex.orobinsk.vortex.ui.adapter.recycler.DataBindingViewHolder
 import alex.orobinsk.vortex.ui.widgets.ParallaxTransformer
 import alex.orobinsk.vortex.ui.widgets.ResideLayout
 import alex.orobinsk.vortex.ui.widgets.VortexProgress
@@ -21,6 +24,7 @@ import android.widget.ListView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -44,6 +48,12 @@ fun setTextField(view: EditText, textField: MutableLiveData<String>) {
 
         }
     })
+}
+
+@BindingAdapter("listAdapter")
+fun setListAdapter(recyclerView: RecyclerView, adapter: RecyclerView.Adapter<DataBindingViewHolder<ActivityMainBinding, TracksResponse>>) {
+
+    recyclerView.adapter = adapter
 }
 
 @BindingAdapter("resideAdapter"/*, "navigator"*/)

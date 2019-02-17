@@ -28,6 +28,7 @@
             android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
             android:layout_marginEnd="@dimen/margin_card_text_title_horizontal"
             android:layout_marginBottom="@dimen/margin_login"
+            android:adapter=""
             android:clipToPadding="false" />
     </RelativeLayout>
 </layout>
