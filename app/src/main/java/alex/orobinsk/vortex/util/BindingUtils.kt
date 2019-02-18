@@ -2,8 +2,12 @@ package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.databinding.ActivityMainBinding
+import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
+import alex.orobinsk.vortex.ui.adapter.recycler.BindingRecyclerAdapter
 import alex.orobinsk.vortex.ui.adapter.recycler.DataBindingViewHolder
+import alex.orobinsk.vortex.ui.base.BaseViewModel
+import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ParallaxTransformer
 import alex.orobinsk.vortex.ui.widgets.ResideLayout
 import alex.orobinsk.vortex.ui.widgets.VortexProgress
@@ -23,6 +27,7 @@ import android.widget.ImageView
 import android.widget.ListView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -33,6 +38,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import java.io.Serializable
 
 @BindingAdapter("setTextField")
 fun setTextField(view: EditText, textField: MutableLiveData<String>) {
@@ -50,14 +56,18 @@ fun setTextField(view: EditText, textField: MutableLiveData<String>) {
     })
 }
 
-@BindingAdapter("listAdapter")
-fun setListAdapter(recyclerView: RecyclerView, adapter: RecyclerView.Adapter<DataBindingViewHolder<ActivityMainBinding, TracksResponse>>) {
+@BindingAdapter("listItems"/*,"callbackHandler", "listLayout"*/)
+fun setListItems(recyclerView: RecyclerView,
+                    items: ArrayList<RadioResponse.Data>) {}/*,
+                    callbackHandler: ActionListener<RadioResponse.Data>,
+                    layoutItem: Int) {
+    recyclerView.adapter = BindingRecyclerAdapter<ViewDataBinding, RadioResponse.Data>(layoutItem, callbackHandler, items)
+}*/
 
-    recyclerView.adapter = adapter
-}
 
 @BindingAdapter("resideAdapter"/*, "navigator"*/)
-fun setResideMenu(view: ListView, resideMenuAdapter: ArrayAdapter<String>?/*, navigator: ActivityNavigator*/) {
+fun setResideMenu(view: ListView,
+                  resideMenuAdapter: ArrayAdapter<String>?/*, navigator: ActivityNavigator*/) {
     view.adapter = resideMenuAdapter
     view.divider = null
     view.dividerHeight = 0

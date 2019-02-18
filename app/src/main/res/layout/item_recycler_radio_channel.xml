@@ -7,6 +7,9 @@
         <variable
             name="viewModel"
             type="alex.orobinsk.vortex.domain.model.RadioResponse.Data" />
+        <variable
+            name="actionListener"
+            type="alex.orobinsk.vortex.ui.widgets.ActionListener&lt;alex.orobinsk.vortex.domain.model.RadioResponse.Data&gt;" />
         <import type="android.view.View" />
         <import type="android.text.TextUtils"/>
     </data>
@@ -28,6 +31,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:onClick="@{() -> actionListener.onClick(viewModel)}"
                 android:layout_height="match_parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
