@@ -6,6 +6,7 @@ import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.base.FragmentFactory
 import alex.orobinsk.vortex.ui.view.RadioFragment
 import alex.orobinsk.vortex.ui.widgets.ResideLayout
+import alex.orobinsk.vortex.ui.widgets.ToolbarModel
 import android.view.View
 import android.widget.ArrayAdapter
 import com.flaviofaria.kenburnsview.KenBurnsView

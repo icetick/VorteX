@@ -13,9 +13,9 @@ class DeezerTokenResponse(private val htmlResponse: String) {
 
     val expirationTime
         get() = try {
-            htmlResponse.split("&expires=")[1]
+            htmlResponse.split("&expires=")[1].toLong()
         } catch (ex: IndexOutOfBoundsException) {
             ex.printStackTrace()
-            htmlResponse
+            0.toLong()
         }
 }

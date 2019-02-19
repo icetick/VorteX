@@ -2,6 +2,7 @@ package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.databinding.ActivityMainBinding
+import alex.orobinsk.vortex.domain.model.DataContainer
 import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.ui.adapter.recycler.BindingRecyclerAdapter
@@ -19,6 +20,7 @@ import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
 import android.widget.ArrayAdapter
@@ -28,7 +30,10 @@ import android.widget.ListView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -56,13 +61,18 @@ fun setTextField(view: EditText, textField: MutableLiveData<String>) {
     })
 }
 
-@BindingAdapter("listItems"/*,"callbackHandler", "listLayout"*/)
-fun setListItems(recyclerView: RecyclerView,
-                    items: ArrayList<RadioResponse.Data>) {}/*,
-                    callbackHandler: ActionListener<RadioResponse.Data>,
+@BindingAdapter("listItems","callbackHandler", "listLayout")
+fun<T> setListItems(recyclerView: RecyclerView,
+                    items: MutableLiveData<List<T>>,
+                    callbackHandler: ActionListener<T>,
                     layoutItem: Int) {
-    recyclerView.adapter = BindingRecyclerAdapter<ViewDataBinding, RadioResponse.Data>(layoutItem, callbackHandler, items)
-}*/
+    items.observeForever {
+        it?.let {list ->
+            recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+            recyclerView.adapter = BindingRecyclerAdapter<ViewDataBinding, T>(layoutItem, callbackHandler, list)
+        }
+    }
+}
 
 
 @BindingAdapter("resideAdapter"/*, "navigator"*/)
@@ -121,6 +131,17 @@ fun progressField(view: VortexProgress, progressFlag: MutableLiveData<Boolean>) 
     progressFlag.observeForever { field -> if(field) view.showProgressBar() else view.hideProgressBar()  }
 }
 
+@BindingAdapter("disallowTouchEvent")
+fun disallowTouchEvent(view: RecyclerView, isDisallowed: Boolean) {
+    if(isDisallowed) {
+        view.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean { rv.parent.requestDisallowInterceptTouchEvent(isDisallowed); return false }
+            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) { }
+            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+        })
+    }
+}
+
 @BindingAdapter("android:src")
 fun setImageSrc(view: ImageView, drawable: Drawable?) {
     Glide.with(view).load(drawable)
@@ -141,7 +162,7 @@ fun setImageSrcUrl(view: ImageView,url: String?) {
     Glide.with(view).load(url).apply(RequestOptions().error(R.drawable.vortex_progress))
             .listener(object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    scheduleStartPostponedTransition(view)
+                    //scheduleStartPostponedTransition(view)
                     return false
                 }
 

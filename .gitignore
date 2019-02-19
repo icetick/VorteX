@@ -65,7 +65,7 @@ captures/
 google-services.json
 
 #Generated
-*Builder.kt
+/*Builder.kt
 
 # Freeline
 freeline.py

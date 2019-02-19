@@ -14,7 +14,7 @@ import org.kodein.di.generic.instance
 
 class BindingRecyclerAdapter<T: ViewDataBinding, R>(val layoutId: Int,
                                                     val actionListener: ActionListener<R>? = null,
-                                                    items: ArrayList<R> = arrayListOf())
+                                                    items: List<R> = arrayListOf())
     : RecyclerView.Adapter<DataBindingViewHolder<T, R>>() {
 
     val application: App by App.singletonKodein.instance()

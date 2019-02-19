@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="toolbarModel"
+            type="alex.orobinsk.vortex.ui.widgets.ToolbarModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_status_bar_height"
+        android:background="@color/full_transparent"
+        android:visibility="@{toolbarModel!=null ? View.VISIBLE : View.GONE}">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:contentScrim="?attr/colorPrimary"
+            android:fitsSystemWindows="true"
+            android:layout_height="match_parent">
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetStart="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
+                        android:background="#0000"
+                        style="@style/TextBlackOutline"
+                        android:onClickListener="@{toolbarModel.listenerLeft}"
+                        android:src="@{toolbarModel.leftIcon}"
+                        tools:src="@drawable/ic_menu" />
+
+                    <TextView
+                        style="@style/TextBlackOutline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text='@{toolbarModel.toolbarTitle ?? ""}'
+                        tools:text="TITLE" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/margin_card_text_title_horizontal"
+                        android:background="#0000"
+                        style="@style/TextBlackOutline"
+                        android:onClickListener="@{toolbarModel.listenerRight}"
+                        android:src="@{toolbarModel.rightIcon}"
+                        tools:src="@drawable/ic_search" />
+                </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+</layout>

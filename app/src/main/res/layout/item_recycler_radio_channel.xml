@@ -25,12 +25,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/margin_fields"
-            card_view:cardCornerRadius="10dp"
             card_view:cardElevation="5dp"
+            android:background="@drawable/border_black"
+            card_view:cardCornerRadius="3dp"
             android:layout_weight="9">
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:elevation="@dimen/margin_fields"
                 android:onClick="@{() -> actionListener.onClick(viewModel)}"
                 android:layout_height="match_parent">
 

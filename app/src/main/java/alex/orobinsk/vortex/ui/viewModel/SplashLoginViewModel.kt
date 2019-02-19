@@ -56,7 +56,7 @@ class SplashLoginViewModel : BaseViewModel() {
                         GlobalScope.launch(Dispatchers.Main) {
                             deezerAuthenticator.removeWebView()
                             val tokenResponse = withContext(Dispatchers.IO) { deezerAuthenticator.getTokenResponse(authenticationCode) }
-                            preferences.storeExpirationTime(tokenResponse.expirationTime.toLong())
+                            preferences.storeExpirationTime(tokenResponse.expirationTime)
                             onLoginSucceded(tokenResponse.token)
                         }
                     }
