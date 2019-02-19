@@ -9,11 +9,14 @@ import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ToolbarModel
 import alex.orobinsk.vortex.ui.widgets.ToolbarModelBuilder
+import alex.orobinsk.vortex.util.delay
 import alex.orobinsk.vortex.util.toast
 import android.media.MediaPlayer
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.kodein.di.generic.instance
 import java.util.*
 
@@ -22,22 +25,39 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     val radioResponse = MutableLiveData<List<RadioResponse.Data>>()
     val trackList = ArrayDeque<String>()
     var toolbarModel: ToolbarModel? = null
+    val player = MediaPlayer()
 
     val onPlayClick = View.OnClickListener {
-        val player = MediaPlayer()
+        if(player.isPlaying) {
+            player.stop()
+            player.reset()
+        }
+
         player.setDataSource(trackList.poll())
         player.setOnPreparedListener {
             player.start()
         }
-        player.setOnCompletionListener { it.setDataSource(trackList.poll()); it.prepareAsync(); }
+        player.setOnCompletionListener {
+            GlobalScope.launch {
+                delay(100) {
+                    player.reset()
+                    player.setDataSource(trackList.poll())
+                    player.prepare()
+                }
+            }
+        }
         player.prepareAsync()
+    }
+
+    fun checkIfMusicAvailable(track: String): Boolean {
+        return track.isNotEmpty() && track.isNotBlank()
     }
 
     override fun onClick(data: RadioResponse.Data) {
         deezerRepository.getData<TracksResponse>(data.id) {response ->
             response.data.forEach {track ->
-                trackList.add(track.preview)
-            }
+                if(checkIfMusicAvailable(track.preview)) {trackList.add(track.preview)}
+            }.apply { onPlayClick.onClick(null) }
         }
     }
 
