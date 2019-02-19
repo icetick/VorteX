@@ -25,17 +25,17 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/margin_fields"
-            card_view:cardElevation="5dp"
+            card_view:cardElevation="15dp"
+            scaleTapListener="@{()->actionListener.onClick(viewModel)}"
+            card_view:cardPreventCornerOverlap="false"
             android:background="@drawable/border_black"
-            card_view:cardCornerRadius="3dp"
+            card_view:cardCornerRadius="10dp"
             android:layout_weight="9">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:elevation="@dimen/margin_fields"
-                android:onClick="@{() -> actionListener.onClick(viewModel)}"
                 android:layout_height="match_parent">
-
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

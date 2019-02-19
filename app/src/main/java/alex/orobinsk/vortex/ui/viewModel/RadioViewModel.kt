@@ -34,7 +34,11 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     }
 
     override fun onClick(data: RadioResponse.Data) {
-        super.onClick(data)
+        deezerRepository.getData<TracksResponse>(data.id) {response ->
+            response.data.forEach {track ->
+                trackList.add(track.preview)
+            }
+        }
     }
 
     override fun onCreated() {

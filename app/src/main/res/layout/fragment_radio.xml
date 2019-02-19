@@ -16,7 +16,6 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:contentScrim="@color/transparent"
         android:layout_marginTop="15dp"
         android:fitsSystemWindows="false">
 
@@ -24,7 +23,8 @@
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@{@drawable/vortex}"
+            android:background="@color/transparent"
+            android:src="@{@drawable/earth_space}"
             tools:src="@drawable/nebula_stars" />
 
         <RelativeLayout

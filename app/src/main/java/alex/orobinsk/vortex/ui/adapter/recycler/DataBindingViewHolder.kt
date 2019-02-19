@@ -15,4 +15,8 @@ class DataBindingViewHolder<T: ViewDataBinding, R>(private val binding: T): Recy
         binding.setVariable(field, actionListener)
         binding.executePendingBindings()
     }
+
+    fun clearAnimation() {
+        binding.root.clearAnimation()
+    }
 }

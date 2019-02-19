@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 
 interface ActionListener<T>: ItemsProvider {
     open fun onClick(data: T) {}
-
 }
 interface ItemsProvider {
 /*

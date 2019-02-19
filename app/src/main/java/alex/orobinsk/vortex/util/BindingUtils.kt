@@ -7,6 +7,7 @@ import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.ui.adapter.recycler.BindingRecyclerAdapter
 import alex.orobinsk.vortex.ui.adapter.recycler.DataBindingViewHolder
+import alex.orobinsk.vortex.ui.base.BaseView
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ParallaxTransformer
@@ -16,6 +17,7 @@ import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.bounce
 import alex.orobinsk.vortex.util.animation.AnimationSets.Companion.bounceInterpolator
 import alex.orobinsk.vortex.util.animation.chainAnimation
 import alex.orobinsk.vortex.util.animation.interpolator
+import alex.orobinsk.vortex.util.animation.setOnClickListenerWithScale
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.text.Editable
@@ -23,10 +25,8 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ListView
+import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
@@ -73,7 +73,12 @@ fun<T> setListItems(recyclerView: RecyclerView,
         }
     }
 }
-
+@BindingAdapter("scaleTapListener")
+fun<T> scaleTapListener(view: CardView, block: ()->Unit ) {
+    view.setOnClickListenerWithScale {
+        block.invoke()
+    }
+}
 
 @BindingAdapter("resideAdapter"/*, "navigator"*/)
 fun setResideMenu(view: ListView,
