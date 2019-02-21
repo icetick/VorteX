@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/layout"
+              android:weightSum="2"
+              android:layout_height="128dp" android:layout_width="fill_parent"
+              android:padding="10dp" android:orientation="vertical">
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="50dp">
+        <ImageView
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="10dp"/>
+        <TextView
+                android:textSize="13sp"
+                android:textColor="#000"
+                android:text="Author"
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/image"
+        />
+        <TextView
+                android:textSize="13dp"
+                android:textColor="#000"
+                android:text="Music Name"
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/image"
+                android:layout_below="@id/author"
+        />
+        <ImageButton
+                android:id="@+id/like_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_insert_emoticon"
+                android:padding="20dp"
+                android:background="#0000"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="bottom"
+            android:layout_weight="1">
+        <ImageButton
+                android:id="@+id/previous_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#0000"
+                app:srcCompat="@drawable/ic_skip_previous"
+                android:layout_weight="1"/>
+        <ImageButton
+                android:id="@+id/pause_resume_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#0000"
+                app:srcCompat="@drawable/ic_pause_circle_outline"
+                android:layout_weight="1"/>
+        <ImageButton
+                android:id="@+id/next_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#0000"
+                app:srcCompat="@drawable/ic_skip_next"
+                android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>
+
