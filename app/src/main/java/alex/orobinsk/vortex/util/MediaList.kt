@@ -1,5 +1,6 @@
 package alex.orobinsk.vortex.util
 
+import alex.orobinsk.vortex.domain.model.TracksResponse
 import android.os.Parcelable
 import java.lang.Exception
 
@@ -15,10 +16,12 @@ class MediaList<T>(vararg items: T) : Collection<T> {
 
     var items = items
         get() {
+            if(currentPointer==-1)
             currentPointer = 0
             return field
         } set(value) {
-        currentPointer = 0
+        if(currentPointer==-1)
+            currentPointer = 0
         field = value
     }
 
@@ -73,4 +76,15 @@ class MediaList<T>(vararg items: T) : Collection<T> {
     override fun iterator(): Iterator<T> {
         return items.iterator()
     }
+}
+
+fun MediaList<TracksResponse.Data>.firstAvailable(): TracksResponse.Data? {
+    for(item in this.items) {
+        if(item.preview.isBlank()) {
+            continue
+        } else {
+            return item
+        }
+    }
+    return null
 }

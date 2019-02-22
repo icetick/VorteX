@@ -6,9 +6,12 @@ import alex.orobinsk.vortex.ui.view.MainActivity
 import alex.orobinsk.vortex.util.MediaList
 import alex.orobinsk.vortex.util.NotificationPlayer
 import alex.orobinsk.vortex.util.Utils
+import alex.orobinsk.vortex.util.firstAvailable
 import android.app.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
@@ -44,11 +47,8 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     private lateinit var notificationManager: NotificationManager
     private val PLAYER_NOTIFICATION_ID: Int = 5532
     private var notification: Notification? = null
-    private val NEXT_TAG = "nextTAG"
-    private val PREVIOUS_TAG = "previousTAG"
-    private val RESUME_PAUSE_TOOGLE_TAG = "pauseResumeTag"
-    private val LIKE_TAG = "likeTAG"
     private val PLAYER_NOTIFICATION_CHANNEL_ID: String = "music_channel_007"
+    private val receiver = MusicControlReceiver()
 
     var mediaList: MediaList<TracksResponse.Data>? = null
     set(value) {
@@ -58,6 +58,10 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     companion object {
         const val DEFAULT_ITEMSET = "defItems"
+        const val NEXT_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.NEXT_TAG"
+        const val PREVIOUS_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.PREVIOUS_TAG"
+        const val RESUME_PAUSE_TOOGLE_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.RESUME_PAUSE_TOOGLE_TAG"
+        const val LIKE_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.LIKE_TAG"
     }
 
     private fun initMediaPlayer() {
@@ -80,7 +84,9 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
             mediaPlayer?.setAudioAttributes(audioAttributes)
             try {
-                mediaPlayer?.setDataSource(mediaList?.first()!!.preview)
+                mediaList?.firstAvailable()?.let {
+                    mediaPlayer?.setDataSource(it.preview)
+                }
             } catch (ex: IOException) {
                 ex.printStackTrace()
                 stopSelf()
@@ -89,7 +95,9 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         } else {
             mediaPlayer?.reset()
             try {
-                mediaPlayer?.setDataSource(mediaList?.first()!!.preview)
+                mediaList?.firstAvailable()?.let {
+                    mediaPlayer?.setDataSource(it.preview)
+                }
             } catch (ex: IOException) {
                 ex.printStackTrace()
                 stopSelf()
@@ -102,6 +110,15 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     override fun onCreate() {
         super.onCreate()
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val filter = IntentFilter()/*.apply {
+            addCategory(Intent.CATEGORY_DEFAULT)
+            addAction(NEXT_TAG)
+            addAction(PREVIOUS_TAG)
+            addAction(RESUME_PAUSE_TOOGLE_TAG)
+            addAction(LIKE_TAG)
+        }*/
+        registerReceiver(receiver, filter)
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -124,31 +141,14 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 mediaList?.isNotEmpty().let {
                     if(notification==null) {
                         mediaList?.current()?.let {track ->
-                            startForeground(PLAYER_NOTIFICATION_ID, showNotification(Utils.PlayerModelOf(track)))
+                            showNotification(Utils.PlayerModelOf(track))
                         }
                     }
                 }
             } else {
-                when(intent.action) {
-                    RESUME_PAUSE_TOOGLE_TAG -> {
-                       pauseResumeToggle()
-                    }
-                    NEXT_TAG -> {
-                        next()
-                    }
-                    PREVIOUS_TAG -> {
-                        previous()
-                    }
-                    LIKE_TAG -> {
-                        like()
-                    }
-                    else -> {
 
-                    }
-                }
             }
         }
-
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -160,6 +160,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
             mediaPlayer?.release()
         }
         removeAudioFocus()
+        unregisterReceiver(receiver)
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
@@ -178,6 +179,9 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     override fun onPrepared(mp: MediaPlayer?) {
         if(waitingForStart) {
             playMedia()
+            notification?.let {
+                showNotification(Utils.PlayerModelOf(mediaList!!.current()!!))
+            }
         }
     }
 
@@ -281,14 +285,14 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
 
-    fun showNotification(model: PlayerNotificationModel): Notification? {
-        val builder = NotificationCompat.Builder(applicationContext, PLAYER_NOTIFICATION_CHANNEL_ID)
+    fun showNotification(model: PlayerNotificationModel) {
+        val builder = NotificationCompat.Builder(this, PLAYER_NOTIFICATION_CHANNEL_ID)
         val openIntent = Intent(this, MainActivity::class.java)
         val contentIntent =
-            PendingIntent.getActivity(applicationContext, 0, openIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(this, 0, openIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(contentIntent)
         builder.setSmallIcon(R.drawable.ic_stars)
-        builder.setContentTitle("Title").setContentText("TEXT").setOngoing(true)
+        builder.setContentTitle("Vortex").setContentText("is Playing now").setOngoing(true)
         builder.priority = NotificationCompat.PRIORITY_HIGH
         builder.setChannelId(PLAYER_NOTIFICATION_CHANNEL_ID)
         builder.setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_stars))
@@ -296,29 +300,39 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     fun listener(remoteViews: RemoteViews, context: Context) {
-        val pendingIntentPlayPause = getPendingSelfIntent(context, RESUME_PAUSE_TOOGLE_TAG)
+        /*val pendingIntentPlayPause = getPendingSelfIntent(context, RESUME_PAUSE_TOOGLE_TAG)
         val pendingIntentNext = getPendingSelfIntent(context, NEXT_TAG)
         val pendingIntentPrevious = getPendingSelfIntent(context, PREVIOUS_TAG)
-        val pendingIntentLike = getPendingSelfIntent(context, LIKE_TAG)
-        remoteViews.setOnClickPendingIntent(R.id.pause_resume_btn, pendingIntentPlayPause)
-        remoteViews.setOnClickPendingIntent(R.id.next_btn, pendingIntentNext)
+        val pendingIntentLike = getPendingSelfIntent(context, LIKE_TAG)*/
+        val pase = Intent(this, MusicControlReceiver::class.java)
+        pase.putExtra("AN_ACTION", "DO")
+        pase.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        var pendingSwitchIntent = PendingIntent.getBroadcast(this, 1, pase, 0)
+
+        remoteViews.setOnClickPendingIntent(R.id.pause_resume_btn, pendingSwitchIntent)
+       /* remoteViews.setOnClickPendingIntent(R.id.next_btn, pendingIntentNext)
         remoteViews.setOnClickPendingIntent(R.id.previous_btn, pendingIntentPrevious)
-        remoteViews.setOnClickPendingIntent(R.id.like_btn, pendingIntentLike)
+        remoteViews.setOnClickPendingIntent(R.id.like_btn, pendingIntentLike)*/
     }
 
-    private fun updateNotification(model: PlayerNotificationModel?, builder: NotificationCompat.Builder? = null): Notification? {
+    private fun updateNotification(model: PlayerNotificationModel?, builder: NotificationCompat.Builder? = null) {
         val remoteViews = RemoteViews(packageName, R.layout.player_notification)
 
         model?.let {
-            remoteViews.setTextViewText(R.id.author, model.author)
-            remoteViews.setTextViewText(R.id.name, model.title)
-            remoteViews.setImageViewResource(R.id.pause_resume_btn, model.pauseResumeToggleIcon)
-            listener(remoteViews, applicationContext)
+            remoteViews.apply {
+                setTextViewText(R.id.author, model.author)
+                setTextViewText(R.id.name, model.title)
+                setImageViewResource(R.id.next_btn, R.drawable.ic_skip_next)
+                setImageViewResource(R.id.previous_btn, R.drawable.ic_skip_previous)
+                setImageViewResource(R.id.like_btn, R.drawable.ic_insert_emoticon)
+                setImageViewResource(R.id.pause_resume_btn, model.pauseResumeToggleIcon)
+            }
             builder?.setCustomBigContentView(remoteViews)
+            listener(remoteViews, this)
         }
         builder?.let { notification = builder.build() }
 
-        Glide.with(applicationContext).asBitmap().load(model?.image).listener(object : RequestListener<Bitmap?> {
+        Glide.with(this).asBitmap().load(model?.image).listener(object : RequestListener<Bitmap?> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap?>?, isFirstResource: Boolean): Boolean {
                 e?.printStackTrace()
                 return false
@@ -328,15 +342,15 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 notificationManager.notify(PLAYER_NOTIFICATION_ID, notification)
                 return false
             }
-        }).into(NotificationTarget(applicationContext, R.id.image, remoteViews, notification, PLAYER_NOTIFICATION_ID))
-
-        return notification
+        }).into(NotificationTarget(this, R.id.image, remoteViews, notification, PLAYER_NOTIFICATION_ID))
+        startForeground(PLAYER_NOTIFICATION_ID,notification)
     }
 
     private fun getPendingSelfIntent(context: Context, action: String): PendingIntent {
-        val intent = Intent(context, javaClass)
+        val intent = Intent(context, MusicControlReceiver::class.java)
         intent.action = action
-        return PendingIntent.getBroadcast(context, 0, intent, 0)
+        intent.putExtra("CODE", 1)
+        return PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun like() {
@@ -355,7 +369,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 model.pauseResumeToggleIcon = R.drawable.ic_pause_circle_outline
             }
         }
-        updateNotification(model)
+        showNotification(model)
     }
 
 
@@ -368,7 +382,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 }
             }
         }
-        updateNotification(Utils.PlayerModelOf(mediaList?.current()!!))
+        showNotification(Utils.PlayerModelOf(mediaList?.current()!!))
     }
 
     override fun previous() {
@@ -421,6 +435,30 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 it.start()
             }
         }
+    }
+
+    inner class MusicControlReceiver(): BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.e("PGFSAFASAFSFASF", "ASFASFSAFSAFMASLFMKAFMASKLMFASKLFMKLASMFKLASMFKLSAKLAS")
+            when(intent?.action) {
+                RESUME_PAUSE_TOOGLE_TAG -> {
+                    pauseResumeToggle()
+                }
+                NEXT_TAG -> {
+                    next()
+                }
+                PREVIOUS_TAG -> {
+                    previous()
+                }
+                LIKE_TAG -> {
+                    like()
+                }
+                else -> {
+
+                }
+            }
+        }
+
     }
 
     inner class LocalBinder : Binder() {
