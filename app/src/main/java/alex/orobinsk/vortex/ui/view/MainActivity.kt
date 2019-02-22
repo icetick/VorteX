@@ -1,6 +1,7 @@
 package alex.orobinsk.vortex.ui.view
 
 import alex.orobinsk.vortex.R
+import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.service.MusicPlayerService
 import alex.orobinsk.vortex.ui.base.BaseActivity
 import alex.orobinsk.vortex.ui.viewModel.MainViewModel
@@ -11,6 +12,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.IBinder
+import com.google.gson.Gson
 
 class MainActivity: BaseActivity() {
     private lateinit var servicePlayer: MusicPlayerService
@@ -41,10 +43,10 @@ class MainActivity: BaseActivity() {
         }
     }
 
-    fun playAudio(vararg items: String) {
+    fun playAudio(items: List<TracksResponse.Data>) {
         if(!isMusicPlayerBound) {
             val playerIntent = Intent(this, MusicPlayerService::class.java)
-            playerIntent.putExtra(MusicPlayerService.DEFAULT_ITEMSET, items)
+            playerIntent.putExtra(MusicPlayerService.DEFAULT_ITEMSET, Gson().toJson(items))
             if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O) {
                 startForegroundService(playerIntent)
             } else {
@@ -52,7 +54,7 @@ class MainActivity: BaseActivity() {
             }
             bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         } else {
-            servicePlayer.mediaList = MediaList(*items)
+            servicePlayer.mediaList = MediaList.of(items)
         }
     }
 

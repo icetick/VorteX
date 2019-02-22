@@ -1,22 +1,15 @@
 package alex.orobinsk.vortex.ui.viewModel
 
-import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.domain.repository.DeezerRepository
-import alex.orobinsk.vortex.ui.adapter.recycler.DataBindingViewHolder
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ToolbarModel
-import alex.orobinsk.vortex.ui.widgets.ToolbarModelBuilder
-import alex.orobinsk.vortex.util.delay
-import alex.orobinsk.vortex.util.toast
 import android.media.MediaPlayer
 import android.view.View
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.deezer.sdk.model.Track
 import org.kodein.di.generic.instance
 import java.util.*
 
@@ -25,10 +18,12 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     val radioResponse = MutableLiveData<List<RadioResponse.Data>>()
     val trackList = ArrayDeque<String>()
     var toolbarModel: ToolbarModel? = null
+    var postActivityTracks: MutableLiveData<Boolean> = MutableLiveData()
+    var currentTracklist: MutableLiveData<List<TracksResponse.Data>> = MutableLiveData()
     val player = MediaPlayer()
 
     val onPlayClick = View.OnClickListener {
-        if(player.isPlaying) {
+        /*if(player.isPlaying) {
             player.stop()
             player.reset()
         }
@@ -46,7 +41,8 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
                 }
             }
         }
-        player.prepareAsync()
+        player.prepareAsync()*/
+        postActivityTracks.postValue(true)
     }
 
     fun checkIfMusicAvailable(track: String): Boolean {
@@ -54,10 +50,12 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     }
 
     override fun onClick(data: RadioResponse.Data) {
+        var trackList: MutableList<TracksResponse.Data> = arrayListOf()
         deezerRepository.getData<TracksResponse>(data.id) {response ->
             response.data.forEach {track ->
-                if(checkIfMusicAvailable(track.preview)) {trackList.add(track.preview)}
-            }.apply { onPlayClick.onClick(null) }
+                trackList.add(track)
+               /* if(checkIfMusicAvailable(track.link)) {trackList.add(track.preview)}*/
+            }.apply { currentTracklist.postValue(trackList); onPlayClick.onClick(null) }
         }
     }
 

@@ -5,6 +5,11 @@ import java.lang.Exception
 
 // 10 - initial size
 class MediaList<T>(vararg items: T) : Collection<T> {
+    companion object {
+        inline fun<reified T> of(items: List<T>): MediaList<T> {
+            return MediaList(*items.toTypedArray())
+        }
+    }
     override var size: Int = items.size
     private var currentPointer = -1
 

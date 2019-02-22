@@ -6,4 +6,18 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 
 @ModelBuilder
-data class PlayerNotificationModel(val image: Bitmap? = null, val author: String, val title: String, val appName: String, val previousIcon: Drawable, val nextIcon: Drawable, val previousAction: PendingIntent, val nextAction: PendingIntent, val pauseResumeAction: PendingIntent, val pauseResumeToggleIcon: Int, val resumeIcon: Drawable, val likeDrawable: Drawable? = null, val likeListener: PendingIntent?= null)
+data class PlayerNotificationModel(
+    val image: String? = null,
+    val author: String,
+    val title: String,
+    val appName: String,
+    var pauseResumeToggleIcon: Int/*,
+    val resumeIcon: Drawable? = null,
+    val previousIcon: Drawable? = null,
+    val pauseResumeAction: PendingIntent? = null,
+    val nextIcon: Drawable? = null,
+    val previousAction: PendingIntent? = null,
+    val nextAction: PendingIntent? = null,
+    val likeDrawable: Drawable? = null,
+    val likeListener: PendingIntent? = null*/
+)
