@@ -110,15 +110,6 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     override fun onCreate() {
         super.onCreate()
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val filter = IntentFilter()/*.apply {
-            addCategory(Intent.CATEGORY_DEFAULT)
-            addAction(NEXT_TAG)
-            addAction(PREVIOUS_TAG)
-            addAction(RESUME_PAUSE_TOOGLE_TAG)
-            addAction(LIKE_TAG)
-        }*/
-        registerReceiver(receiver, filter)
-
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -146,7 +137,41 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                     }
                 }
             } else {
+                when(intent.action) {
+                    RESUME_PAUSE_TOOGLE_TAG -> {
+                       pauseResumeToggle()
+                    }
+                    NEXT_TAG -> {
+                        next()
+                    }
+                    PREVIOUS_TAG -> {
+                        previous()
+                    }
+                    LIKE_TAG -> {
+                        like()
+                    }
+                    else -> {
 
+                    }
+                }
+            }
+        } ?: run {
+            when(intent?.action) {
+                RESUME_PAUSE_TOOGLE_TAG -> {
+                    pauseResumeToggle()
+                }
+                NEXT_TAG -> {
+                    next()
+                }
+                PREVIOUS_TAG -> {
+                    previous()
+                }
+                LIKE_TAG -> {
+                    like()
+                }
+                else -> {
+
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -186,7 +211,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     override fun onSeekComplete(mp: MediaPlayer?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
@@ -300,19 +325,15 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     fun listener(remoteViews: RemoteViews, context: Context) {
-        /*val pendingIntentPlayPause = getPendingSelfIntent(context, RESUME_PAUSE_TOOGLE_TAG)
+        val pendingIntentPlayPause = getPendingSelfIntent(context, RESUME_PAUSE_TOOGLE_TAG)
         val pendingIntentNext = getPendingSelfIntent(context, NEXT_TAG)
         val pendingIntentPrevious = getPendingSelfIntent(context, PREVIOUS_TAG)
-        val pendingIntentLike = getPendingSelfIntent(context, LIKE_TAG)*/
-        val pase = Intent(this, MusicControlReceiver::class.java)
-        pase.putExtra("AN_ACTION", "DO")
-        pase.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        var pendingSwitchIntent = PendingIntent.getBroadcast(this, 1, pase, 0)
+        val pendingIntentLike = getPendingSelfIntent(context, LIKE_TAG)
 
-        remoteViews.setOnClickPendingIntent(R.id.pause_resume_btn, pendingSwitchIntent)
-       /* remoteViews.setOnClickPendingIntent(R.id.next_btn, pendingIntentNext)
+        remoteViews.setOnClickPendingIntent(R.id.pause_resume_btn, pendingIntentPlayPause)
+        remoteViews.setOnClickPendingIntent(R.id.next_btn, pendingIntentNext)
         remoteViews.setOnClickPendingIntent(R.id.previous_btn, pendingIntentPrevious)
-        remoteViews.setOnClickPendingIntent(R.id.like_btn, pendingIntentLike)*/
+        remoteViews.setOnClickPendingIntent(R.id.like_btn, pendingIntentLike)
     }
 
     private fun updateNotification(model: PlayerNotificationModel?, builder: NotificationCompat.Builder? = null) {
@@ -347,10 +368,9 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     private fun getPendingSelfIntent(context: Context, action: String): PendingIntent {
-        val intent = Intent(context, MusicControlReceiver::class.java)
+        val intent = Intent(context, this::class.java)
         intent.action = action
-        intent.putExtra("CODE", 1)
-        return PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getService(context, 0, intent, 0)
     }
 
     override fun like() {
@@ -437,7 +457,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         }
     }
 
-    inner class MusicControlReceiver(): BroadcastReceiver() {
+    inner class MusicControlReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.e("PGFSAFASAFSFASF", "ASFASFSAFSAFMASLFMKAFMASKLMFASKLFMKLASMFKLASMFKLSAKLAS")
             when(intent?.action) {
