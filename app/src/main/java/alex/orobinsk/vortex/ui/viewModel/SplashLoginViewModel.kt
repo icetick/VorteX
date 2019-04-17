@@ -7,8 +7,17 @@ import alex.orobinsk.vortex.domain.api.deezer.DeezerAuthenticationHelper
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.util.*
+import android.app.Activity
+import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.deezer.sdk.model.Permissions
+import com.deezer.sdk.network.connect.DeezerConnect
+import com.deezer.sdk.network.connect.SessionStore
+import com.deezer.sdk.network.connect.event.DialogListener
+import com.github.felixgail.gplaymusic.api.GPlayMusic
+import com.github.felixgail.gplaymusic.util.TokenProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,6 +34,7 @@ class SplashLoginViewModel : BaseViewModel() {
     val splashEnded = MutableLiveData<Boolean>().apply { value = false }
     val afterLogoAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
     val progressBarAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
+    val offlineLoginSucceded = MutableLiveData<Boolean>()
     val loginSucceeded = MutableLiveData<Boolean>()
 
     val currentApi: MusicApiType = MusicApiType.DEEZER
@@ -51,7 +61,26 @@ class SplashLoginViewModel : BaseViewModel() {
         if (!validateFields()) {
             when(currentApi) {
                 MusicApiType.DEEZER -> {
-                    val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
+                    val deezerConnector = DeezerConnect(it.context, BuildConfig.DEEZER_APPLICATION_ID)
+                    val permissions = arrayOf(Permissions.BASIC_ACCESS, Permissions.MANAGE_LIBRARY, Permissions.LISTENING_HISTORY)
+                    val listener = object: DialogListener {
+                        override fun onComplete(p0: Bundle?) {
+                            val store = SessionStore()
+                            store.save(deezerConnector, it.context)
+                            //deezerConnector.requestAsync()
+                        }
+
+                        override fun onCancel() {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+
+                        override fun onException(p0: Exception?) {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+                    }
+
+                    deezerConnector.authorize(it.context as Activity, permissions, listener)
+                   /* val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
                     deezerAuthenticator.authenticate(defaultEmail, defaultPassword) { authenticationCode ->
                         GlobalScope.launch(Dispatchers.Main) {
                             deezerAuthenticator.removeWebView()
@@ -59,17 +88,17 @@ class SplashLoginViewModel : BaseViewModel() {
                             preferences.storeExpirationTime(tokenResponse.expirationTime)
                             onLoginSucceded(tokenResponse.token)
                         }
-                    }
+                    }*/
                 }
                 MusicApiType.GPLAY -> {
                     //TODO: Implement GOOGLE Play Music feature
-                    /*GlobalScope.launch(Dispatchers.Main) {
+                    GlobalScope.launch(Dispatchers.Main) {
                         val token = withContext(Dispatchers.IO) {
                             TokenProvider.provideToken(userName.value, password.value, androidID.value)
                         }
                         val api = GPlayMusic.Builder().setAuthToken(token).build()
                         Toast.makeText(it.context, api.listenNowSituation.situations.first().imageUrl.toString(), Toast.LENGTH_SHORT).show()
-                    }*/
+                    }
                 }
                 MusicApiType.SPOTIFY -> {
 
@@ -83,6 +112,11 @@ class SplashLoginViewModel : BaseViewModel() {
         progressBarAnimationEnabled.postValue(false)
         application.enqueueTokenRefresh()
         loginSucceeded.postValue(true)
+    }
+
+    fun onOfflineLoginSucceded() {
+        progressBarAnimationEnabled.postValue(false)
+        offlineLoginSucceded.postValue(true)
     }
 
     fun onLongClick() = View.OnLongClickListener { v ->

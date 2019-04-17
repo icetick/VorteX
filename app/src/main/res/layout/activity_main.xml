@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <data>
-
         <variable
             name="viewModel"
             type="alex.orobinsk.vortex.ui.viewModel.MainViewModel" />
+        <variable name="resideListener" type="alex.orobinsk.vortex.ui.widgets.ResideLayout.PanelSlideListener" />
+        <variable name="resideAdapter" type="android.widget.ArrayAdapter&lt;String>"/>
+        <variable name="pagerAdapter" type="alex.orobinsk.vortex.ui.adapter.viewpager.MainScreenAdapter"/>
     </data>
 
     <alex.orobinsk.vortex.ui.widgets.ResideLayout
         android:id="@+id/reside_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:resideListener="@{viewModel.resideListener}">
+        app:resideListener="@{resideListener}">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/margin_menu"
-                app:resideAdapter="@{viewModel.resideAdapter}" />
+                app:resideAdapter="@{resideAdapter}" />
 
         </FrameLayout>
 
@@ -41,6 +42,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}" />
+            app:parallaxViewPagerAdapter="@{pagerAdapter}" />
     </alex.orobinsk.vortex.ui.widgets.ResideLayout>
 </layout>

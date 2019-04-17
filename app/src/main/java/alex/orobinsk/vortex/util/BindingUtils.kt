@@ -1,14 +1,7 @@
 package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.R
-import alex.orobinsk.vortex.databinding.ActivityMainBinding
-import alex.orobinsk.vortex.domain.model.DataContainer
-import alex.orobinsk.vortex.domain.model.RadioResponse
-import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.ui.adapter.recycler.BindingRecyclerAdapter
-import alex.orobinsk.vortex.ui.adapter.recycler.DataBindingViewHolder
-import alex.orobinsk.vortex.ui.base.BaseView
-import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ParallaxTransformer
 import alex.orobinsk.vortex.ui.widgets.ResideLayout
@@ -19,20 +12,23 @@ import alex.orobinsk.vortex.util.animation.chainAnimation
 import alex.orobinsk.vortex.util.animation.interpolator
 import alex.orobinsk.vortex.util.animation.setOnClickListenerWithScale
 import android.app.Activity
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ListView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -43,7 +39,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
-import java.io.Serializable
+import java.io.File
 
 @BindingAdapter("setTextField")
 fun setTextField(view: EditText, textField: MutableLiveData<String>) {
@@ -162,6 +158,12 @@ fun setImageSrc(view: ImageView, drawable: Drawable?) {
             })
             .into(view)
 }
+
+@BindingAdapter("android:srcUri")
+fun setImageUri(view: ImageView, bitmap: Bitmap) {
+    Glide.with(view).load(bitmap).into(view)
+}
+
 @BindingAdapter("android:srcUrl")
 fun setImageSrcUrl(view: ImageView,url: String?) {
     Glide.with(view).load(url).apply(RequestOptions().error(R.drawable.vortex_progress))

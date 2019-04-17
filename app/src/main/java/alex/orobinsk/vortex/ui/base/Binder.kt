@@ -3,6 +3,7 @@ package alex.orobinsk.vortex.ui.base
 import alex.orobinsk.vortex.BR
 import alex.orobinsk.vortex.util.ViewModelFactory
 import android.app.Activity
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
@@ -14,7 +15,14 @@ class Binder {
     var viewModel: BaseViewModel? = null
     var baseView: BaseView? = null
 
-    inline fun <reified F, reified T: BaseViewModel> bind(layoutId: Int,activity: BaseActivity? = null, callback: (viewModel: T) -> BaseViewModel): Binder where F: LifecycleOwner {
+    /***
+     * This method allows you to bind architecture components with
+     * each other
+     * @sample bind<Activity, ViewModel>(R.layout.activity) { it.apply { demo.observeForever{} } }
+     * @param layoutId specifies layout binded with activity or fragment
+     * @param callback specifies callback, that applies each observer to field of viewModel
+     */
+    inline fun <reified F, reified T: BaseViewModel> bind(layoutId: Int, callback: (viewModel: T) -> BaseViewModel): Binder where F: LifecycleOwner {
         when(F::class.isSubclassOf(Activity::class)) {
             true -> {
                 binding = DataBindingUtil.setContentView(baseView as BaseActivity, layoutId)
@@ -26,12 +34,15 @@ class Binder {
             }
         }
         viewModel = ViewModelFactory().create(T::class.java)
-        viewModel?.bindedActivity = activity
         viewModel = callback.invoke(viewModel as T)
         viewModel?.onCreated()
         binding?.setVariable(BR.viewModel, viewModel as T)
-        binding?.executePendingBindings()
         return this
+    }
+
+    inline fun withVariables(applyClosure: (binding: ViewDataBinding) -> Unit) {
+        binding?.let(applyClosure)
+        binding?.executePendingBindings()
     }
 
     operator fun getValue(baseView: BaseView, property: KProperty<*>): Binder {
