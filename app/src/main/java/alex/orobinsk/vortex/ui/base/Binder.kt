@@ -3,7 +3,6 @@ package alex.orobinsk.vortex.ui.base
 import alex.orobinsk.vortex.BR
 import alex.orobinsk.vortex.util.ViewModelFactory
 import android.app.Activity
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
@@ -20,9 +19,12 @@ class Binder {
      * each other
      * @sample bind<Activity, ViewModel>(R.layout.activity) { it.apply { demo.observeForever{} } }
      * @param layoutId specifies layout binded with activity or fragment
-     * @param callback specifies callback, that applies each observer to field of viewModel
+     * @param viewModelApplier specifies callback, that applies each observer to field of viewModel
      */
-    inline fun <reified F, reified T: BaseViewModel> bind(layoutId: Int, callback: (viewModel: T) -> BaseViewModel): Binder where F: LifecycleOwner {
+    inline fun <reified F, reified T: BaseViewModel> bind(
+        layoutId: Int,
+        viewModelApplier: (viewModel: T) -> BaseViewModel,
+        noinline bindingApplier: ((binding: ViewDataBinding) -> ViewDataBinding)? = null): Binder where F: LifecycleOwner {
         when(F::class.isSubclassOf(Activity::class)) {
             true -> {
                 binding = DataBindingUtil.setContentView(baseView as BaseActivity, layoutId)
@@ -34,15 +36,12 @@ class Binder {
             }
         }
         viewModel = ViewModelFactory().create(T::class.java)
-        viewModel = callback.invoke(viewModel as T)
+        viewModel = viewModelApplier.invoke(viewModel as T)
         viewModel?.onCreated()
-        binding?.setVariable(BR.viewModel, viewModel as T)
-        return this
-    }
-
-    inline fun withVariables(applyClosure: (binding: ViewDataBinding) -> Unit) {
-        binding?.let(applyClosure)
+        binding?.apply { setVariable(BR.viewModel, viewModel as T) }
+        bindingApplier?.let { binding?.let(it) }
         binding?.executePendingBindings()
+        return this
     }
 
     operator fun getValue(baseView: BaseView, property: KProperty<*>): Binder {

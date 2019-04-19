@@ -8,12 +8,11 @@ import alex.orobinsk.vortex.ui.widgets.ToolbarModelBuilder
 import alex.orobinsk.vortex.util.toast
 import android.view.View
 import androidx.lifecycle.Observer
-import java.util.*
 
 class RadioFragment: BaseFragment() {
     var currentRadioData = listOf<TracksResponse.Data>()
     override fun init() {
-        binder.bind<RadioFragment, RadioViewModel>(R.layout.fragment_radio) {viewModel ->
+        binder.bind<RadioFragment, RadioViewModel>(R.layout.fragment_radio, {viewModel ->
             viewModel.apply {
                 toolbarModel = ToolbarModelBuilder()
                         .leftIcon(resources.getDrawable(R.drawable.ic_menu, activity?.theme))
@@ -35,7 +34,7 @@ class RadioFragment: BaseFragment() {
                     }
                 })
             }
-        }
+        })
     }
 
     override fun onReleaseResources() {

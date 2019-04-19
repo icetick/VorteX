@@ -14,8 +14,8 @@ class SplashLoginActivity : BaseActivity() {
     override fun init() {
         requestPermissions()
 
-        binder.bind<SplashLoginActivity, SplashLoginViewModel>(R.layout.activity_splash) {
-            it.apply {
+        binder.bind<SplashLoginActivity, SplashLoginViewModel>(R.layout.activity_splash, {viewModel ->
+            viewModel.apply {
                 androidID.postValue(getImei())
                 loginSucceeded.observeForever{
                     startActivity<MainActivity>()
@@ -24,7 +24,7 @@ class SplashLoginActivity : BaseActivity() {
                     //startActivity<ShareActivity>()
                 }
             }
-        }
+        })
     }
 
     override fun onReleaseResources() {

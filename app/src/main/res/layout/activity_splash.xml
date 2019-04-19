@@ -1,134 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-                name="viewModel"
-                type="alex.orobinsk.vortex.ui.viewModel.SplashLoginViewModel"/>
+            name="viewModel"
+            type="alex.orobinsk.vortex.ui.viewModel.SplashLoginViewModel" />
     </data>
 
     <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.view.SplashLoginActivity">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.view.SplashLoginActivity">
 
         <com.flaviofaria.kenburnsview.KenBurnsView
-                android:id="@+id/splashView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@{@drawable/nebula}"
-                android:transitionName="@string/background"/>
+            android:id="@+id/splashView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@{@drawable/nebula}"
+            android:transitionName="@string/background" />
 
         <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/black_overlay"
-                app:overlayReveal="@{viewModel.afterLogoAnimationEnabled}"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_overlay"
+            app:overlayReveal="@{viewModel.afterLogoAnimationEnabled}" />
 
         <ImageView
-                android:id="@+id/logo_iv"
-                app:bounceAnimate="@{viewModel.afterLogoAnimationEnabled}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_logo"
-                android:layout_marginEnd="@dimen/margin_logo"
-                android:src="@{@drawable/logo}"
-                android:transitionName="@string/vortex_logo"/>
+            android:id="@+id/logo_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_logo"
+            android:layout_marginEnd="@dimen/margin_logo"
+            android:src="@{@drawable/logo}"
+            android:transitionName="@string/vortex_logo"
+            app:bounceAnimate="@{viewModel.afterLogoAnimationEnabled}" />
 
         <LinearLayout
-                android:id="@+id/field_parent"
+            android:id="@+id/field_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_login"
+            android:layout_marginTop="@dimen/margin_login_top"
+            android:layout_marginEnd="@dimen/margin_login"
+            android:layout_marginBottom="@dimen/margin_login"
+            android:orientation="vertical"
+            app:animateChilds="@{viewModel.splashEnded}">
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/margin_login"
-                app:animateChilds="@{viewModel.splashEnded}"
-                android:layout_marginTop="@dimen/margin_login_top"
-                android:layout_marginEnd="@dimen/margin_login"
-                android:layout_marginBottom="@dimen/margin_login"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical">
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_fields"
-                    android:visibility="invisible"
-                    android:backgroundTint="@color/white"
-                    android:textColorHint="@color/white">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_fields"
+                android:backgroundTint="@color/white"
+                android:textColorHint="@color/white"
+                android:visibility="invisible">
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        app:setTextField="@{viewModel.userName}"
-                        android:hint="@string/email"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:setTextField="@{viewModel.userName}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_fields"
-                    android:visibility="invisible"
-                    android:backgroundTint="@color/white"
-                    android:textColorHint="@color/white">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_fields"
+                android:backgroundTint="@color/white"
+                android:textColorHint="@color/white"
+                android:visibility="invisible">
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        android:hint="@string/password"
-                        app:setTextField="@{viewModel.password}"
-                        android:inputType="textPassword"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:setTextField="@{viewModel.password}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_fields"
-                    android:visibility="invisible"
-                    android:backgroundTint="@color/white"
-                    android:fontFamily="@font/montserrat"
-                    android:textColorHint="@color/white">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_fields"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/montserrat"
+                android:textColorHint="@color/white"
+                android:visibility="invisible">
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        app:setPasswordValidateField="@{viewModel.password}"
-                        android:hint="@string/confirm_password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:hint="@string/confirm_password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:setPasswordValidateField="@{viewModel.password}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/button_height_login"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_fields_button"
-                    android:visibility="invisible"
-                    android:background="@drawable/rounded_button"
-                    android:onClick="@{viewModel.onSignInClicked()}"
-                    android:onLongClick="@{viewModel.onLongClick()}"
-                    android:text="@string/sign_in"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"/>
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_login"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_fields_button"
+                android:background="@drawable/rounded_button"
+                android:onClick="@{viewModel.onSignInClicked()}"
+                android:onLongClick="@{viewModel.onLongClick()}"
+                android:text="@string/sign_in"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="invisible" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_login"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_fields_button"
+                android:background="@drawable/rounded_button_white"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="@{viewModel.onLoginViaDeezer()}"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_fields_button"
+                    android:layout_marginTop="@dimen/margin_fields"
+                    android:layout_marginEnd="@dimen/margin_fields"
+                    android:layout_marginBottom="@dimen/margin_fields"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/deezer" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="@dimen/margin_fields"
+                    android:text="@string/sign_in_viaDeezer"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+            </RelativeLayout>
+
         </LinearLayout>
 
         <alex.orobinsk.vortex.ui.widgets.VortexProgress
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="@dimen/margin_logo"
-                android:indeterminateDrawable="@drawable/vortex_progress"
-                android:visibility="gone"
-                app:progressField="@{viewModel.progressBarAnimationEnabled}"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/margin_logo"
+            android:indeterminateDrawable="@drawable/vortex_progress"
+            android:visibility="gone"
+            app:progressField="@{viewModel.progressBarAnimationEnabled}" />
     </FrameLayout>
 </layout>

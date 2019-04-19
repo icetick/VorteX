@@ -9,6 +9,7 @@ import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.util.*
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -71,11 +72,11 @@ class SplashLoginViewModel : BaseViewModel() {
                         }
 
                         override fun onCancel() {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            Log.e("TAG", "Cancelled")
                         }
 
                         override fun onException(p0: Exception?) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            p0?.printStackTrace()
                         }
                     }
 
@@ -105,6 +106,28 @@ class SplashLoginViewModel : BaseViewModel() {
                 }
             }
         }
+    }
+
+    fun onLoginViaDeezer()=  View.OnClickListener {
+        val deezerConnector = DeezerConnect(it.context, BuildConfig.DEEZER_APPLICATION_ID)
+        val permissions = arrayOf(Permissions.BASIC_ACCESS, Permissions.MANAGE_LIBRARY, Permissions.LISTENING_HISTORY)
+        val listener = object: DialogListener {
+            override fun onComplete(p0: Bundle?) {
+                val store = SessionStore()
+                store.save(deezerConnector, it.context)
+                //deezerConnector.requestAsync()
+            }
+
+            override fun onCancel() {
+                Log.e("TAG", "Cancelled")
+            }
+
+            override fun onException(p0: Exception?) {
+                p0?.printStackTrace()
+            }
+        }
+
+        deezerConnector.authorize(it.context as Activity, permissions, listener)
     }
 
     fun onLoginSucceded(token: String) {
@@ -142,7 +165,9 @@ class SplashLoginViewModel : BaseViewModel() {
     }
 
     private fun validateFields(): Boolean {
-        if (userName isValidAs ValidationType.EMAIL && androidID isValidAs ValidationType.ANDROID_ID && password isValidAs ValidationType.PASSWORD) {
+        if (userName isValidAs ValidationType.EMAIL &&
+            androidID isValidAs ValidationType.ANDROID_ID &&
+            password isValidAs ValidationType.PASSWORD) {
             return true
         }
         return false

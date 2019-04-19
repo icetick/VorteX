@@ -6,11 +6,11 @@ import alex.orobinsk.vortex.ui.viewModel.MusicViewModel
 
 class MusicFragment: BaseFragment() {
     override fun init() {
-        binder.bind<MusicFragment, MusicViewModel>(R.layout.fragment_music) {
+        binder.bind<MusicFragment, MusicViewModel>(R.layout.fragment_music, {
             it.apply {
 
             }
-        }
+        })
     }
 
     override fun onReleaseResources() {
