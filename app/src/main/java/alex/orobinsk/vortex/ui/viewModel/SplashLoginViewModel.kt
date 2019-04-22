@@ -37,6 +37,9 @@ class SplashLoginViewModel : BaseViewModel() {
     val progressBarAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
     val offlineLoginSucceded = MutableLiveData<Boolean>()
     val loginSucceeded = MutableLiveData<Boolean>()
+    val updateProgress: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
 
     val currentApi: MusicApiType = MusicApiType.DEEZER
 
@@ -60,11 +63,16 @@ class SplashLoginViewModel : BaseViewModel() {
         it.hideKeyboard()
 
         if (!validateFields()) {
-            when(currentApi) {
+            when (currentApi) {
                 MusicApiType.DEEZER -> {
-                    val deezerConnector = DeezerConnect(it.context, BuildConfig.DEEZER_APPLICATION_ID)
-                    val permissions = arrayOf(Permissions.BASIC_ACCESS, Permissions.MANAGE_LIBRARY, Permissions.LISTENING_HISTORY)
-                    val listener = object: DialogListener {
+                    val deezerConnector =
+                        DeezerConnect(it.context, BuildConfig.DEEZER_APPLICATION_ID)
+                    val permissions = arrayOf(
+                        Permissions.BASIC_ACCESS,
+                        Permissions.MANAGE_LIBRARY,
+                        Permissions.LISTENING_HISTORY
+                    )
+                    val listener = object : DialogListener {
                         override fun onComplete(p0: Bundle?) {
                             val store = SessionStore()
                             store.save(deezerConnector, it.context)
@@ -81,24 +89,32 @@ class SplashLoginViewModel : BaseViewModel() {
                     }
 
                     deezerConnector.authorize(it.context as Activity, permissions, listener)
-                   /* val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
-                    deezerAuthenticator.authenticate(defaultEmail, defaultPassword) { authenticationCode ->
-                        GlobalScope.launch(Dispatchers.Main) {
-                            deezerAuthenticator.removeWebView()
-                            val tokenResponse = withContext(Dispatchers.IO) { deezerAuthenticator.getTokenResponse(authenticationCode) }
-                            preferences.storeExpirationTime(tokenResponse.expirationTime)
-                            onLoginSucceded(tokenResponse.token)
-                        }
-                    }*/
+                    /* val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
+                     deezerAuthenticator.authenticate(defaultEmail, defaultPassword) { authenticationCode ->
+                         GlobalScope.launch(Dispatchers.Main) {
+                             deezerAuthenticator.removeWebView()
+                             val tokenResponse = withContext(Dispatchers.IO) { deezerAuthenticator.getTokenResponse(authenticationCode) }
+                             preferences.storeExpirationTime(tokenResponse.expirationTime)
+                             onLoginSucceded(tokenResponse.token)
+                         }
+                     }*/
                 }
                 MusicApiType.GPLAY -> {
                     //TODO: Implement GOOGLE Play Music feature
                     GlobalScope.launch(Dispatchers.Main) {
                         val token = withContext(Dispatchers.IO) {
-                            TokenProvider.provideToken(userName.value, password.value, androidID.value)
+                            TokenProvider.provideToken(
+                                userName.value,
+                                password.value,
+                                androidID.value
+                            )
                         }
                         val api = GPlayMusic.Builder().setAuthToken(token).build()
-                        Toast.makeText(it.context, api.listenNowSituation.situations.first().imageUrl.toString(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            it.context,
+                            api.listenNowSituation.situations.first().imageUrl.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 MusicApiType.SPOTIFY -> {
@@ -108,10 +124,14 @@ class SplashLoginViewModel : BaseViewModel() {
         }
     }
 
-    fun onLoginViaDeezer()=  View.OnClickListener {
+    fun onLoginViaDeezer() = View.OnClickListener {
         val deezerConnector = DeezerConnect(it.context, BuildConfig.DEEZER_APPLICATION_ID)
-        val permissions = arrayOf(Permissions.BASIC_ACCESS, Permissions.MANAGE_LIBRARY, Permissions.LISTENING_HISTORY)
-        val listener = object: DialogListener {
+        val permissions = arrayOf(
+            Permissions.BASIC_ACCESS,
+            Permissions.MANAGE_LIBRARY,
+            Permissions.LISTENING_HISTORY
+        )
+        val listener = object : DialogListener {
             override fun onComplete(p0: Bundle?) {
                 val store = SessionStore()
                 store.save(deezerConnector, it.context)
@@ -151,7 +171,9 @@ class SplashLoginViewModel : BaseViewModel() {
                 GlobalScope.launch(Dispatchers.Main) {
                     deezerAuthenticator.removeWebView()
                     val token = try {
-                        withContext(Dispatchers.IO) { deezerAuthenticator.getTokenResponse(code).token }
+                        withContext(Dispatchers.IO) {
+                            deezerAuthenticator.getTokenResponse(code).token
+                        }
                     } catch (ex: Exception) {
                         null
                     }
@@ -167,7 +189,8 @@ class SplashLoginViewModel : BaseViewModel() {
     private fun validateFields(): Boolean {
         if (userName isValidAs ValidationType.EMAIL &&
             androidID isValidAs ValidationType.ANDROID_ID &&
-            password isValidAs ValidationType.PASSWORD) {
+            password isValidAs ValidationType.PASSWORD
+        ) {
             return true
         }
         return false

@@ -126,6 +126,7 @@
                 android:layout_height="@dimen/button_height_login"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_fields_button"
+                android:visibility="invisible"
                 android:background="@drawable/rounded_button_white"
                 android:clickable="true"
                 android:focusable="true"
@@ -157,7 +158,15 @@
             </RelativeLayout>
 
         </LinearLayout>
-
+        <ProgressBar
+            android:layout_width="match_parent"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_height="wrap_content"
+            android:max="100"
+            app:updateProgress="@{viewModel.updateProgress}"
+            android:indeterminate="false"
+            android:visibility="gone"
+            />
         <alex.orobinsk.vortex.ui.widgets.VortexProgress
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -166,5 +175,6 @@
             android:indeterminateDrawable="@drawable/vortex_progress"
             android:visibility="gone"
             app:progressField="@{viewModel.progressBarAnimationEnabled}" />
+
     </FrameLayout>
 </layout>

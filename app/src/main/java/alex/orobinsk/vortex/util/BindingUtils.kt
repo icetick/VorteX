@@ -18,12 +18,10 @@ import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ListView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
@@ -131,12 +129,26 @@ class AccelerateDecelerateSlowInterpolator : Interpolator {
 fun progressField(view: VortexProgress, progressFlag: MutableLiveData<Boolean>) {
     progressFlag.observeForever { field -> if(field) view.showProgressBar() else view.hideProgressBar()  }
 }
+@BindingAdapter("updateProgress")
+fun updateProgress(view: ProgressBar, progressFlag: MutableLiveData<Int>) {
+    progressFlag.observeForever { field ->
+        if(field!=0 || field==100) {
+            view.visibility = View.VISIBLE
+            view.progress = field
+        } else {
+            view.visibility = View.GONE
+        }
+    }
+}
 
 @BindingAdapter("disallowTouchEvent")
 fun disallowTouchEvent(view: RecyclerView, isDisallowed: Boolean) {
     if(isDisallowed) {
         view.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener {
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean { rv.parent.requestDisallowInterceptTouchEvent(isDisallowed); return false }
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                rv.parent.requestDisallowInterceptTouchEvent(isDisallowed);
+                return false
+            }
             override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) { }
             override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
         })
