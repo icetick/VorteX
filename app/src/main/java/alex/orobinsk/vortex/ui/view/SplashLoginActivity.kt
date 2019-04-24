@@ -17,6 +17,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 class SplashLoginActivity : BaseActivity() {
     private var androidID: String? = null
     private var remoteConfig: FirebaseConfig = FirebaseConfig()
+    private var updateUtils: UpdateUtils = UpdateUtils()
 
     override fun init() {
         requestPermissions()
@@ -34,6 +35,11 @@ class SplashLoginActivity : BaseActivity() {
                     }
                     splashEnded.observeForever {
                         if(it) {
+                            with(this@SplashLoginActivity) {
+                               if (updateUtils.updateCacheExisting(this)) {
+                                   updateUtils.clearUpdateData(this)
+                               }
+                            }
                             fetchUpdateInfo(this.updateProgress)
                         }
                     }
@@ -49,7 +55,7 @@ class SplashLoginActivity : BaseActivity() {
                 AlertDialog.Builder(this@SplashLoginActivity)
                     .setMessage("New update is available")
                     .setPositiveButton("Update") { _, which ->
-                        UpdateUtils().selfUpdate(this, progressLiveData)
+                        updateUtils.selfUpdate(this, progressLiveData)
                     }.setNegativeButton("Cancell", null).show()
             }
         }

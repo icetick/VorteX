@@ -38,9 +38,9 @@ class BuilderGenerator: AbstractProcessor() {
     }
 
     override fun process(p0: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
-        (roundEnvironment?.getElementsAnnotatedWith(ModelBuilder::class.java) as Iterable<Element>)?.forEach {
-                generateClass(it)
-            }
+        (roundEnvironment?.getElementsAnnotatedWith(ModelBuilder::class.java) as Iterable<Element>).forEach {
+            generateClass(it)
+        }
         return true
     }
 

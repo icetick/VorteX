@@ -31,6 +31,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
     buildTypes.each {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
@@ -98,6 +101,7 @@ dependencies {
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation 'com.tbuonomo:morph-bottom-navigation:1.0.1'
     implementation 'devlight.io:navigationtabbar:1.2.5'
+    implementation 'com.google.android.exoplayer:exoplayer:2.9.6'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
@@ -111,6 +115,5 @@ dependencies {
     testImplementation "junit:junit:$rootProject.junitVersion"
     implementation "com.google.firebase:firebase-firestore:$rootProject.firebaseVersion"
     implementation project(':annotation')
-    implementation project(':deezer-sdk-0.11.2')
     kapt project(':codeGeneration')
 }

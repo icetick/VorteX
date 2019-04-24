@@ -29,7 +29,7 @@ class TokenExpireWorker(private val context: Context, workerParameters: WorkerPa
                 GlobalScope.launch(Dispatchers.IO) {
                     authHelper.getTokenResponse(refreshingCode).let { deezerTokenResponse ->
                         prefs.storeToken(deezerTokenResponse.token)
-                        prefs.storeExpirationTime(deezerTokenResponse.expirationTime.toLong())
+                        prefs.storeExpirationTime(deezerTokenResponse.expirationTime)
                         prefs.storeLatestTokenUpdate(System.currentTimeMillis())
                         Log.i(this::class.java.simpleName, "Token updated: "+deezerTokenResponse.token+" at time: "+Date(System.currentTimeMillis()))
                     }

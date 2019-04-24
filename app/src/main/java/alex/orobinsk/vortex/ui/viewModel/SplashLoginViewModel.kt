@@ -6,17 +6,13 @@ import alex.orobinsk.vortex.domain.api.MusicApiType
 import alex.orobinsk.vortex.domain.api.deezer.DeezerAuthenticationHelper
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.ui.base.BaseViewModel
-import alex.orobinsk.vortex.util.*
-import android.app.Activity
-import android.os.Bundle
-import android.util.Log
+import alex.orobinsk.vortex.util.ValidationType
+import alex.orobinsk.vortex.util.delay
+import alex.orobinsk.vortex.util.hideKeyboard
+import alex.orobinsk.vortex.util.isValidAs
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.deezer.sdk.model.Permissions
-import com.deezer.sdk.network.connect.DeezerConnect
-import com.deezer.sdk.network.connect.SessionStore
-import com.deezer.sdk.network.connect.event.DialogListener
 import com.github.felixgail.gplaymusic.api.GPlayMusic
 import com.github.felixgail.gplaymusic.util.TokenProvider
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +20,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.kodein.di.generic.instance
-import java.lang.Exception
 
 class SplashLoginViewModel : BaseViewModel() {
     val application: App by instance()
@@ -65,31 +60,7 @@ class SplashLoginViewModel : BaseViewModel() {
         if (!validateFields()) {
             when (currentApi) {
                 MusicApiType.DEEZER -> {
-                    val deezerConnector =
-                        DeezerConnect(it.context, BuildConfig.DEEZER_APPLICATION_ID)
-                    val permissions = arrayOf(
-                        Permissions.BASIC_ACCESS,
-                        Permissions.MANAGE_LIBRARY,
-                        Permissions.LISTENING_HISTORY
-                    )
-                    val listener = object : DialogListener {
-                        override fun onComplete(p0: Bundle?) {
-                            val store = SessionStore()
-                            store.save(deezerConnector, it.context)
-                            //deezerConnector.requestAsync()
-                        }
-
-                        override fun onCancel() {
-                            Log.e("TAG", "Cancelled")
-                        }
-
-                        override fun onException(p0: Exception?) {
-                            p0?.printStackTrace()
-                        }
-                    }
-
-                    deezerConnector.authorize(it.context as Activity, permissions, listener)
-                    /* val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
+                     val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
                      deezerAuthenticator.authenticate(defaultEmail, defaultPassword) { authenticationCode ->
                          GlobalScope.launch(Dispatchers.Main) {
                              deezerAuthenticator.removeWebView()
@@ -97,7 +68,7 @@ class SplashLoginViewModel : BaseViewModel() {
                              preferences.storeExpirationTime(tokenResponse.expirationTime)
                              onLoginSucceded(tokenResponse.token)
                          }
-                     }*/
+                     }
                 }
                 MusicApiType.GPLAY -> {
                     //TODO: Implement GOOGLE Play Music feature
@@ -125,29 +96,6 @@ class SplashLoginViewModel : BaseViewModel() {
     }
 
     fun onLoginViaDeezer() = View.OnClickListener {
-        val deezerConnector = DeezerConnect(it.context, BuildConfig.DEEZER_APPLICATION_ID)
-        val permissions = arrayOf(
-            Permissions.BASIC_ACCESS,
-            Permissions.MANAGE_LIBRARY,
-            Permissions.LISTENING_HISTORY
-        )
-        val listener = object : DialogListener {
-            override fun onComplete(p0: Bundle?) {
-                val store = SessionStore()
-                store.save(deezerConnector, it.context)
-                //deezerConnector.requestAsync()
-            }
-
-            override fun onCancel() {
-                Log.e("TAG", "Cancelled")
-            }
-
-            override fun onException(p0: Exception?) {
-                p0?.printStackTrace()
-            }
-        }
-
-        deezerConnector.authorize(it.context as Activity, permissions, listener)
     }
 
     fun onLoginSucceded(token: String) {

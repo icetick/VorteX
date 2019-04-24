@@ -9,7 +9,6 @@ import alex.orobinsk.vortex.ui.widgets.ToolbarModel
 import android.media.MediaPlayer
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import com.deezer.sdk.model.Track
 import org.kodein.di.generic.instance
 import java.util.*
 

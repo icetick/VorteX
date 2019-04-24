@@ -2,6 +2,7 @@ package alex.orobinsk.vortex.util
 
 import android.content.Context
 import android.content.Intent
+import android.preference.PreferenceManager
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.storage.FirebaseStorage
@@ -25,6 +26,9 @@ class UpdateUtils {
         val storage = FirebaseStorage.getInstance()
             .getReference("app-debug.apk")
         val localApk = File.createTempFile("app-debug", "apk")
+
+        storeTempFilesPath(context, localApk)
+
         storage.getFile(localApk).addOnSuccessListener {
             installApk(context, localApk)
         }.addOnFailureListener {
@@ -35,4 +39,26 @@ class UpdateUtils {
             progressLiveData.postValue(progress.toInt())
         }
     }
+
+    fun storeTempFilesPath(context: Context, apk: File) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        preferences.
+            edit().putString("tempUpdateFile", apk.absolutePath).apply()
+    }
+
+    fun clearUpdateData(context: Context) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val tempFile = preferences.getString("tempUpdateFile", null)
+        tempFile?.let {
+            with(File(it)) {
+                delete()
+                preferences
+                    .edit().putString("tempUpdateFile", null).apply()
+            }
+        }
+    }
+
+    fun updateCacheExisting(context: Context) = PreferenceManager
+        .getDefaultSharedPreferences(context)
+        .getString("tempUpdateFile", null)!=null
 }

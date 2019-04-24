@@ -38,7 +38,7 @@ class ViewModelCallbackGenerator: AbstractProcessor() {
     }
 
     override fun process(p0: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
-        (roundEnvironment?.getElementsAnnotatedWith(ObservableVM::class.java) as Iterable<Element>)?.forEach {
+        (roundEnvironment?.getElementsAnnotatedWith(ObservableVM::class.java) as Iterable<Element>).forEach {
             generateClass(it)
         }
         return true

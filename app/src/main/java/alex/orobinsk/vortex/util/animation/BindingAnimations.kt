@@ -14,6 +14,7 @@ import alex.orobinsk.vortex.util.hideKeyboard
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputLayout
@@ -61,6 +62,7 @@ fun setVortexAnimation(view: View, startState: MutableLiveData<Boolean>) {
 fun setAnimateInsiders(view: ViewGroup, startState: MutableLiveData<Boolean>) {
     val animatedFields = view.findViewsByType<TextInputLayout>()
     val animatedButtons= view.findViewsByType<Button>()
+    val animatedLayouts = view.findViewsByType<RelativeLayout>()
 
     animatedFields.forEach { it.visibility = View.INVISIBLE }
     animatedButtons.forEach { it.visibility = View.INVISIBLE }
@@ -76,6 +78,13 @@ fun setAnimateInsiders(view: ViewGroup, startState: MutableLiveData<Boolean>) {
             }
 
             animatedButtons.forEach { item ->
+                item.chainAnimation {
+                    translateUp() interpolator accelerateInterpolator() then {
+                            item.visibility = View.VISIBLE
+                    }
+                }
+            }
+            animatedLayouts.forEach { item ->
                 item.chainAnimation {
                     translateUp() interpolator accelerateInterpolator() then {
                             item.visibility = View.VISIBLE
