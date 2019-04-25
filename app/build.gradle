@@ -42,12 +42,18 @@ android {
         def secretKey = properties.getProperty("SECRET_KEY", "")
         def defaultPassword = properties.getProperty("DEFAULT_PASSWORD", "")
         def defaultEmail = properties.getProperty("DEFAULT_EMAIL", "")
+        def last_fm_secret = properties.getProperty("LAST_FM_SHARED_SECRED", "")
+        def last_fm_api_key = properties.getProperty("API_KEY", "")
+        def last_fm_endpoint = properties.getProperty("LAST_FM_API_ENDPOINT", "")
 
         it.buildConfigField 'String', "DEEZER_APPLICATION_ID", appId
         it.buildConfigField 'String', "API_ENDPOINT", apiEndpoint
         it.buildConfigField 'String', "SECRET_KEY", secretKey
         it.buildConfigField 'String', "DEFAULT_PASSWORD", defaultPassword
         it.buildConfigField 'String', "DEFAULT_EMAIL", defaultEmail
+        it.buildConfigField 'String', "LAST_FM_SECRET", last_fm_secret
+        it.buildConfigField 'String', "LAST_FM_API_KEY", last_fm_api_key
+        it.buildConfigField 'String', "LAST_FM_API_ENDPOINT", last_fm_endpoint
 
         it.resValue 'string', "api_key", appId
     }

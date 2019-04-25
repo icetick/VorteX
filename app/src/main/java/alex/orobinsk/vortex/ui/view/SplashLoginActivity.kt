@@ -4,13 +4,11 @@ import alex.orobinsk.vortex.BuildConfig
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.base.BaseActivity
 import alex.orobinsk.vortex.ui.viewModel.SplashLoginViewModel
-import alex.orobinsk.vortex.util.FirebaseConfig
-import alex.orobinsk.vortex.util.UpdateUtils
-import alex.orobinsk.vortex.util.getImei
-import alex.orobinsk.vortex.util.startActivity
+import alex.orobinsk.vortex.util.*
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.tbruyelle.rxpermissions2.RxPermissions
 
 
@@ -43,6 +41,9 @@ class SplashLoginActivity : BaseActivity() {
                             fetchUpdateInfo(this.updateProgress)
                         }
                     }
+                    message.observe(this@SplashLoginActivity, Observer{
+                        toast(it)
+                    })
 
                 }
             })

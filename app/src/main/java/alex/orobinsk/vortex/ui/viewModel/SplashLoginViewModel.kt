@@ -6,15 +6,14 @@ import alex.orobinsk.vortex.domain.api.MusicApiType
 import alex.orobinsk.vortex.domain.api.deezer.DeezerAuthenticationHelper
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.ui.base.BaseViewModel
-import alex.orobinsk.vortex.util.ValidationType
-import alex.orobinsk.vortex.util.delay
-import alex.orobinsk.vortex.util.hideKeyboard
-import alex.orobinsk.vortex.util.isValidAs
+import alex.orobinsk.vortex.util.*
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.github.felixgail.gplaymusic.api.GPlayMusic
 import com.github.felixgail.gplaymusic.util.TokenProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,11 +31,14 @@ class SplashLoginViewModel : BaseViewModel() {
     val progressBarAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
     val offlineLoginSucceded = MutableLiveData<Boolean>()
     val loginSucceeded = MutableLiveData<Boolean>()
+    val message = MutableLiveData<String>()
+    val firebaseAuthManager = FirebaseAuthManager()
     val updateProgress: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
     }
+    val networkStatus = MutableLiveData<Resource<FirebaseUser>>()
 
-    val currentApi: MusicApiType = MusicApiType.DEEZER
+    val currentApi: MusicApiType = MusicApiType.VORTEX
 
     val defaultEmail = BuildConfig.DEFAULT_EMAIL
     val defaultPassword = BuildConfig.DEFAULT_PASSWORD
@@ -45,7 +47,9 @@ class SplashLoginViewModel : BaseViewModel() {
     override fun onCreated() {
         //TODO: Get androidID for Google Play Music(?)
         //androidID.postValue(Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID))
-
+        if(firebaseAuthManager.hasUser()) {
+            loginSucceeded.postValue(true)
+        }
         GlobalScope.launch(Dispatchers.IO) {
             delay(SPLASH_END_TIME) {
                 splashEnded.postValue(true)
@@ -57,7 +61,7 @@ class SplashLoginViewModel : BaseViewModel() {
         progressBarAnimationEnabled.value = true
         it.hideKeyboard()
 
-        if (!validateFields()) {
+        if (validateFields()) {
             when (currentApi) {
                 MusicApiType.DEEZER -> {
                      val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
@@ -91,11 +95,27 @@ class SplashLoginViewModel : BaseViewModel() {
                 MusicApiType.SPOTIFY -> {
 
                 }
+                MusicApiType.VORTEX -> {
+                    networkStatus.observeForever {resource ->
+                        when(resource.status()) {
+                            Resource.Status.LOADING -> {
+                                progressBarAnimationEnabled.postValue(true)
+                            }
+                            Resource.Status.ERROR -> {
+                                progressBarAnimationEnabled.postValue(false)
+                                message.postValue(resource.message())
+                            }
+                            Resource.Status.SUCCESS -> {
+                                loginSucceeded.postValue(true)
+                                progressBarAnimationEnabled.postValue(false)
+                            }
+                        }
+                    }
+                    firebaseAuthManager.signInUp(userName.value!!, password.value!!, networkStatus)
+
+                }
             }
         }
-    }
-
-    fun onLoginViaDeezer() = View.OnClickListener {
     }
 
     fun onLoginSucceded(token: String) {
@@ -113,8 +133,8 @@ class SplashLoginViewModel : BaseViewModel() {
     fun onLongClick() = View.OnLongClickListener { v ->
         progressBarAnimationEnabled.value = true
         v.hideKeyboard()
-        if (!validateFields()) {
-            val deezerAuthenticator = DeezerAuthenticationHelper.with(v.context)
+        if (validateFields()) {
+         /*   val deezerAuthenticator = DeezerAuthenticationHelper.with(v.context)
             deezerAuthenticator.showAlertAuthentication { code ->
                 GlobalScope.launch(Dispatchers.Main) {
                     deezerAuthenticator.removeWebView()
@@ -129,7 +149,7 @@ class SplashLoginViewModel : BaseViewModel() {
                         onLoginSucceded(token)
                     }
                 }
-            }
+            }*/
         }
         false
     }

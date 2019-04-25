@@ -1,5 +1,5 @@
 package alex.orobinsk.vortex.domain.api
 
 enum class MusicApiType {
-    DEEZER, GPLAY, SPOTIFY
+    DEEZER, GPLAY, SPOTIFY, VORTEX
 }

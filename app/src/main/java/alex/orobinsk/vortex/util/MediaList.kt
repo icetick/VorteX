@@ -1,5 +1,6 @@
 package alex.orobinsk.vortex.util
 
+import alex.orobinsk.vortex.domain.model.ChartTracksResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import android.os.Parcelable
 import java.lang.Exception
@@ -78,9 +79,9 @@ class MediaList<T>(vararg items: T) : Collection<T> {
     }
 }
 
-fun MediaList<TracksResponse.Data>.firstAvailable(): TracksResponse.Data? {
+fun MediaList<ChartTracksResponse.Track>.firstAvailable(): ChartTracksResponse.Track? {
     for(item in this.items) {
-        if(item.preview.isBlank()) {
+        if(item.url.isBlank()) {
             continue
         } else {
             return item

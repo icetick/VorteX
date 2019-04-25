@@ -1,8 +1,9 @@
 package alex.orobinsk.vortex.ui.viewModel
 
+import alex.orobinsk.vortex.domain.model.ChartTracksResponse
 import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
-import alex.orobinsk.vortex.domain.repository.DeezerRepository
+import alex.orobinsk.vortex.domain.repository.MusicRepository
 import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ToolbarModel
@@ -13,12 +14,13 @@ import org.kodein.di.generic.instance
 import java.util.*
 
 class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
-    val deezerRepository: DeezerRepository by instance()
+    //val deezerRepository: DeezerRepository by instance()
+    val musicRepository: MusicRepository by instance()
     val radioResponse = MutableLiveData<List<RadioResponse.Data>>()
     val trackList = ArrayDeque<String>()
     var toolbarModel: ToolbarModel? = null
     var postActivityTracks: MutableLiveData<Boolean> = MutableLiveData()
-    var currentTracklist: MutableLiveData<List<TracksResponse.Data>> = MutableLiveData()
+    var currentTracklist: MutableLiveData<ChartTracksResponse.Tracks> = MutableLiveData()
     val player = MediaPlayer()
 
     val onPlayClick = View.OnClickListener {
@@ -49,19 +51,22 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     }
 
     override fun onClick(data: RadioResponse.Data) {
-        var trackList: MutableList<TracksResponse.Data> = arrayListOf()
-        deezerRepository.getData<TracksResponse>(data.id) {response ->
+        var trackList: ChartTracksResponse.Tracks
+        musicRepository.getData<ChartTracksResponse> {chartTracksResponse ->
+            trackList = chartTracksResponse.tracks
+        }
+      /*  deezerRepository.getData<TracksResponse>(data.id) {response ->
             response.data.forEach {track ->
                 trackList.add(track)
-               /* if(checkIfMusicAvailable(track.link)) {trackList.add(track.preview)}*/
+               *//* if(checkIfMusicAvailable(track.link)) {trackList.add(track.preview)}*//*
             }.apply { currentTracklist.postValue(trackList); onPlayClick.onClick(null) }
-        }
+        }*/
     }
 
     override fun onCreated() {
-        deezerRepository.getData<RadioResponse> { response ->
+      /*  deezerRepository.getData<RadioResponse> { response ->
             radioResponse.postValue(response.data)
-        }
+        }*/
         /*radioResponse.observeForever {
             if (it.data.isNotEmpty()) {
                 deezerRepository.getData<TracksResponse>(it.data[0].id.toString()) {

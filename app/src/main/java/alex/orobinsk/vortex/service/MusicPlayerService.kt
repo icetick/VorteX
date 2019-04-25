@@ -1,6 +1,7 @@
 package alex.orobinsk.vortex.service
 
 import alex.orobinsk.vortex.R
+import alex.orobinsk.vortex.domain.model.ChartTracksResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.ui.view.MainActivity
 import alex.orobinsk.vortex.util.MediaList
@@ -11,18 +12,19 @@ import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.*
+import android.os.Binder
+import android.os.Build
+import android.os.IBinder
+import android.os.RemoteException
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import java.io.IOException
 import android.widget.RemoteViews
+import androidx.core.app.NotificationCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -31,8 +33,7 @@ import com.bumptech.glide.request.target.NotificationTarget
 import com.bumptech.glide.request.target.Target
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.kodein.di.javaType
-import java.lang.Exception
+import java.io.IOException
 
 class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
     MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnInfoListener,
@@ -50,7 +51,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     private val PLAYER_NOTIFICATION_CHANNEL_ID: String = "music_channel_007"
     private val receiver = MusicControlReceiver()
 
-    var mediaList: MediaList<TracksResponse.Data>? = null
+    var mediaList: MediaList<ChartTracksResponse.Track>? = null
     set(value) {
         field = value
         initMediaPlayer()
@@ -85,7 +86,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
             mediaPlayer?.setAudioAttributes(audioAttributes)
             try {
                 mediaList?.firstAvailable()?.let {
-                    mediaPlayer?.setDataSource(it.preview)
+                    mediaPlayer?.setDataSource(it.url)
                 }
             } catch (ex: IOException) {
                 ex.printStackTrace()
@@ -96,7 +97,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
             mediaPlayer?.reset()
             try {
                 mediaList?.firstAvailable()?.let {
-                    mediaPlayer?.setDataSource(it.preview)
+                    mediaPlayer?.setDataSource(it.url)
                 }
             } catch (ex: IOException) {
                 ex.printStackTrace()
@@ -195,7 +196,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 stopSelf()
             } else {
                 it.next()?.let {track ->
-                    resetupSource(track.preview)
+                    resetupSource(track.url)
                 }
             }
         }
@@ -398,7 +399,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         mediaList?.let {
             if(!it.isEmpty()) {
                 it.next()?.let {track ->
-                    resetupSource(track.preview)
+                    resetupSource(track.url)
                 }
             }
         }
@@ -409,7 +410,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         mediaList?.let {
             if(!it.isEmpty()) {
                 it.previous()?.let {track ->
-                    resetupSource(track.preview)
+                    resetupSource(track.url)
                 }
             }
         }

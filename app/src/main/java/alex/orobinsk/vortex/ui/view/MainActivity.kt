@@ -2,6 +2,7 @@ package alex.orobinsk.vortex.ui.view
 
 import alex.orobinsk.vortex.BR
 import alex.orobinsk.vortex.R
+import alex.orobinsk.vortex.domain.model.ChartTracksResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.service.MusicPlayerService
 import alex.orobinsk.vortex.ui.adapter.viewpager.MainScreenAdapter
@@ -78,7 +79,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun playAudio(items: List<TracksResponse.Data>) {
+    fun playAudio(items: ChartTracksResponse.Tracks) {
         if (!isMusicPlayerBound) {
             val playerIntent = Intent(this, MusicPlayerService::class.java)
             playerIntent.putExtra(MusicPlayerService.DEFAULT_ITEMSET, Gson().toJson(items))
@@ -89,7 +90,7 @@ class MainActivity : BaseActivity() {
             }
             bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         } else {
-            servicePlayer.mediaList = MediaList.of(items)
+            servicePlayer.mediaList = MediaList.of(items.track)
         }
     }
 

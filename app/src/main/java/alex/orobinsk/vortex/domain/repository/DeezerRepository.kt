@@ -1,5 +1,7 @@
 package alex.orobinsk.vortex.domain.repository
 
+import alex.orobinsk.vortex.domain.model.Artist
+import alex.orobinsk.vortex.domain.model.ChartTracksResponse
 import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.domain.networking.MusicAPI
@@ -14,7 +16,7 @@ import kotlin.coroutines.CoroutineContext
  * This class does not implement Repository<T>, it`s 3rd-party and need to
  * be custom implemented
  */
-open class DeezerRepository(override val kodein: Kodein, override val coroutineContext: CoroutineContext): CoroutineScope, KodeinAware {
+open class MusicRepository(override val kodein: Kodein, override val coroutineContext: CoroutineContext): CoroutineScope, KodeinAware {
     @PublishedApi
     internal val publishedApi: MusicAPI by instance()
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext: CoroutineContext, throwable: Throwable -> throwable.printStackTrace() }
@@ -22,16 +24,22 @@ open class DeezerRepository(override val kodein: Kodein, override val coroutineC
     /**
      * This method allows you to get any data depends on class, that you require
      * by reification
-     * @param parameters declares all of parameters, that may be at request path
-     * @param listener declares listener, that are getting response after request done
+     * @param parameters declares all of parameters, that may be at request path ordered by usage
+     * @param listener declares listener, that getting response after request done
      */
     inline fun<reified T> getData(vararg parameters: String, noinline listener: (T)-> Unit) = when(T::class) {
-        RadioResponse::class -> {
-            loadData(publishedApi.getRadioSets(), listener)
+        Artist::class -> {
+            loadData(publishedApi.getArtistInfo(parameters.first()), listener)
         }
-        TracksResponse::class -> {
+        ChartTracksResponse::class -> {
+            loadData(publishedApi.getChartTracks(), listener)
+        }
+        /*RadioResponse::class -> {
+            loadData(publishedApi.getArtistInfo(parameters.first()), listener)
+        }*/
+        /*TracksResponse::class -> {
             loadData(publishedApi.getRadioTracks(parameters.first()), listener)
-        }
+        }*/
         else -> {}
     }
 

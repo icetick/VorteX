@@ -10,7 +10,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 class ServiceGenerator {
     companion object {
         private lateinit var retrofit: Retrofit
-        private val BASE_URL = BuildConfig.API_ENDPOINT
+        private val BASE_URL = BuildConfig.LAST_FM_API_ENDPOINT//BuildConfig.API_ENDPOINT
         private val httpClient = OkHttpClient.Builder()
 
         private val builder = Retrofit.Builder().baseUrl(BASE_URL)
