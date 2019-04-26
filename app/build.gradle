@@ -42,7 +42,7 @@ android {
         def secretKey = properties.getProperty("SECRET_KEY", "")
         def defaultPassword = properties.getProperty("DEFAULT_PASSWORD", "")
         def defaultEmail = properties.getProperty("DEFAULT_EMAIL", "")
-        def last_fm_secret = properties.getProperty("LAST_FM_SHARED_SECRED", "")
+        def last_fm_secret = properties.getProperty("LAST_FM_SHARED_SECRET", "")
         def last_fm_api_key = properties.getProperty("API_KEY", "")
         def last_fm_endpoint = properties.getProperty("LAST_FM_API_ENDPOINT", "")
 

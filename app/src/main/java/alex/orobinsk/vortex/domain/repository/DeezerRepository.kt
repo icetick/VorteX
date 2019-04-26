@@ -6,6 +6,7 @@ import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.domain.networking.MusicAPI
 import kotlinx.coroutines.*
+import okhttp3.ResponseBody
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
@@ -33,6 +34,9 @@ open class MusicRepository(override val kodein: Kodein, override val coroutineCo
         }
         ChartTracksResponse::class -> {
             loadData(publishedApi.getChartTracks(), listener)
+        }
+        ResponseBody::class-> {
+            loadData(publishedApi.getHtml(parameters.first()), listener)
         }
         /*RadioResponse::class -> {
             loadData(publishedApi.getArtistInfo(parameters.first()), listener)

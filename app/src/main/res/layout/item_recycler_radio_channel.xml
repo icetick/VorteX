@@ -6,10 +6,10 @@
     <data>
         <variable
             name="viewModel"
-            type="alex.orobinsk.vortex.domain.model.RadioResponse.Data" />
+            type="alex.orobinsk.vortex.domain.model.ChartTracksResponse.Track" />
         <variable
             name="actionListener"
-            type="alex.orobinsk.vortex.ui.widgets.ActionListener&lt;alex.orobinsk.vortex.domain.model.RadioResponse.Data&gt;" />
+            type="alex.orobinsk.vortex.ui.widgets.ActionListener&lt;alex.orobinsk.vortex.domain.model.ChartTracksResponse.Track&gt;" />
         <import type="android.view.View" />
         <import type="android.text.TextUtils"/>
     </data>
@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:srcUrl="@{viewModel.picture_big}"
+                    android:srcUrl="@{viewModel.image[3].text}"
                     tools:src="@drawable/nebula_stars" />
 
                 <TextView
@@ -52,8 +52,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
                     android:layout_marginTop="@dimen/margin_card_text_title_vertical"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.title) ? View.GONE : View.VISIBLE}"
-                    android:text='@{viewModel.title ?? ""}'
+                    android:visibility="@{TextUtils.isEmpty(viewModel.name) ? View.GONE : View.VISIBLE}"
+                    android:text='@{viewModel.name ?? ""}'
                     tools:text="Title" />
 
                 <TextView
@@ -65,8 +65,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
                     android:layout_marginBottom="@dimen/margin_card_text_title_vertical"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.id) ? View.GONE : View.VISIBLE}"
-                    android:text='@{viewModel.id ?? ""}'
+                    android:visibility="@{TextUtils.isEmpty(viewModel.duration) ? View.GONE : View.VISIBLE}"
+                    android:text='@{viewModel.duration ?? ""}'
                     tools:text="Description" />
 
                 <TextView
@@ -78,8 +78,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginEnd="@dimen/margin_card_text_title_horizontal"
                     android:layout_marginBottom="@dimen/margin_card_text_title_vertical"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.type) ? View.GONE : View.VISIBLE}"
-                    android:text='@{viewModel.type ?? ""}'
+                    android:visibility="@{TextUtils.isEmpty(viewModel.artist.name) ? View.GONE : View.VISIBLE}"
+                    android:text='@{viewModel.artist.name ?? ""}'
                     tools:text="Description" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
@@ -93,8 +93,8 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="match_parent"
-                android:visibility="@{TextUtils.isEmpty(viewModel.tracklist) ? View.GONE : View.VISIBLE}"
-                android:text='@{viewModel.tracklist ?? ""}'
+                android:visibility="@{TextUtils.isEmpty(viewModel.playcount) ? View.GONE : View.VISIBLE}"
+                android:text='@{viewModel.playcount ?? ""}'
                 tools:text="Description"
                 android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
                 style="@style/TextWhiteOutline"

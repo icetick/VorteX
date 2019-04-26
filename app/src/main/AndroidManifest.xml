@@ -18,6 +18,7 @@
         android:name=".App"
         android:largeHeap="true"
         android:theme="@style/FullscreenTheme"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true">
         <provider
             android:name="androidx.core.content.FileProvider"

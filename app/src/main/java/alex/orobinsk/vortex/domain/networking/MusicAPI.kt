@@ -6,6 +6,8 @@ import alex.orobinsk.vortex.domain.model.ChartTracksResponse
 import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import kotlinx.coroutines.Deferred
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -40,6 +42,13 @@ interface MusicAPI {
 
     @POST("?method=chart.gettoptracks&api_key=${BuildConfig.LAST_FM_API_KEY}&format=json")
     fun getChartTracks(): Deferred<ChartTracksResponse>
+
+   /* @POST("?method=chart.gettoptracks&api_key=${BuildConfig.LAST_FM_API_KEY}&format=json")
+    fun getChartTracks1(): Call<ChartTracksResponse>*/
+
+    @GET("{path}")
+    fun getHtml(@Path("path") query: String): Deferred<ResponseBody>
+
    /* @GET("radio/{id}/tracks")
     fun getRadioTracks(@Path("id") id: String): Deferred<TracksResponse>*/
 }
