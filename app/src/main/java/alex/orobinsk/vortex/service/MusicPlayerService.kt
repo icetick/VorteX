@@ -35,9 +35,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
 
-class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
+class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener,
+    MediaPlayer.OnPreparedListener,
     MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnInfoListener,
-    MediaPlayer.OnBufferingUpdateListener, AudioManager.OnAudioFocusChangeListener, NotificationPlayer {
+    MediaPlayer.OnBufferingUpdateListener, AudioManager.OnAudioFocusChangeListener,
+    NotificationPlayer {
 
     private val binder: IBinder = LocalBinder()
     private var mediaPlayer: MediaPlayer? = null
@@ -52,21 +54,22 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     private val receiver = MusicControlReceiver()
 
     var mediaList: MediaList<ChartTracksResponse.Track>? = null
-    set(value) {
-        field = value
-        initMediaPlayer()
-    }
+        set(value) {
+            field = value
+            initMediaPlayer()
+        }
 
     companion object {
         const val DEFAULT_ITEMSET = "defItems"
         const val NEXT_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.NEXT_TAG"
         const val PREVIOUS_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.PREVIOUS_TAG"
-        const val RESUME_PAUSE_TOOGLE_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.RESUME_PAUSE_TOOGLE_TAG"
+        const val RESUME_PAUSE_TOOGLE_TAG =
+            "alex.orobinsk.vortex.service.MusicPlayerService.RESUME_PAUSE_TOOGLE_TAG"
         const val LIKE_TAG = "alex.orobinsk.vortex.service.MusicPlayerService.LIKE_TAG"
     }
 
     private fun initMediaPlayer() {
-        if(mediaPlayer==null) {
+        if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer()
 
             mediaPlayer?.setOnCompletionListener(this)
@@ -114,33 +117,39 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
-                notificationManager.createNotificationChannel(NotificationChannel(PLAYER_NOTIFICATION_CHANNEL_ID, "Music Player Notification Channel", NotificationManager.IMPORTANCE_LOW))
+                notificationManager.createNotificationChannel(
+                    NotificationChannel(
+                        PLAYER_NOTIFICATION_CHANNEL_ID,
+                        "Music Player Notification Channel",
+                        NotificationManager.IMPORTANCE_LOW
+                    )
+                )
             } catch (ex: RemoteException) {
-
+                ex.printStackTrace()
             }
         }
-        if(!requestAudioFocus()) {
-           stopSelf()
+        if (!requestAudioFocus()) {
+            stopSelf()
         }
         intent?.hasExtra(DEFAULT_ITEMSET)?.let {
-            if(it) {
-                intent.getStringExtra(DEFAULT_ITEMSET)?.let {tracks ->
-                    val typeTokenList = object: TypeToken<List<TracksResponse.Data>>(){}.type
+            if (it) {
+                intent.getStringExtra(DEFAULT_ITEMSET)?.let { tracks ->
+                    val typeTokenList = object : TypeToken<List<TracksResponse.Data>>() {}.type
                     mediaList = MediaList.of(Gson().fromJson(tracks, typeTokenList))
                 }
                 mediaList?.isNotEmpty().let {
-                    if(notification==null) {
-                        mediaList?.current()?.let {track ->
+                    if (notification == null) {
+                        mediaList?.current()?.let { track ->
                             showNotification(Utils.PlayerModelOf(track))
                         }
                     }
                 }
             } else {
-                when(intent.action) {
+                when (intent.action) {
                     RESUME_PAUSE_TOOGLE_TAG -> {
-                       pauseResumeToggle()
+                        pauseResumeToggle()
                     }
                     NEXT_TAG -> {
                         next()
@@ -157,7 +166,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 }
             }
         } ?: run {
-            when(intent?.action) {
+            when (intent?.action) {
                 RESUME_PAUSE_TOOGLE_TAG -> {
                     pauseResumeToggle()
                 }
@@ -180,7 +189,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     override fun onDestroy() {
         super.onDestroy()
-        if(mediaPlayer!=null) {
+        if (mediaPlayer != null) {
             stopMedia()
             stopForeground(true)
             mediaPlayer?.release()
@@ -191,11 +200,11 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     override fun onCompletion(mp: MediaPlayer?) {
         mediaList?.let {
-            if(it.isEmpty()) {
+            if (it.isEmpty()) {
                 stopMedia()
                 stopSelf()
             } else {
-                it.next()?.let {track ->
+                it.next()?.let { track ->
                     resetupSource(track.url)
                 }
             }
@@ -203,7 +212,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     override fun onPrepared(mp: MediaPlayer?) {
-        if(waitingForStart) {
+        if (waitingForStart) {
             playMedia()
             notification?.let {
                 showNotification(Utils.PlayerModelOf(mediaList!!.current()!!))
@@ -221,8 +230,14 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 "MediaPlayer Error",
                 "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK $extra"
             )
-            MediaPlayer.MEDIA_ERROR_SERVER_DIED -> Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED $extra")
-            MediaPlayer.MEDIA_ERROR_UNKNOWN -> Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN $extra")
+            MediaPlayer.MEDIA_ERROR_SERVER_DIED -> Log.d(
+                "MediaPlayer Error",
+                "MEDIA ERROR SERVER DIED $extra"
+            )
+            MediaPlayer.MEDIA_ERROR_UNKNOWN -> Log.d(
+                "MediaPlayer Error",
+                "MEDIA ERROR UNKNOWN $extra"
+            )
         }
         return false
     }
@@ -239,12 +254,10 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     override fun onAudioFocusChange(focusState: Int) {
-        //Invoked when the audio focus of the system is updated.
         when (focusState) {
             AudioManager.AUDIOFOCUS_GAIN -> {
-                // resume playback
                 mediaPlayer?.let {
-                    if(!it.isPlaying) {
+                    if (!it.isPlaying) {
                         it.start()
                     }
                 } ?: run {
@@ -253,9 +266,8 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 mediaPlayer?.setVolume(1.0f, 1.0f)
             }
             AudioManager.AUDIOFOCUS_LOSS -> {
-                // Lost focus for an unbounded amount of time: stop playback and release media player
                 mediaPlayer?.let {
-                    if(it.isPlaying) {
+                    if (it.isPlaying) {
                         it?.stop()
                     }
                 }
@@ -263,19 +275,14 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 mediaPlayer = null
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ->
-                // Lost focus for a short time, but we have to stop
-                // playback. We don't release the media player because playback
-                // is likely to resume
                 mediaPlayer?.let {
-                    if(it.isPlaying){
+                    if (it.isPlaying) {
                         it.pause()
                     }
                 }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
-                // Lost focus for a short time, but it's ok to keep playing
-                // at an attenuated level
                 mediaPlayer?.let {
-                    if(it.isPlaying) {
+                    if (it.isPlaying) {
                         it.setVolume(0.1f, 0.1f)
                     }
                 }
@@ -285,7 +292,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     @Suppress("DEPRECATION")
     private fun requestAudioFocus(): Boolean {
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val playbackAttributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -297,14 +304,19 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
                 .build()
             audioManager?.requestAudioFocus(focusRequest)
         } else {
-            audioManager?.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+            audioManager?.requestAudioFocus(
+                this,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
         } == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-        //Could not gain focus
     }
 
     private fun removeAudioFocus(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager?.abandonAudioFocusRequest(focusRequest!!)
+            AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager?.abandonAudioFocusRequest(
+                focusRequest!!
+            )
         } else {
             AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager?.abandonAudioFocus(this)
         }
@@ -337,7 +349,10 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         remoteViews.setOnClickPendingIntent(R.id.like_btn, pendingIntentLike)
     }
 
-    private fun updateNotification(model: PlayerNotificationModel?, builder: NotificationCompat.Builder? = null) {
+    private fun updateNotification(
+        model: PlayerNotificationModel?,
+        builder: NotificationCompat.Builder? = null
+    ) {
         val remoteViews = RemoteViews(packageName, R.layout.player_notification)
 
         model?.let {
@@ -355,17 +370,36 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         builder?.let { notification = builder.build() }
 
         Glide.with(this).asBitmap().load(model?.image).listener(object : RequestListener<Bitmap?> {
-            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap?>?, isFirstResource: Boolean): Boolean {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Bitmap?>?,
+                isFirstResource: Boolean
+            ): Boolean {
                 e?.printStackTrace()
                 return false
             }
 
-            override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap?>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+            override fun onResourceReady(
+                resource: Bitmap?,
+                model: Any?,
+                target: Target<Bitmap?>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
                 notificationManager.notify(PLAYER_NOTIFICATION_ID, notification)
                 return false
             }
-        }).into(NotificationTarget(this, R.id.image, remoteViews, notification, PLAYER_NOTIFICATION_ID))
-        startForeground(PLAYER_NOTIFICATION_ID,notification)
+        }).into(
+            NotificationTarget(
+                this,
+                R.id.image,
+                remoteViews,
+                notification,
+                PLAYER_NOTIFICATION_ID
+            )
+        )
+        startForeground(PLAYER_NOTIFICATION_ID, notification)
     }
 
     private fun getPendingSelfIntent(context: Context, action: String): PendingIntent {
@@ -382,7 +416,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         val model = Utils.PlayerModelOf(mediaList!!.current()!!)
 
         mediaPlayer?.isPlaying?.let {
-            if(it) {
+            if (it) {
                 pauseMedia()
                 model.pauseResumeToggleIcon = R.drawable.ic_play_circle_outline
             } else {
@@ -394,11 +428,10 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
 
-
     override fun next() {
         mediaList?.let {
-            if(!it.isEmpty()) {
-                it.next()?.let {track ->
+            if (!it.isEmpty()) {
+                it.next()?.let { track ->
                     resetupSource(track.url)
                 }
             }
@@ -408,8 +441,8 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     override fun previous() {
         mediaList?.let {
-            if(!it.isEmpty()) {
-                it.previous()?.let {track ->
+            if (!it.isEmpty()) {
+                it.previous()?.let { track ->
                     resetupSource(track.url)
                 }
             }
@@ -426,7 +459,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     private fun playMedia() {
         mediaPlayer?.let {
-            if(!it.isPlaying) {
+            if (!it.isPlaying) {
                 it.start()
             }
         }
@@ -434,7 +467,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     private fun stopMedia() {
         mediaPlayer?.let {
-            if(it.isPlaying) {
+            if (it.isPlaying) {
                 it.stop()
             }
         }
@@ -442,7 +475,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     private fun pauseMedia() {
         mediaPlayer?.let {
-            if(it.isPlaying) {
+            if (it.isPlaying) {
                 it.pause()
                 resumePosition = it.currentPosition
             }
@@ -451,7 +484,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
 
     private fun resumeMedia() {
         mediaPlayer?.let {
-            if(!it.isPlaying) {
+            if (!it.isPlaying) {
                 it.seekTo(resumePosition)
                 it.start()
             }
@@ -461,7 +494,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     inner class MusicControlReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.e("PGFSAFASAFSFASF", "ASFASFSAFSAFMASLFMKAFMASKLMFASKLFMKLASMFKLASMFKLSAKLAS")
-            when(intent?.action) {
+            when (intent?.action) {
                 RESUME_PAUSE_TOOGLE_TAG -> {
                     pauseResumeToggle()
                 }

@@ -1,5 +1,6 @@
 package alex.orobinsk.vortex.ui.viewModel
 
+import alex.orobinsk.vortex.domain.api.lastfm.LastFmTrackResolver
 import alex.orobinsk.vortex.domain.model.ChartTracksResponse
 import alex.orobinsk.vortex.domain.model.RadioResponse
 import alex.orobinsk.vortex.domain.model.TracksResponse
@@ -9,6 +10,7 @@ import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ToolbarModel
 import android.media.MediaPlayer
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import okhttp3.ResponseBody
@@ -54,6 +56,7 @@ class RadioViewModel : BaseViewModel(), ActionListener<ChartTracksResponse.Track
 
     override fun onClick(data: ChartTracksResponse.Track) {
         var trackList: ChartTracksResponse.Tracks
+
 
         /*  deezerRepository.getData<TracksResponse>(data.id) {response ->
               response.data.forEach {track ->

@@ -1,6 +1,7 @@
 package alex.orobinsk.vortex.ui.view
 
 import alex.orobinsk.vortex.R
+import alex.orobinsk.vortex.domain.api.lastfm.LastFmTrackResolver
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.ui.base.BaseFragment
 import alex.orobinsk.vortex.ui.viewModel.RadioViewModel
@@ -8,6 +9,7 @@ import alex.orobinsk.vortex.ui.widgets.ToolbarModelBuilder
 import alex.orobinsk.vortex.util.toast
 import android.view.View
 import androidx.lifecycle.Observer
+import okhttp3.ResponseBody
 
 class RadioFragment: BaseFragment() {
     var currentRadioData = listOf<TracksResponse.Data>()
@@ -25,6 +27,12 @@ class RadioFragment: BaseFragment() {
                         })
                         .build()
                 radioResponse.observe(this@RadioFragment, Observer { radioResponse ->
+                    musicRepository.getData<ResponseBody>(radioResponse[0].url) {
+                        val htmlResponse = it.string()
+                        val dataYoutubeId = htmlResponse.split("data-youtube-id=")
+                        val trackId = dataYoutubeId[1].split("\"")[1]
+                        LastFmTrackResolver.with(this@RadioFragment.context!!).getMusic(trackId)
+                    }
                     /*val endpointRadioData = radioResponse.data.joinToString { data -> data.picture+data.id+data.title }
                     toast(endpointRadioData)*/
                 })
