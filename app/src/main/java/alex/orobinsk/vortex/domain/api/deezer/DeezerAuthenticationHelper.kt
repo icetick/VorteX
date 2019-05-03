@@ -116,6 +116,7 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
         alert.setView(webView)
             .setNegativeButton(context.getString(R.string.close)) { dialog, _ -> dialog?.dismiss(); webView?.destroy() }
         alert.show()
+        webView?.requestFocus()
     }
 
     fun getDeezerCookie(connection: URLConnection) {
