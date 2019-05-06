@@ -5,12 +5,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.webkit.*
+import android.webkit.ValueCallback
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import android.webkit.JavascriptInterface
-import android.content.DialogInterface
-import android.app.Dialog
 
 
 class LastFmTrackResolver private constructor(private val context: Context) {
