@@ -5,10 +5,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import android.webkit.JavascriptInterface
+import android.content.DialogInterface
+import android.app.Dialog
 
 
 class LastFmTrackResolver private constructor(private val context: Context) {
@@ -28,7 +30,6 @@ class LastFmTrackResolver private constructor(private val context: Context) {
             settings.javaScriptEnabled = true
             webViewClient =
                 LastFmResolverWebClient()
-            addJavascriptInterface(this@LastFmTrackResolver, "android")
             loadUrl("https://youtube2mp3api.com/@api/button/mp3/$trackId")
             setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
                 val i = Intent(Intent.ACTION_VIEW)
@@ -42,6 +43,7 @@ class LastFmTrackResolver private constructor(private val context: Context) {
     }
 
     class LastFmResolverWebClient() : WebViewClient() {
+        var valueCallback: ValueCallback<String>? = null
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
             view.loadUrl(url)
@@ -51,17 +53,36 @@ class LastFmTrackResolver private constructor(private val context: Context) {
 
 
         override fun onPageFinished(view: WebView?, url: String?) {
-            val jsInjectedLogin = "javascript:(function() {" +
+           /* val jsInjectedLogin = "javascript:(function() {" +
                     "while(true) {\n" +
                     " if(document.getElementsByClassName(\"fa fa-download\")[0]==null) {\n" +
                     "  await new Promise(r => setTimeout(r, 1000));\n" +
                     " } else {\n" +
-                    "javascript:android.onData(document.getElementsByClassName(\"fa fa-download\")[0].parentElement.parentElement.href)\n" +
+                    "javascript:Android.androidAlert(document.getElementsByClassName(\"fa fa-download\")[0].parentElement.parentElement.href)\n" +
                     "break;\n" +
                     " }\n" +
-                    "}" + "})()"
-            view?.loadUrl(jsInjectedLogin)
+                    "}" + "})()"*/
+            val jsInjectedLogin = "javascript: ( function() { " +
+                    "if(document.getElementsByClassName('fa fa-download')[0]==null)" +
+                     "{ return 0 } else { return document.getElementsByClassName(\"fa fa-download\")[0].parentElement.parentElement.href) }"
+                    " }) ()"
+            val valueResolver = ValueCallback<String> { value ->
+                if (value == "null") {
+                    evaluateMp3Resolver(view, jsInjectedLogin, valueCallback)
+                } else {
+                    Toast.makeText(view?.context, value, Toast.LENGTH_SHORT).show()
+                }
+            }
+            valueCallback = valueResolver
+            view?.evaluateJavascript(jsInjectedLogin, valueResolver)
+
             super.onPageFinished(view, url)
+        }
+
+        fun evaluateMp3Resolver(view: WebView?, script: String?, callback: ValueCallback<String>?) {
+            view?.handler?.postDelayed ({
+                view.evaluateJavascript(script, callback)
+            }, 500)
         }
     }
 }
