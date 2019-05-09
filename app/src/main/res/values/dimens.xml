@@ -7,7 +7,7 @@
     <dimen name="margin_fields_button">20dp</dimen>
     <dimen name="button_height_login">45dp</dimen>
     <dimen name="margin_status_bar_height">26dp</dimen>
-    <dimen name="radio_card_height">260dp</dimen>
+    <dimen name="radio_card_height">200dp</dimen>
     <dimen name="margin_card_text_title_horizontal">15dp</dimen>
     <dimen name="margin_card_text_title_vertical">10dp</dimen>
     <dimen name="margin_menu">50dp</dimen>

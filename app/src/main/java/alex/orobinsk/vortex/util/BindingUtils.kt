@@ -19,6 +19,7 @@ import alex.orobinsk.vortex.util.animation.chainAnimation
 import alex.orobinsk.vortex.util.animation.interpolator
 import alex.orobinsk.vortex.util.animation.setOnClickListenerWithScale
 import android.app.Activity
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,6 +27,7 @@ import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
 import android.widget.*
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
@@ -33,17 +35,23 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import jp.wasabeef.glide.transformations.BlurTransformation
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import java.io.Serializable
+import kotlin.random.Random
 
 @BindingAdapter("setTextField")
 fun setTextField(view: EditText, textField: MutableLiveData<String>) {
@@ -68,7 +76,7 @@ fun<T> setListItems(recyclerView: RecyclerView,
                     layoutItem: Int) {
     items.observeForever {
         it?.let {list ->
-            recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+            recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 2)
             recyclerView.adapter = BindingRecyclerAdapter<ViewDataBinding, T>(layoutItem, callbackHandler, list)
         }
     }
@@ -161,6 +169,14 @@ fun setImageSrc(view: ImageView, drawable: Drawable?) {
                 }
             })
             .into(view)
+}
+
+@BindingAdapter("android:srcBlur")
+fun setImageSrcBlurUrl(view:ImageView, url: String?) {
+    val roundedBlurryTransform = MultiTransformation<Bitmap>(BlurTransformation(20,1),
+        RoundedCornersTransformation(70, 0, RoundedCornersTransformation.CornerType.ALL))
+
+    Glide.with(view).load(url).apply(RequestOptions.bitmapTransform(roundedBlurryTransform).error(R.drawable.vortex_progress)).into(view)
 }
 @BindingAdapter("android:srcUrl")
 fun setImageSrcUrl(view: ImageView,url: String?) {

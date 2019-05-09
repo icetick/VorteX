@@ -19,13 +19,14 @@
         android:layout_marginTop="15dp"
         android:fitsSystemWindows="false">
 
-        <com.flaviofaria.kenburnsview.KenBurnsView
+        <ImageView
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/transparent"
-            android:src="@{@drawable/earth_space}"
-            tools:src="@drawable/nebula_stars" />
+            android:scaleType="centerCrop"
+            android:src="@{@drawable/nebula_radio}"
+            tools:src="@drawable/nebula_radio" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,6 +42,7 @@
                 android:paddingBottom="@dimen/margin_login"
                 app:callbackHandler="@{viewModel}"
                 app:listItems="@{viewModel.radioResponse}"
+                disallowTouchEvent="@{true}"
                 app:listLayout="@{@layout/item_recycler_radio_channel}" />
         </RelativeLayout>
 

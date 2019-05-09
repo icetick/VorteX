@@ -28,9 +28,6 @@ class MainViewModel: BaseViewModel() {
     }
 
     override fun onCreated() {
-        pagerAdapter = MainScreenAdapter(bindedActivity!!.supportFragmentManager)
-        resideAdapter = ArrayAdapter(bindedActivity!!.applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))
-        pagerAdapter?.add(FragmentFactory.create<RadioFragment>())
-        pagerAdapter?.notifyDataSetChanged()
+
     }
 }
