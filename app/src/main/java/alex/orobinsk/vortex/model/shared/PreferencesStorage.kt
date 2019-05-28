@@ -1,9 +1,7 @@
 package alex.orobinsk.vortex.model.shared
 
 import alex.orobinsk.vortex.App
-import android.app.Application
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
