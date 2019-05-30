@@ -43,5 +43,20 @@
                 disallowTouchEvent="@{true}"
                 app:listLayout="@{@layout/item_recycler_radio_channel}" />
         </RelativeLayout>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/bottom_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:backgroundTint="@color/colorPrimary"
+                app:fabAlignmentMode="center"
+                app:navigationIcon="@android:drawable/ic_menu_add"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_add"
+                app:layout_anchor="@id/bottom_app_bar" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
