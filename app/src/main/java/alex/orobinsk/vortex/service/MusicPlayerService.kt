@@ -4,10 +4,9 @@ import alex.orobinsk.vortex.App
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.player.MediaPlayer
-import alex.orobinsk.vortex.ui.view.MainActivity
 import alex.orobinsk.vortex.util.MediaList
 import alex.orobinsk.vortex.util.NotificationPlayer
-import alex.orobinsk.vortex.util.Utils
+import alex.orobinsk.vortex.util.MediaModelUtils
 import alex.orobinsk.vortex.util.firstAvailable
 import android.app.*
 import android.content.Context
@@ -66,7 +65,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         try {
             mediaList?.firstAvailable()?.let {
                 mediaPlayer.play(it.preview)
-                showNotification(Utils.playerModelOf(it))
+                showNotification(MediaModelUtils.playerModelOf(it))
             }
         } catch (ex: IOException) {
             ex.printStackTrace()
@@ -100,7 +99,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
                 mediaList?.isNotEmpty().let {
                     if(notification==null) {
                         mediaList?.current()?.let {track ->
-                            showNotification(Utils.playerModelOf(track))
+                            showNotification(MediaModelUtils.playerModelOf(track))
                         }
                     }
                 }
@@ -169,7 +168,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         if(waitingForStart) {
             playMedia()
             notification?.let {
-                showNotification(Utils.playerModelOf(mediaList!!.current()!!))
+                showNotification(MediaModelUtils.playerModelOf(mediaList!!.current()!!))
             }
         }
     }*/
@@ -331,7 +330,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     }
 
     override fun pauseResumeToggle() {
-        val model = Utils.playerModelOf(mediaList!!.current()!!)
+        val model = MediaModelUtils.playerModelOf(mediaList!!.current()!!)
 
         mediaPlayer.isPlaying().let {
             if(it) {
@@ -355,7 +354,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
                 }
             }
         }
-        showNotification(Utils.playerModelOf(mediaList?.current()!!))
+        showNotification(MediaModelUtils.playerModelOf(mediaList?.current()!!))
     }
 
     override fun previous() {
@@ -366,7 +365,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
                 }
             }
         }
-        showNotification(Utils.playerModelOf(mediaList?.current()!!))
+        showNotification(MediaModelUtils.playerModelOf(mediaList?.current()!!))
     }
 
     private fun stopMedia() {
