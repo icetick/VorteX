@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import com.flaviofaria.kenburnsview.KenBurnsView
 
-
 class MainViewModel: BaseViewModel() {
     var pagerAdapter: MainScreenAdapter? = null
     var resideAdapter: ArrayAdapter<String>? = null
@@ -23,7 +22,7 @@ class MainViewModel: BaseViewModel() {
         }
         override fun onPanelClosed(panel: View?) {
             //pagerAdapter?.resumeCurrentFragment()
-            panel?.findViewById<KenBurnsView>(R.id.splashView)?.pause()
+             panel?.findViewById<KenBurnsView>(R.id.splashView)?.pause()
         }
     }
 

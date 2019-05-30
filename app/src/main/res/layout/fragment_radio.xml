@@ -9,8 +9,6 @@
         <variable
             name="viewModel"
             type="alex.orobinsk.vortex.ui.viewModel.RadioViewModel" />
-
-        <import type="alex.orobinsk.vortex.ui.widgets.ToolbarModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -45,9 +43,5 @@
                 disallowTouchEvent="@{true}"
                 app:listLayout="@{@layout/item_recycler_radio_channel}" />
         </RelativeLayout>
-
-        <include
-            layout="@layout/toolbar"
-            app:toolbarModel="@{viewModel.toolbarModel}" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

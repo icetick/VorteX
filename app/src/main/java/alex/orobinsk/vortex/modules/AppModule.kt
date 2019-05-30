@@ -5,6 +5,8 @@ import alex.orobinsk.vortex.domain.networking.MusicAPI
 import alex.orobinsk.vortex.domain.networking.ServiceGenerator
 import alex.orobinsk.vortex.domain.repository.DeezerRepository
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
+import alex.orobinsk.vortex.player.MediaPlayer
+import alex.orobinsk.vortex.player.MusicPlayer
 import alex.orobinsk.vortex.util.TokenExpireHandler
 import kotlinx.coroutines.Job
 import org.kodein.di.Kodein
@@ -19,5 +21,6 @@ object AppModule {
        bind<PreferencesStorage>() with singleton { PreferencesStorage() }
        bind<DeezerRepository>() with singleton { DeezerRepository(App.singletonKodein, Job()) }
        bind<TokenExpireHandler>() with singleton { TokenExpireHandler(instance()) }
+       bind<MediaPlayer>() with singleton { MusicPlayer(instance()) }
     }
 }
