@@ -75,7 +75,8 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0-alpha01"
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
-    implementation 'jp.co.cyberagent.android:gpuimage:2.0.0'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
 
     implementation "com.google.android.material:material:$rootProject.materialVersion"
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
@@ -92,11 +93,8 @@ dependencies {
     //UI
     implementation "com.flaviofaria:kenburnsview:$rootProject.kenburnsVersion"
     implementation 'com.github.felixgail:gplaymusic:0.3.6'
-    implementation 'com.gjiazhe:PanoramaImageView:1.0'
-    implementation 'com.github.florent37:materialtextfield:1.0.7'
-    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
-    implementation 'com.tbuonomo:morph-bottom-navigation:1.0.1'
-    implementation 'devlight.io:navigationtabbar:1.2.5'
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.1'
 
     // Testing dependencies
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
@@ -108,5 +106,4 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:$rootProject.firebaseVersion"
     implementation project(':annotation')
     kapt project(':codeGeneration')
-    implementation project(':Deezer')
 }

@@ -173,11 +173,14 @@ fun setImageSrc(view: ImageView, drawable: Drawable?) {
 
 @BindingAdapter("android:srcBlur")
 fun setImageSrcBlurUrl(view:ImageView, url: String?) {
-    val roundedBlurryTransform = MultiTransformation<Bitmap>(BlurTransformation(20,1),
-        RoundedCornersTransformation(70, 0, RoundedCornersTransformation.CornerType.ALL))
+    val roundedBlurryTransform = MultiTransformation<Bitmap>(
+        BlurTransformation(20,1),
+        RoundedCornersTransformation(70, 0, RoundedCornersTransformation.CornerType.ALL)
+    )
 
     Glide.with(view).load(url).apply(RequestOptions.bitmapTransform(roundedBlurryTransform).error(R.drawable.vortex_progress)).into(view)
 }
+
 @BindingAdapter("android:srcUrl")
 fun setImageSrcUrl(view: ImageView,url: String?) {
     Glide.with(view).load(url).apply(RequestOptions().error(R.drawable.vortex_progress))

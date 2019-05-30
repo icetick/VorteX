@@ -11,8 +11,6 @@ import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Alex Orobinskiy 07.02.2019
- * This class does not implement Repository<T>, it`s 3rd-party and need to
- * be custom implemented
  */
 open class DeezerRepository(override val kodein: Kodein, override val coroutineContext: CoroutineContext): CoroutineScope, KodeinAware {
     @PublishedApi

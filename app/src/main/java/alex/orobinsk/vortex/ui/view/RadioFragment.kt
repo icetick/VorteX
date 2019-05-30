@@ -15,7 +15,7 @@ class RadioFragment: BaseFragment() {
     override fun init() {
         binder.bind<RadioFragment, RadioViewModel>(R.layout.fragment_radio) {viewModel ->
             viewModel.apply {
-                toolbarModel = ToolbarModelBuilder()
+               /* toolbarModel = ToolbarModelBuilder()
                         .leftIcon(resources.getDrawable(R.drawable.ic_menu, activity?.theme))
                         .listenerLeft(View.OnClickListener {
                         })
@@ -24,7 +24,7 @@ class RadioFragment: BaseFragment() {
                         .listenerRight(View.OnClickListener {
                             toast("Search clicked")
                         })
-                        .build()
+                        .build()*/
                 radioResponse.observe(this@RadioFragment, Observer { radioResponse ->
                     /*val endpointRadioData = radioResponse.data.joinToString { data -> data.picture+data.id+data.title }
                     toast(endpointRadioData)*/
