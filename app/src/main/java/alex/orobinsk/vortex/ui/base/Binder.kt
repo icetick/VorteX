@@ -14,8 +14,8 @@ class Binder {
     var viewModel: BaseViewModel? = null
     var baseView: BaseView? = null
 
-    inline fun <reified F, reified T: BaseViewModel> bind(layoutId: Int,activity: BaseActivity? = null, callback: (viewModel: T) -> BaseViewModel): Binder where F: LifecycleOwner {
-        when(F::class.isSubclassOf(Activity::class)) {
+    inline fun <reified F, reified T: BaseViewModel> bind(layoutId: Int, callback: (viewModel: T) -> BaseViewModel): Binder where F: LifecycleOwner {
+        when (F::class.isSubclassOf(Activity::class)) {
             true -> {
                 binding = DataBindingUtil.setContentView(baseView as BaseActivity, layoutId)
             }
@@ -41,7 +41,7 @@ class Binder {
         this.baseView = baseView
     }
 
-    infix fun with(view: BaseView) {
+    infix fun bind(view: BaseView) {
         this.baseView = view
     }
 

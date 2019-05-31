@@ -5,14 +5,16 @@ import alex.orobinsk.vortex.R
 import android.net.Uri
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
-class MusicPlayer(private val context: App): MediaPlayer {
+class MusicPlayer(private val context: App) : MediaPlayer {
     private lateinit var exoPlayer: ExoPlayer
+    private var currentMode: PlayMode = PlayMode.SINGLE
 
     init {
         initializePlayer()
@@ -23,39 +25,40 @@ class MusicPlayer(private val context: App): MediaPlayer {
         val loadControl = DefaultLoadControl()
         val renderersFactory = DefaultRenderersFactory(context)
 
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(context,
-            renderersFactory, trackSelector, loadControl)
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(
+            context,
+            renderersFactory, trackSelector, loadControl
+        )
     }
 
     override fun play(url: String) {
-        //1
         val userAgent = Util.getUserAgent(context, context.getString(R.string.app_name))
-        //2
         val mediaSource = ProgressiveMediaSource
             .Factory(DefaultDataSourceFactory(context, userAgent), DefaultExtractorsFactory())
             .createMediaSource(Uri.parse(url))
-        //3
         exoPlayer.prepare(mediaSource)
-
         exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
-        //4
         exoPlayer.playWhenReady = true
     }
 
-//    override fun play(urls: TrackGroupArray) {
-//        //1
-//        val userAgent = Util.getUserAgent(context, context.getString(R.string.app_name))
-//        //2
-//        val mediaSource = ProgressiveMediaSource
-//            .Factory(DefaultDataSourceFactory(context, userAgent), DefaultExtractorsFactory())
-//            .createMediaSource(urls)
-//        //3
-//        exoPlayer.prepare(mediaSource)
-//
-//        exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
-//        //4
-//        exoPlayer.playWhenReady = true
-//    }
+    override fun setMode(mode: PlayMode) {
+        this.currentMode = mode
+    }
+
+    override fun play(urls: List<String>) {
+        val userAgent = Util.getUserAgent(context, context.getString(R.string.app_name))
+        val mediaSource = ConcatenatingMediaSource()
+        urls.forEach {
+            mediaSource.addMediaSource(
+                ProgressiveMediaSource
+                    .Factory(DefaultDataSourceFactory(context, userAgent), DefaultExtractorsFactory())
+                    .createMediaSource(Uri.parse((it)))
+            )
+        }
+        exoPlayer.prepare(mediaSource)
+        exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+        exoPlayer.playWhenReady = true
+    }
 
     override fun releasePlayer() {
         exoPlayer.stop()
@@ -74,5 +77,13 @@ class MusicPlayer(private val context: App): MediaPlayer {
 
     override fun resume() {
         exoPlayer.playWhenReady = true
+    }
+
+    override fun previous() {
+        exoPlayer.previous()
+    }
+
+    override fun next() {
+        exoPlayer.next()
     }
 }

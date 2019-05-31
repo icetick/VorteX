@@ -18,25 +18,6 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     val player = MediaPlayer()
 
     val onPlayClick = View.OnClickListener {
-        /*if(player.isPlaying) {
-            player.stop()
-            player.reset()
-        }
-
-        player.setDataSource(trackList.poll())
-        player.setOnPreparedListener {
-            player.start()
-        }
-        player.setOnCompletionListener {
-            GlobalScope.launch {
-                delay(100) {
-                    player.reset()
-                    player.setDataSource(trackList.poll())
-                    player.prepare()
-                }
-            }
-        }
-        player.prepareAsync()*/
         postActivityTracks.postValue(true)
     }
 
@@ -58,12 +39,5 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
         deezerRepository.getData<RadioResponse> { response ->
             radioResponse.postValue(response.data)
         }
-        /*radioResponse.observeForever {
-            if (it.data.isNotEmpty()) {
-                deezerRepository.getData<TracksResponse>(it.data[0].id.toString()) {
-                    it.data.forEach { trackList.add(it.preview) }
-                }
-            }
-        }*/
     }
 }

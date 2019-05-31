@@ -18,13 +18,8 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       /* with(window) {
-            requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
-            enterTransition = TransitionInflater.from(this@BaseActivity).inflateTransition(android.R.transition.fade)
-            exitTransition = TransitionInflater.from(this@BaseActivity).inflateTransition(android.R.transition.fade)
-        }*/
         postponeEnterTransition()
-        binder with this
+        binder bind this
         inflater = layoutInflater
         init()
     }

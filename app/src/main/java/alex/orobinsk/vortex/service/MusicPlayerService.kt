@@ -64,7 +64,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     private fun initMediaPlayer() {
         try {
             mediaList?.firstAvailable()?.let {
-                mediaPlayer.play(it.preview)
+                mediaPlayer.play(MediaModelUtils.getAllPreviews(mediaList!!))
                 showNotification(MediaModelUtils.playerModelOf(it))
             }
         } catch (ex: IOException) {
@@ -150,51 +150,6 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         removeAudioFocus()
         stopForeground(true)
     }
-
-/*    override fun onCompletion(mp: MediaPlayer?) {
-        mediaList?.let {
-            if(it.isEmpty()) {
-                stopMedia()
-                stopSelf()
-            } else {
-                it.next()?.let {track ->
-                    resetupSource(track.preview)
-                }
-            }
-        }
-    }*/
-/*
-    override fun onPrepared(mp: MediaPlayer?) {
-        if(waitingForStart) {
-            playMedia()
-            notification?.let {
-                showNotification(MediaModelUtils.playerModelOf(mediaList!!.current()!!))
-            }
-        }
-    }*/
-
-/*    override fun onSeekComplete(mp: MediaPlayer?) {
-
-    }
-
-    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-        when (what) {
-            MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK -> Log.d(
-                "MediaPlayer Error",
-                "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK $extra"
-            )
-            MediaPlayer.MEDIA_ERROR_SERVER_DIED -> Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED $extra")
-            MediaPlayer.MEDIA_ERROR_UNKNOWN -> Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN $extra")
-        }
-        return false
-    }
-
-    override fun onInfo(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-        return false
-    }
-
-    override fun onBufferingUpdate(mp: MediaPlayer?, percent: Int) {
-    }*/
 
     override fun onBind(intent: Intent?): IBinder? {
         return binder
@@ -350,7 +305,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         mediaList?.let {
             if(!it.isEmpty()) {
                 it.next()?.let {track ->
-                    mediaPlayer.play(track.preview)
+                    mediaPlayer.next()
                 }
             }
         }
@@ -361,7 +316,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         mediaList?.let {
             if(!it.isEmpty()) {
                 it.previous()?.let {track ->
-                    mediaPlayer.play(track.preview)
+                    mediaPlayer.previous()
                 }
             }
         }

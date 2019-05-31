@@ -18,7 +18,7 @@ import java.lang.Exception
 
 
 /**
- * This class is used to prevent deezer login to user. In out application we need to use internal login/password field, but deezer requires
+ * This class used to prevent deezer login to user. In out application we need to use internal login/password field, but deezer requires
  * to use their own interface. In this case we are making workaround to pass login/password to deezer login webpage
  */
 class DeezerAuthenticationHelper private constructor(private val context: Context) :

@@ -11,4 +11,8 @@ object MediaModelUtils {
             R.drawable.ic_pause_circle_outline).image(current.album.cover_medium).build()
     }
 
+    fun getAllPreviews(mediaList: MediaList<TracksResponse.Data>): List<String> {
+        return mediaList.map { it.preview }
+    }
+
 }
