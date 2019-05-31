@@ -119,7 +119,7 @@
                     android:layout_height="@dimen/button_height_login"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/margin_fields_button"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:background="@drawable/rounded_button"
                     android:onClick="@{viewModel.onSignInClicked()}"
                     android:onLongClick="@{viewModel.onLongClick()}"

@@ -1,14 +1,7 @@
 package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.R
-import alex.orobinsk.vortex.databinding.ActivityMainBinding
-import alex.orobinsk.vortex.domain.model.DataContainer
-import alex.orobinsk.vortex.domain.model.RadioResponse
-import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.ui.adapter.recycler.BindingRecyclerAdapter
-import alex.orobinsk.vortex.ui.adapter.recycler.DataBindingViewHolder
-import alex.orobinsk.vortex.ui.base.BaseView
-import alex.orobinsk.vortex.ui.base.BaseViewModel
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ParallaxTransformer
 import alex.orobinsk.vortex.ui.widgets.ResideLayout
@@ -26,17 +19,16 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
-import android.widget.*
-import androidx.appcompat.widget.AppCompatImageView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ListView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -44,14 +36,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
-import java.io.Serializable
-import kotlin.random.Random
 
 @BindingAdapter("setTextField")
 fun setTextField(view: EditText, textField: MutableLiveData<String>) {
