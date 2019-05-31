@@ -1,8 +1,5 @@
 package alex.orobinsk.vortex.util
 
-import alex.orobinsk.vortex.ui.base.BaseActivity
-import alex.orobinsk.vortex.ui.base.BaseView
-import alex.orobinsk.vortex.ui.base.BaseViewModel
 import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

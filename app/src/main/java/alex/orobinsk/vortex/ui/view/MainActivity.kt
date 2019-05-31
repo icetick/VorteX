@@ -1,6 +1,8 @@
 package alex.orobinsk.vortex.ui.view
 
+import alex.orobinsk.vortex.App
 import alex.orobinsk.vortex.R
+import alex.orobinsk.vortex.databinding.ActivityMainBinding
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.service.MusicPlayerService
 import alex.orobinsk.vortex.ui.adapter.viewpager.MainScreenAdapter
@@ -8,6 +10,7 @@ import alex.orobinsk.vortex.ui.base.BaseActivity
 import alex.orobinsk.vortex.ui.base.FragmentFactory
 import alex.orobinsk.vortex.ui.viewModel.MainViewModel
 import alex.orobinsk.vortex.util.MediaList
+import alex.orobinsk.vortex.util.ViewModelFactory
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -16,8 +19,16 @@ import android.os.Build
 import android.os.IBinder
 import android.widget.ArrayAdapter
 import com.google.gson.Gson
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
 
-class MainActivity: BaseActivity() {
+class MainActivity: BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinAware {
+    override val kodein: Kodein = App.singletonKodein
+    override val viewModel: MainViewModel by instance()
+
+    override fun getLayoutID(): Int = R.layout.activity_main
+
     private lateinit var servicePlayer: MusicPlayerService
     var isMusicPlayerBound: Boolean = false
 
@@ -39,13 +50,11 @@ class MainActivity: BaseActivity() {
     }
 
     override fun init() {
-        binder.bind<MainActivity, MainViewModel>(R.layout.activity_main) {
-            it.apply {
-                pagerAdapter = MainScreenAdapter(supportFragmentManager)
-                resideAdapter = ArrayAdapter(applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))
-                pagerAdapter?.add(FragmentFactory.create<RadioFragment>())
-                pagerAdapter?.notifyDataSetChanged()
-            }
+        viewModel.apply {
+            pagerAdapter = MainScreenAdapter(supportFragmentManager)
+            resideAdapter = ArrayAdapter(applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))
+            pagerAdapter?.add(FragmentFactory.create<RadioFragment>())
+            pagerAdapter?.notifyDataSetChanged()
         }
     }
 
@@ -70,7 +79,6 @@ class MainActivity: BaseActivity() {
     }
 
     override fun onReleaseResources() {
-        binder.destroy()
         isMusicPlayerBound = false
     }
 }
