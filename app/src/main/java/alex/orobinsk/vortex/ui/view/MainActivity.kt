@@ -39,7 +39,7 @@ class MainActivity: BaseActivity() {
     }
 
     override fun init() {
-        binder.bind<MainActivity, MainViewModel>(R.layout.activity_main, this) {
+        binder.bind<MainActivity, MainViewModel>(R.layout.activity_main) {
             it.apply {
                 pagerAdapter = MainScreenAdapter(supportFragmentManager)
                 resideAdapter = ArrayAdapter(applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))

@@ -13,8 +13,6 @@ import org.kodein.di.generic.instance
 
 
 class LoginViewModel : BaseViewModel() {
-
-
     val application: App by instance()
     val androidID: MutableLiveData<String> = MutableLiveData()
     val userName: MutableLiveData<String> = MutableLiveData()

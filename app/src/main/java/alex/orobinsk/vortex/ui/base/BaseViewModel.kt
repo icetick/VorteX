@@ -8,6 +8,5 @@ import org.kodein.di.KodeinAware
 
 abstract class BaseViewModel: ViewModel(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
-    //This method is needed to know when activity is created and bounded
-    abstract fun onCreated() 
+    abstract fun onCreated()
 }

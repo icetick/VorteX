@@ -11,13 +11,5 @@ data class PlayerNotificationModel(
     val author: String,
     val title: String,
     val appName: String,
-    var pauseResumeToggleIcon: Int/*,
-    val resumeIcon: Drawable? = null,
-    val previousIcon: Drawable? = null,
-    val pauseResumeAction: PendingIntent? = null,
-    val nextIcon: Drawable? = null,
-    val previousAction: PendingIntent? = null,
-    val nextAction: PendingIntent? = null,
-    val likeDrawable: Drawable? = null,
-    val likeListener: PendingIntent? = null*/
+    var pauseResumeToggleIcon: Int
 )

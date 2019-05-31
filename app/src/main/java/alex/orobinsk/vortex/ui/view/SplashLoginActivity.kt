@@ -14,7 +14,7 @@ class SplashLoginActivity : BaseActivity() {
     override fun init() {
         requestPermissions()
 
-        binder.bind<SplashLoginActivity, SplashLoginViewModel>(R.layout.activity_splash, this) {
+        binder.bind<SplashLoginActivity, SplashLoginViewModel>(R.layout.activity_splash) {
             it.apply {
                 androidID.postValue(getImei())
                 loginSucceeded.observeForever{
