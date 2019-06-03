@@ -6,6 +6,7 @@ import alex.orobinsk.vortex.databinding.FragmentRadioBinding
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.ui.base.BaseFragment
 import alex.orobinsk.vortex.ui.viewModel.RadioViewModel
+import alex.orobinsk.vortex.util.toast
 import androidx.lifecycle.Observer
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -20,6 +21,9 @@ class RadioFragment: BaseFragment<FragmentRadioBinding, RadioViewModel>(), Kodei
         viewModel.apply {
             postActivityTracks.observe(this@RadioFragment, Observer {
                 (activity as MainActivity).playAudio(currentTracklist.value!!)
+            })
+            message.observe(this@RadioFragment, Observer {
+                toast(it)
             })
         }
     }
