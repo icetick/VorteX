@@ -116,18 +116,6 @@ fun setPasswordValidator(view: EditText, textField: MutableLiveData<String>) {
     })
 }
 
-class HesitateInterpolator : Interpolator {
-    override fun getInterpolation(t: Float): Float {
-        val x = 2.0f * t - 1.0f
-        return 0.5f * (x/2)
-    }
-}
-class AccelerateDecelerateSlowInterpolator : Interpolator {
-    override fun getInterpolation(t: Float): Float {
-        return (Math.cos((t/2 * Math.PI) / 3.0f).toFloat())
-    }
-}
-
 @BindingAdapter("progressField")
 fun progressField(view: VortexProgress, progressFlag: MutableLiveData<Boolean>) {
     progressFlag.observeForever { field -> if(field) view.showProgressBar() else view.hideProgressBar()  }
