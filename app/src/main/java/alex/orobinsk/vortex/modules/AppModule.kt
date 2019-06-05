@@ -34,9 +34,5 @@ object AppModule {
        bind<MediaPlayer>() with singleton { MusicPlayer(instance()) }
 
        bind<ViewModelProvider.Factory>() with singleton { ViewModelFactory(kodein.direct) }
-        //ViewModel Dependencies
-      /*  bind<MainViewModel>() with scoped(WeakContextScope.of<FragmentActivity>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(MainViewModel::class.java) }
-        bind<SplashLoginViewModel>() with scoped(WeakContextScope.of<FragmentActivity>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(SplashLoginViewModel::class.java) }
-        bind<RadioViewModel>() with scoped(WeakContextScope.of<Fragment>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(RadioViewModel::class.java) }*/
     }
 }
