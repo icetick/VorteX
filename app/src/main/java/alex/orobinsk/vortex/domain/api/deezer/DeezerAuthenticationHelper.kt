@@ -121,7 +121,6 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
 
     fun getDeezerCookie(connection: URLConnection) {
         if (msCookieManager.cookieStore.cookies.size > 0) {
-            // While joining the Cookies, use ',' or ';' as needed. Most of the servers are using ';'
             connection.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.cookieStore.cookies))
         }
     }

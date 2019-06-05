@@ -4,6 +4,7 @@ import alex.orobinsk.vortex.App
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.player.MediaPlayer
+import alex.orobinsk.vortex.player.PlayerListener
 import alex.orobinsk.vortex.util.MediaList
 import alex.orobinsk.vortex.util.NotificationPlayer
 import alex.orobinsk.vortex.util.MediaModelUtils
@@ -64,7 +65,18 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     private fun initMediaPlayer() {
         try {
             mediaList?.firstAvailable()?.let {
-                mediaPlayer.play(MediaModelUtils.getAllPreviews(mediaList!!))
+                mediaPlayer.play(MediaModelUtils.getAllPreviews(mediaList!!), object: PlayerListener {
+                    override fun onNextTrack() {
+                        mediaList?.let { list ->
+                            if(!list.isEmpty()) {
+                                list.next()?.let {track ->
+                                    showNotification(MediaModelUtils.playerModelOf(track))                    }
+                                }
+                            }
+                        }
+
+                    override fun onTrackEnded() { }
+                })
                 showNotification(MediaModelUtils.playerModelOf(it))
             }
         } catch (ex: IOException) {

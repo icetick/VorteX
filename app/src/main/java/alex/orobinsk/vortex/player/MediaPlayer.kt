@@ -8,7 +8,12 @@ interface MediaPlayer {
     fun pause()
     fun resume()
     fun setVolume(volume: Float)
-    fun play(urls: List<String>)
+    fun play(urls: List<String>, playerListener: PlayerListener)
     fun next()
     fun previous()
+}
+
+interface PlayerListener {
+    fun onNextTrack()
+    fun onTrackEnded()
 }

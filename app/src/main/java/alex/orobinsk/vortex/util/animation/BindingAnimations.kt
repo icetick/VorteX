@@ -18,14 +18,19 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_splash.*
+import java.util.logging.Handler
 
 @BindingAdapter("bounceAnimate")
 fun setBounceAnimation(view: ImageView, startState: MutableLiveData<Boolean>) {
-    startState.value?.let {
+    startState.observeForever {
         if (!it) {
-            view.chainAnimation {
-                bounce() and scaleTranslateUp() before { startState.value = true } interpolator bounceInterpolator()
-            }
+            view.visibility = View.INVISIBLE
+
+            view.handler.postDelayed({
+                view.chainAnimation {
+                    bounce() and scaleTranslateUp() before { startState.value = true } interpolator bounceInterpolator()
+                }
+            }, 200)
         }
     }
 }
@@ -60,7 +65,7 @@ fun setVortexAnimation(view: View, startState: MutableLiveData<Boolean>) {
 @BindingAdapter("animateChilds")
 fun setAnimateInsiders(view: ViewGroup, startState: MutableLiveData<Boolean>) {
     val animatedFields = view.findViewsByType<TextInputLayout>()
-    val animatedButtons= view.findViewsByType<Button>()
+    val animatedButtons = view.findViewsByType<Button>()
 
     animatedFields.forEach { it.visibility = View.INVISIBLE }
     animatedButtons.forEach { it.visibility = View.INVISIBLE }
@@ -70,7 +75,7 @@ fun setAnimateInsiders(view: ViewGroup, startState: MutableLiveData<Boolean>) {
             animatedFields.forEach { item ->
                 item.chainAnimation {
                     translateUp() interpolator accelerateInterpolator() then {
-                            item.visibility = View.VISIBLE
+                        item.visibility = View.VISIBLE
                     }
                 }
             }
@@ -78,7 +83,7 @@ fun setAnimateInsiders(view: ViewGroup, startState: MutableLiveData<Boolean>) {
             animatedButtons.forEach { item ->
                 item.chainAnimation {
                     translateUp() interpolator accelerateInterpolator() then {
-                            item.visibility = View.VISIBLE
+                        item.visibility = View.VISIBLE
                     }
                 }
             }

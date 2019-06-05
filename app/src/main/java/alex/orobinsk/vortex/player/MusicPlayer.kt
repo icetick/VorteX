@@ -9,12 +9,14 @@ import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
 class MusicPlayer(private val context: App) : MediaPlayer {
     private lateinit var exoPlayer: ExoPlayer
     private var currentMode: PlayMode = PlayMode.SINGLE
+    private var firstSetup: Boolean = true
 
     init {
         initializePlayer()
@@ -45,7 +47,7 @@ class MusicPlayer(private val context: App) : MediaPlayer {
         this.currentMode = mode
     }
 
-    override fun play(urls: List<String>) {
+    override fun play(urls: List<String>, playerListener: PlayerListener) {
         val userAgent = Util.getUserAgent(context, context.getString(R.string.app_name))
         val mediaSource = ConcatenatingMediaSource()
         urls.forEach {
@@ -58,6 +60,16 @@ class MusicPlayer(private val context: App) : MediaPlayer {
         exoPlayer.prepare(mediaSource)
         exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
         exoPlayer.playWhenReady = true
+
+        exoPlayer.addListener(object : Player.EventListener {
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                super.onPlayerStateChanged(playWhenReady, playbackState)
+            }
+
+            override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+                super.onTracksChanged(trackGroups, trackSelections)
+            }
+        })
     }
 
     override fun releasePlayer() {

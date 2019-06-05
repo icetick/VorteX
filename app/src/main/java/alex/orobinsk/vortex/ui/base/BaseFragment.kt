@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
 import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
-abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel>: Fragment() {
+abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel>: Fragment(), KodeinAware {
     abstract fun init()
     abstract fun onReleaseResources()
     abstract fun getLayoutId(): Int
@@ -24,6 +26,8 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel>: Fragment() 
     abstract val viewModel: V
     var binding: T? = null
     var baseActivity: BaseActivity<*, *>? = null
+
+    override val kodein: Kodein by closestKodein()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)

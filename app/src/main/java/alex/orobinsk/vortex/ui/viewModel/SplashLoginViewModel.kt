@@ -23,7 +23,7 @@ class SplashLoginViewModel : BaseViewModel() {
     val userName: MutableLiveData<String> = MutableLiveData()
     val password: MutableLiveData<String> = MutableLiveData()
     val splashEnded = MutableLiveData<Boolean>().apply { value = false }
-    val afterLogoAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
+    val afterLogoAnimationEnabled = MutableLiveData<Boolean>()
     val progressBarAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
     val loginSucceeded = MutableLiveData<Boolean>()
 
@@ -42,6 +42,8 @@ class SplashLoginViewModel : BaseViewModel() {
                 splashEnded.postValue(true)
             }
         }
+
+        afterLogoAnimationEnabled.postValue(false)
     }
 
     fun onSignInClicked() = View.OnClickListener {

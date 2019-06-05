@@ -7,23 +7,16 @@ import alex.orobinsk.vortex.domain.repository.DeezerRepository
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.player.MediaPlayer
 import alex.orobinsk.vortex.player.MusicPlayer
-import alex.orobinsk.vortex.ui.viewModel.MainViewModel
-import alex.orobinsk.vortex.ui.viewModel.RadioViewModel
-import alex.orobinsk.vortex.ui.viewModel.SplashLoginViewModel
 import alex.orobinsk.vortex.util.TokenExpireHandler
 import alex.orobinsk.vortex.util.ViewModelFactory
-import android.app.Activity
-import android.provider.MediaStore
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.Job
 import org.kodein.di.Kodein
-import org.kodein.di.android.AndroidComponentsWeakScope
-import org.kodein.di.bindings.WeakContextScope
 import org.kodein.di.direct
-import org.kodein.di.generic.*
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
+import org.kodein.di.generic.singleton
 
 object AppModule {
     val module = Kodein.Module("app") {
