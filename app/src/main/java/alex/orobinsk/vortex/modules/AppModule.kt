@@ -22,6 +22,7 @@ import kotlinx.coroutines.Job
 import org.kodein.di.Kodein
 import org.kodein.di.android.AndroidComponentsWeakScope
 import org.kodein.di.bindings.WeakContextScope
+import org.kodein.di.direct
 import org.kodein.di.generic.*
 
 object AppModule {
@@ -32,9 +33,10 @@ object AppModule {
        bind<TokenExpireHandler>() with singleton { TokenExpireHandler(instance()) }
        bind<MediaPlayer>() with singleton { MusicPlayer(instance()) }
 
+       bind<ViewModelProvider.Factory>() with singleton { ViewModelFactory(kodein.direct) }
         //ViewModel Dependencies
-        bind<MainViewModel>() with scoped(WeakContextScope.of<FragmentActivity>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(MainViewModel::class.java) }
+      /*  bind<MainViewModel>() with scoped(WeakContextScope.of<FragmentActivity>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(MainViewModel::class.java) }
         bind<SplashLoginViewModel>() with scoped(WeakContextScope.of<FragmentActivity>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(SplashLoginViewModel::class.java) }
-        bind<RadioViewModel>() with scoped(WeakContextScope.of<Fragment>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(RadioViewModel::class.java) }
+        bind<RadioViewModel>() with scoped(WeakContextScope.of<Fragment>()).singleton { ViewModelProviders.of(context, ViewModelFactory()).get(RadioViewModel::class.java) }*/
     }
 }

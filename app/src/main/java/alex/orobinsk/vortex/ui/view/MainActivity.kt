@@ -25,7 +25,7 @@ import org.kodein.di.generic.instance
 
 class MainActivity: BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
-    override val viewModel: MainViewModel by instance()
+    override val viewModel: MainViewModel by viewModel()
 
     override fun getLayoutID(): Int = R.layout.activity_main
 

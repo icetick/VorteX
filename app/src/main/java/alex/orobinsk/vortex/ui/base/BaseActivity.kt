@@ -7,8 +7,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.direct
+import org.kodein.di.generic.instance
 
-abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel>: AppCompatActivity(), BaseFragment.Callback {
+abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel>: AppCompatActivity(),KodeinAware, BaseFragment.Callback {
+    override val kodein: Kodein by closestKodein()
+
     abstract fun init()
     abstract fun onReleaseResources()
 
@@ -32,8 +42,23 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel>: AppCompatAc
         binding?.executePendingBindings()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        onReleaseResources()
+        this.overridePendingTransition(0, R.anim.vortex_animation)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        onReleaseResources()
+    }
+
     override fun onBackPressed() {
         showExitAlert()
+    }
+
+    inline fun <reified VM : ViewModel, T> T.viewModel(): Lazy<VM> where T : KodeinAware, T : FragmentActivity {
+        return lazy { ViewModelProviders.of(this, direct.instance()).get(VM::class.java) }
     }
 
     private fun showExitAlert() {
@@ -48,16 +73,7 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel>: AppCompatAc
             }.show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        onReleaseResources()
-        this.overridePendingTransition(0, R.anim.vortex_animation)
-    }
 
-    override fun onStop() {
-        super.onStop()
-        onReleaseResources()
-    }
 
     override fun onFragmentAttached() {
 

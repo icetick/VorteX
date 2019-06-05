@@ -14,7 +14,8 @@ import org.kodein.di.generic.instance
 
 class RadioFragment: BaseFragment<FragmentRadioBinding, RadioViewModel>(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
-    override val viewModel: RadioViewModel by instance()
+    override val viewModel: RadioViewModel by viewModel()
+
     override fun getLayoutId(): Int = R.layout.fragment_radio
 
     override fun init() {

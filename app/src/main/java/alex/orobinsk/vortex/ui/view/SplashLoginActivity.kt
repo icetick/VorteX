@@ -17,7 +17,7 @@ import org.kodein.di.generic.instance
 
 class SplashLoginActivity : BaseActivity<ActivitySplashBinding, SplashLoginViewModel>(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
-    override val viewModel: SplashLoginViewModel by instance()
+    override val viewModel: SplashLoginViewModel by viewModel()
 
     override fun getLayoutID(): Int = R.layout.activity_splash
 
