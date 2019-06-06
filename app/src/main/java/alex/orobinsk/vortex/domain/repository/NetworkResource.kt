@@ -14,7 +14,7 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
     init {
         result.value = Resource.loading()
         val dbSource = MutableLiveData<ResultType>()
-        dbSource.value = this.loadFromDb()
+        dbSource.value = this.dbCall()
         result.addSource(dbSource) { data ->
             result.removeSource(dbSource)
             if (shouldFetch(data)) {
@@ -26,7 +26,7 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
     }
 
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
-        val apiResponse = createCall()
+        val apiResponse = networkCall()
         val exceptionHandler = CoroutineExceptionHandler { coroutineContext: CoroutineContext, throwable: Throwable ->
             onFetchFailed()
             result.addSource(dbSource) { result.value = Resource.error(throwable.localizedMessage) }
@@ -39,13 +39,13 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
                 result.removeSource(dbSource)
                 launch(Dispatchers.IO) {
                     processResponse(Resource.success(response))?.let { requestType: ResultType ->
-                        saveCallResult(
+                        saveNetworkCallResult(
                             requestType
                         )
                     }
                 }
-                if (loadFromDb() != null) {
-                    result.addSource(loadFromDb().mutableLiveData()) { newData ->
+                if (dbCall() != null) {
+                    result.addSource(dbCall().mutableLiveData()) { newData ->
                         setValue(
                             Resource.success(newData)
                         )
@@ -84,14 +84,14 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
     }
 
     @WorkerThread
-    protected abstract fun saveCallResult(item: ResultType)
+    protected abstract fun saveNetworkCallResult(item: ResultType)
 
     @MainThread
     protected abstract fun shouldFetch(data: ResultType?): Boolean
 
     @MainThread
-    protected abstract fun loadFromDb(): ResultType?
+    protected abstract fun dbCall(): ResultType?
 
     @MainThread
-    protected abstract fun createCall(): Deferred<ResultType>
+    protected abstract fun networkCall(): Deferred<ResultType>
 }

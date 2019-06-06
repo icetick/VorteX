@@ -26,7 +26,7 @@ fun setBounceAnimation(view: ImageView, startState: MutableLiveData<Boolean>) {
         if (!it) {
             view.visibility = View.INVISIBLE
 
-            view.handler.postDelayed({
+            view.postDelayed({
                 view.chainAnimation {
                     bounce() and scaleTranslateUp() before { startState.value = true } interpolator bounceInterpolator()
                 }

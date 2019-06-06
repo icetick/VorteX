@@ -51,7 +51,7 @@ class MainActivity: BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinAw
 
     override fun init() {
         viewModel.apply {
-            pagerAdapter = MainScreenAdapter(supportFragmentManager)
+            pagerAdapter = MainScreenAdapter(this@MainActivity)
             resideAdapter = ArrayAdapter(applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))
             pagerAdapter?.add(FragmentFactory.create<RadioFragment>())
             pagerAdapter?.notifyDataSetChanged()

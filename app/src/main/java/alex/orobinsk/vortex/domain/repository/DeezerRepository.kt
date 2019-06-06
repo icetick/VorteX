@@ -18,22 +18,22 @@ open class DeezerRepository(override val kodein: Kodein, val coroutineContext: C
 
     fun getRadioResponse(): LiveData<Resource<RadioResponse?>> {
         return object: NetworkResource<RadioResponse>(coroutineContext) {
-            override fun saveCallResult(item: RadioResponse) {
+            override fun saveNetworkCallResult(item: RadioResponse) {
             }
-            override fun loadFromDb(): RadioResponse? = null
-            override fun createCall(): Deferred<RadioResponse> = musicAPI.getRadioSets()
+            override fun dbCall(): RadioResponse? = null
+            override fun networkCall(): Deferred<RadioResponse> = musicAPI.getRadioSets()
             override fun shouldFetch(data: RadioResponse?): Boolean = true
         }.asLiveData()
     }
 
     fun getRadioTracks(vararg parameters: String): LiveData<Resource<TracksResponse?>> {
         return object: NetworkResource<TracksResponse>(coroutineContext) {
-            override fun saveCallResult(item: TracksResponse) {
+            override fun saveNetworkCallResult(item: TracksResponse) {
 
             }
             override fun shouldFetch(data: TracksResponse?): Boolean = true
-            override fun loadFromDb(): TracksResponse? = null
-            override fun createCall(): Deferred<TracksResponse> = musicAPI.getRadioTracks(parameters.first())
+            override fun dbCall(): TracksResponse? = null
+            override fun networkCall(): Deferred<TracksResponse> = musicAPI.getRadioTracks(parameters.first())
         }.asLiveData()
     }
 }

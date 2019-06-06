@@ -17,12 +17,10 @@ import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.Interpolator
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ListView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.databinding.BindingAdapter
@@ -115,6 +113,19 @@ fun setPasswordValidator(view: EditText, textField: MutableLiveData<String>) {
         }
     })
 }
+
+@BindingAdapter("updateProgress")
+fun updateProgress(view: ProgressBar, progressFlag: MutableLiveData<Int>) {
+    progressFlag.observeForever { field ->
+        if(field!=0 || field==100) {
+            view.visibility = View.VISIBLE
+            view.progress = field
+        } else {
+            view.visibility = View.GONE
+        }
+    }
+}
+
 
 @BindingAdapter("progressField")
 fun progressField(view: VortexProgress, progressFlag: MutableLiveData<Boolean>) {

@@ -53,6 +53,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
                     android:layout_marginTop="@dimen/margin_card_text_title_vertical"
+                    android:fontFamily="@font/montserrat"
                     android:visibility="@{TextUtils.isEmpty(viewModel.title) ? View.GONE : View.VISIBLE}"
                     android:text='@{viewModel.title ?? ""}'
                     tools:text="Title" />
@@ -65,6 +66,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="@dimen/margin_card_text_title_horizontal"
+                    android:fontFamily="@font/montserrat"
                     android:layout_marginBottom="@dimen/margin_card_text_title_vertical"
                     android:visibility="@{TextUtils.isEmpty(viewModel.id) ? View.GONE : View.VISIBLE}"
                     android:text='@{viewModel.id ?? ""}'

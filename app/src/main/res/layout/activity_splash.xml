@@ -56,7 +56,6 @@
                     android:layout_marginTop="@dimen/margin_fields"
                     android:visibility="invisible"
                     android:backgroundTint="@color/white"
-                    android:background="@android:color/transparent"
                     android:textColorHint="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -65,7 +64,6 @@
                         android:backgroundTint="@color/white"
                         app:setTextField="@{viewModel.userName}"
                         android:hint="@string/email"
-                        android:background="@android:color/transparent"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/white"
                         android:textSize="16sp"/>
@@ -76,7 +74,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_fields"
                     android:visibility="invisible"
-                    android:background="@android:color/transparent"
                     android:backgroundTint="@color/white"
                     android:textColorHint="@color/white">
 
@@ -85,7 +82,6 @@
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
                         android:hint="@string/password"
-                        android:background="@android:color/transparent"
                         app:setTextField="@{viewModel.password}"
                         android:inputType="textPassword"
                         android:textColor="@color/white"
@@ -98,7 +94,6 @@
                     android:layout_marginTop="@dimen/margin_fields"
                     android:visibility="invisible"
                     android:backgroundTint="@color/white"
-                    android:background="@android:color/transparent"
                     android:fontFamily="@font/montserrat"
                     android:textColorHint="@color/white">
 
@@ -108,7 +103,6 @@
                         android:backgroundTint="@color/white"
                         app:setPasswordValidateField="@{viewModel.password}"
                         android:hint="@string/confirm_password"
-                        android:background="@android:color/transparent"
                         android:inputType="textPassword"
                         android:textColor="@color/white"
                         android:textSize="16sp"/>
@@ -124,10 +118,18 @@
                     android:onClick="@{viewModel.onSignInClicked()}"
                     android:onLongClick="@{viewModel.onLongClick()}"
                     android:text="@string/sign_in"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="13sp"/>
         </LinearLayout>
-
+        <ProgressBar
+                android:layout_width="match_parent"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_height="wrap_content"
+                android:max="100"
+                app:updateProgress="@{viewModel.updateProgress}"
+                android:indeterminate="false"
+                android:visibility="gone"
+        />
         <alex.orobinsk.vortex.ui.widgets.VortexProgress
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
