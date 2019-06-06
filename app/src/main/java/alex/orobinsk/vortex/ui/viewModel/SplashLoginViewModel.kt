@@ -19,13 +19,15 @@ import java.lang.Exception
 class SplashLoginViewModel : BaseViewModel() {
     val application: App by instance()
     val preferences: PreferencesStorage by instance()
-    val androidID: MutableLiveData<String> = MutableLiveData()
-    val userName: MutableLiveData<String> = MutableLiveData()
-    val password: MutableLiveData<String> = MutableLiveData()
+    val androidID by lazy {MutableLiveData<String>()}
+    val userName by lazy {MutableLiveData<String>()}
+    val password by lazy {MutableLiveData<String>()}
+    val updateProgress by lazy { MutableLiveData<Int>() }
+    val loginSucceeded by lazy { MutableLiveData<Boolean>() }
+    val afterLogoAnimationEnabled by lazy { MutableLiveData<Boolean>() }
+
     val splashEnded = MutableLiveData<Boolean>().apply { value = false }
-    val afterLogoAnimationEnabled = MutableLiveData<Boolean>()
     val progressBarAnimationEnabled = MutableLiveData<Boolean>().apply { value = false }
-    val loginSucceeded = MutableLiveData<Boolean>()
 
     val currentApi: MusicApiType = MusicApiType.DEEZER
 

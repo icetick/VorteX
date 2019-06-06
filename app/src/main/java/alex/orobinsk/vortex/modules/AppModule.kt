@@ -7,7 +7,9 @@ import alex.orobinsk.vortex.domain.repository.DeezerRepository
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.player.MediaPlayer
 import alex.orobinsk.vortex.player.MusicPlayer
+import alex.orobinsk.vortex.util.FirebaseConfig
 import alex.orobinsk.vortex.util.TokenExpireHandler
+import alex.orobinsk.vortex.util.UpdateUtils
 import alex.orobinsk.vortex.util.ViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.Job
@@ -27,5 +29,7 @@ object AppModule {
        bind<MediaPlayer>() with singleton { MusicPlayer(instance()) }
 
        bind<ViewModelProvider.Factory>() with singleton { ViewModelFactory(kodein.direct) }
+       bind<UpdateUtils>() with singleton { UpdateUtils() }
+       bind<FirebaseConfig>() with singleton { FirebaseConfig() }
     }
 }

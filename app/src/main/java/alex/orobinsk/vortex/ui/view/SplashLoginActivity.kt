@@ -1,14 +1,16 @@
 package alex.orobinsk.vortex.ui.view
 
 import alex.orobinsk.vortex.App
+import alex.orobinsk.vortex.BuildConfig
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.databinding.ActivitySplashBinding
 import alex.orobinsk.vortex.ui.base.BaseActivity
 import alex.orobinsk.vortex.ui.viewModel.SplashLoginViewModel
-import alex.orobinsk.vortex.util.ViewModelFactory
-import alex.orobinsk.vortex.util.getImei
-import alex.orobinsk.vortex.util.startActivity
+import alex.orobinsk.vortex.util.*
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.tbruyelle.rxpermissions2.RxPermissions
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -18,6 +20,9 @@ import org.kodein.di.generic.instance
 class SplashLoginActivity : BaseActivity<ActivitySplashBinding, SplashLoginViewModel>(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
     override val viewModel: SplashLoginViewModel by viewModel()
+
+    val remoteConfig: FirebaseConfig by instance()
+    val updateUtils: UpdateUtils by instance()
 
     override fun getLayoutID(): Int = R.layout.activity_splash
 
@@ -29,6 +34,28 @@ class SplashLoginActivity : BaseActivity<ActivitySplashBinding, SplashLoginViewM
             androidID.postValue(getImei())
             loginSucceeded.observeForever{
                 startActivity<MainActivity>()
+            }
+            splashEnded.observeForever {
+                if(it) {
+                    with(this@SplashLoginActivity) {
+                        if (updateUtils.updateCacheExisting(this)) {
+                            updateUtils.clearUpdateData(this)
+                        }
+                    }
+                    fetchUpdateInfo(this.updateProgress)
+                }
+            }
+        }
+    }
+
+    private fun fetchUpdateInfo(progressLiveData: MutableLiveData<Int>) {
+        remoteConfig.fetchLatestVersionCode(this) {
+            if (it.toInt() > BuildConfig.VERSION_CODE) {
+                AlertDialog.Builder(this@SplashLoginActivity)
+                    .setMessage("New update is available")
+                    .setPositiveButton("Update") { _, which ->
+                        updateUtils.selfUpdate(this, progressLiveData)
+                    }.setNegativeButton("Cancel", null).show()
             }
         }
     }
