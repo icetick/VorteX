@@ -45,7 +45,9 @@ public class ResideLayout extends ViewGroup {
 
     public interface PanelSlideListener {
         void onPanelSlide(View panel, float slideOffset);
+
         void onPanelOpened(View panel);
+
         void onPanelClosed(View panel);
     }
 
@@ -505,7 +507,7 @@ public class ResideLayout extends ViewGroup {
                 View view = findViewAtPosition(this, (int) x, (int) y);
 
                 if (adx > slop && ady > adx || view != null) {
-                    if(view != null) {
+                    if (view != null) {
                         Log.d(TAG, "touch on unscrollable view");
                     }
                     mDragHelper.cancel();
@@ -521,14 +523,14 @@ public class ResideLayout extends ViewGroup {
     }
 
     private View findViewAtPosition(View parent, int x, int y) {
-        if(parent instanceof ViewPager){
+        if (parent instanceof ViewPager) {
             Rect rect = new Rect();
             parent.getGlobalVisibleRect(rect);
             if (rect.contains(x, y)) {
                 return parent;
             }
-        }else if(parent instanceof ViewGroup){
-            ViewGroup viewGroup = (ViewGroup)parent;
+        } else if (parent instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) parent;
             final int length = viewGroup.getChildCount();
             for (int i = 0; i < length; i++) {
                 View child = viewGroup.getChildAt(i);
@@ -597,6 +599,7 @@ public class ResideLayout extends ViewGroup {
     public boolean isOpen() {
         return !mCanSlide || mSlideOffset == 1;
     }
+
     public boolean isSlideable() {
         return mCanSlide;
     }
@@ -656,16 +659,16 @@ public class ResideLayout extends ViewGroup {
 
         if (mCanSlide && !lp.slideable && mSlideableView != null) {
             // Clip against the slider; no sense drawing what will immediately be covered.
-            canvas.scale(1.2f -  0.2f * mSlideOffset, 1.2f -  0.2f * mSlideOffset, child.getRight(), getHeight() / 2);
+            canvas.scale(1.2f - 0.2f * mSlideOffset, 1.2f - 0.2f * mSlideOffset, child.getRight(), getHeight() / 2);
         } else {
             assert mSlideableView != null;
             canvas.scale(1 - mSlideOffset / 3, 1 - mSlideOffset / 3, mSlideableView.getLeft(), getHeight() / 2);
             child.setRotationY(-10 * mSlideOffset);
         }
 
-        if(!lp.slideable && mSlideOffset == 0) {
+        if (!lp.slideable && mSlideOffset == 0) {
             result = true;
-        }else {
+        } else {
             result = super.drawChild(canvas, child, drawingTime);
         }
 
@@ -855,7 +858,7 @@ public class ResideLayout extends ViewGroup {
     }
 
     public static class LayoutParams extends MarginLayoutParams {
-        private static final int[] ATTRS = new int[] {
+        private static final int[] ATTRS = new int[]{
                 android.R.attr.layout_weight
         };
 
@@ -867,12 +870,15 @@ public class ResideLayout extends ViewGroup {
         LayoutParams() {
             super(MATCH_PARENT, MATCH_PARENT);
         }
+
         LayoutParams(ViewGroup.LayoutParams source) {
             super(source);
         }
+
         LayoutParams(MarginLayoutParams source) {
             super(source);
         }
+
         LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
 

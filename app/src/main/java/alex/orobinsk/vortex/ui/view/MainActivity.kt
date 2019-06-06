@@ -23,7 +23,7 @@ import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 
-class MainActivity: BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinAware {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
     override val viewModel: MainViewModel by viewModel()
 
@@ -32,7 +32,7 @@ class MainActivity: BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinAw
     private lateinit var servicePlayer: MusicPlayerService
     var isMusicPlayerBound: Boolean = false
 
-    private var serviceConnection = object: ServiceConnection {
+    private var serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicPlayerService.LocalBinder
             servicePlayer = binder.service
@@ -52,17 +52,18 @@ class MainActivity: BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinAw
     override fun init() {
         viewModel.apply {
             pagerAdapter = MainScreenAdapter(this@MainActivity)
-            resideAdapter = ArrayAdapter(applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))
+            resideAdapter =
+                ArrayAdapter(applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))
             pagerAdapter?.add(FragmentFactory.create<RadioFragment>())
             pagerAdapter?.notifyDataSetChanged()
         }
     }
 
     fun playAudio(items: List<TracksResponse.Data>) {
-        if(!isMusicPlayerBound) {
+        if (!isMusicPlayerBound) {
             val playerIntent = Intent(this, MusicPlayerService::class.java)
             playerIntent.putExtra(MusicPlayerService.DEFAULT_ITEMSET, Gson().toJson(items))
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(playerIntent)
             } else {
                 startService(playerIntent)

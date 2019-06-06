@@ -1,6 +1,6 @@
 package alex.orobinsk.vortex.domain.model
 
-class TracksResponse(override var data: ArrayList<Data>): DataContainer<TracksResponse.Data> {
+class TracksResponse(override var data: ArrayList<Data>) : DataContainer<TracksResponse.Data> {
     data class Data(
         val album: Album,
         val artist: Artist,
@@ -18,6 +18,7 @@ class TracksResponse(override var data: ArrayList<Data>): DataContainer<TracksRe
         val title_version: String,
         val type: String
     )
+
     data class Artist(
         val id: Int,
         val link: String,

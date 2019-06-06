@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 
-abstract class BaseViewModel: ViewModel(), KodeinAware {
+abstract class BaseViewModel : ViewModel(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
     abstract fun onCreated()
 }

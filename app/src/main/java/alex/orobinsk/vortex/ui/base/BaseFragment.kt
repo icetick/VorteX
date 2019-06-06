@@ -18,7 +18,7 @@ import org.kodein.di.android.x.closestKodein
 import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
-abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel>: Fragment(), KodeinAware {
+abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment(), KodeinAware {
     abstract fun init()
     abstract fun onReleaseResources()
     abstract fun getLayoutId(): Int

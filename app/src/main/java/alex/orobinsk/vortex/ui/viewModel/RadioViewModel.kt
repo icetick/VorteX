@@ -31,8 +31,8 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
         var trackList: MutableList<TracksResponse.Data> = arrayListOf()
 
         deezerRepository.getRadioTracks(data.id).observeForever {
-            if(it.status.isSuccessful()) {
-                it.data?.data?.forEach {track ->
+            if (it.status.isSuccessful()) {
+                it.data?.data?.forEach { track ->
                     trackList.add(track)
                     /* if(checkIfMusicAvailable(track.link)) {trackList.add(track.preview)}*/
                 }.apply { currentTracklist.postValue(trackList); onPlayClick.onClick(null) }
@@ -42,8 +42,8 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
 
     override fun onCreated() {
         deezerRepository.getRadioResponse().observeForever { response ->
-            when(response.status) {
-                Status.ERROR -> message.postValue(response.errorMessage?:"")
+            when (response.status) {
+                Status.ERROR -> message.postValue(response.errorMessage ?: "")
                 Status.LOADING -> message.postValue("loading")
                 Status.SUCCESS -> radioResponse.postValue(response.data?.data)
             }

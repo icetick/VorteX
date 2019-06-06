@@ -18,7 +18,7 @@ class FirebaseConfig {
     private var verCode = ""
 
     init {
-        mFirebaseRemoteConfig.setConfigSettings(configSettings)
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings)
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_version_code)
     }
 
@@ -29,7 +29,7 @@ class FirebaseConfig {
             ) { task ->
                 // If is successful, activated fetched
                 if (task.isSuccessful) {
-                    mFirebaseRemoteConfig.activateFetched()
+                    mFirebaseRemoteConfig.activate()
                 } else {
                     Log.d("UPDATE", "Update failed ${task.exception?.localizedMessage}")
                 }

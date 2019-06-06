@@ -7,8 +7,10 @@ import alex.orobinsk.vortex.service.PlayerNotificationModelBuilder
 
 object MediaModelUtils {
     fun playerModelOf(current: TracksResponse.Data): PlayerNotificationModel {
-        return PlayerNotificationModelBuilder().appName("Vortex").title(current.title).author(current.artist.name).pauseResumeToggleIcon(
-            R.drawable.ic_pause_circle_outline).image(current.album.cover_medium).build()
+        return PlayerNotificationModelBuilder().appName("Vortex").title(current.title).author(current.artist.name)
+            .pauseResumeToggleIcon(
+                R.drawable.ic_pause_circle_outline
+            ).image(current.album.cover_medium).build()
     }
 
     fun getAllPreviews(mediaList: MediaList<TracksResponse.Data>): List<String> {

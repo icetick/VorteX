@@ -7,27 +7,29 @@ import java.lang.Exception
 // 10 - initial size
 class MediaList<T>(vararg items: T) : Collection<T> {
     companion object {
-        inline fun<reified T> of(items: List<T>): MediaList<T> {
+        inline fun <reified T> of(items: List<T>): MediaList<T> {
             return MediaList(*items.toTypedArray())
         }
     }
+
     override var size: Int = items.size
     private var currentPointer = -1
 
     var items = items
         get() {
-            if(currentPointer==-1)
-            currentPointer = 0
+            if (currentPointer == -1)
+                currentPointer = 0
             return field
-        } set(value) {
-        if(currentPointer==-1)
-            currentPointer = 0
-        field = value
-    }
+        }
+        set(value) {
+            if (currentPointer == -1)
+                currentPointer = 0
+            field = value
+        }
 
     fun current(): T? {
         return try {
-            if(currentPointer==-1) {
+            if (currentPointer == -1) {
                 items[0]
             }
             items[currentPointer]
@@ -36,9 +38,9 @@ class MediaList<T>(vararg items: T) : Collection<T> {
         }
     }
 
-    fun next(): T?  {
+    fun next(): T? {
         currentPointer++
-        if(currentPointer==items.size) {
+        if (currentPointer == items.size) {
             currentPointer = 0
         }
         return items[currentPointer]
@@ -46,7 +48,7 @@ class MediaList<T>(vararg items: T) : Collection<T> {
 
     fun previous(): T? {
         currentPointer--
-        return if(currentPointer<0) {
+        return if (currentPointer < 0) {
             null
         } else {
             items[currentPointer]
@@ -64,7 +66,7 @@ class MediaList<T>(vararg items: T) : Collection<T> {
     override fun containsAll(elements: Collection<T>): Boolean {
         val iterator = elements.iterator()
         while (iterator.hasNext())
-            if(!contains(iterator.next()))
+            if (!contains(iterator.next()))
                 return false
         return true
     }
@@ -79,8 +81,8 @@ class MediaList<T>(vararg items: T) : Collection<T> {
 }
 
 fun MediaList<TracksResponse.Data>.firstAvailable(): TracksResponse.Data? {
-    for(item in this.items) {
-        if(item.preview.isBlank()) {
+    for (item in this.items) {
+        if (item.preview.isBlank()) {
             continue
         } else {
             return item

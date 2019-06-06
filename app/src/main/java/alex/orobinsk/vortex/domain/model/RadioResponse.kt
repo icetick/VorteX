@@ -1,6 +1,6 @@
 package alex.orobinsk.vortex.domain.model
 
-class RadioResponse(override var data: ArrayList<Data>): DataContainer<RadioResponse.Data> {
+class RadioResponse(override var data: ArrayList<Data>) : DataContainer<RadioResponse.Data> {
     data class Data(
         val id: String,
         val picture: String,

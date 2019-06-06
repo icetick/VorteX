@@ -8,7 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-abstract class NetworkResource<ResultType> constructor(override val coroutineContext: CoroutineContext) : CoroutineScope {
+abstract class NetworkResource<ResultType> constructor(override val coroutineContext: CoroutineContext) :
+    CoroutineScope {
     private val result = MediatorLiveData<Resource<ResultType?>>()
 
     init {

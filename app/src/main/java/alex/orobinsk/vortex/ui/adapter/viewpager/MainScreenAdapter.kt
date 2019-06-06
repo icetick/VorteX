@@ -5,10 +5,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class MainScreenAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
+class MainScreenAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
     private val fragments = ArrayList<Fragment>()
     override fun getItemCount(): Int {
-       return fragments.size
+        return fragments.size
     }
 
     override fun createFragment(position: Int): Fragment {

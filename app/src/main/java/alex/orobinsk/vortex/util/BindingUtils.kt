@@ -56,28 +56,33 @@ fun setTextField(view: EditText, textField: MutableLiveData<String>) {
     })
 }
 
-@BindingAdapter("listItems","callbackHandler", "listLayout")
-fun<T> setListItems(recyclerView: RecyclerView,
-                    items: MutableLiveData<List<T>>,
-                    callbackHandler: ActionListener<T>,
-                    layoutItem: Int) {
+@BindingAdapter("listItems", "callbackHandler", "listLayout")
+fun <T> setListItems(
+    recyclerView: RecyclerView,
+    items: MutableLiveData<List<T>>,
+    callbackHandler: ActionListener<T>,
+    layoutItem: Int
+) {
     items.observeForever {
-        it?.let {list ->
+        it?.let { list ->
             recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 2)
             recyclerView.adapter = BindingRecyclerAdapter<ViewDataBinding, T>(layoutItem, callbackHandler, list)
         }
     }
 }
+
 @BindingAdapter("scaleTapListener")
-fun<T> scaleTapListener(view: CardView, block: ()->Unit ) {
+fun <T> scaleTapListener(view: CardView, block: () -> Unit) {
     view.setOnClickListenerWithScale {
         block.invoke()
     }
 }
 
 @BindingAdapter("resideAdapter"/*, "navigator"*/)
-fun setResideMenu(view: ListView,
-                  resideMenuAdapter: ArrayAdapter<String>?/*, navigator: ActivityNavigator*/) {
+fun setResideMenu(
+    view: ListView,
+    resideMenuAdapter: ArrayAdapter<String>?/*, navigator: ActivityNavigator*/
+) {
     view.adapter = resideMenuAdapter
     view.divider = null
     view.dividerHeight = 0
@@ -107,7 +112,7 @@ fun setPasswordValidator(view: EditText, textField: MutableLiveData<String>) {
         }
 
         override fun afterTextChanged(s: Editable) {
-            if(s.toString() != textField.value) {
+            if (s.toString() != textField.value) {
                 view.error = "Password is not correct"
             }
         }
@@ -117,7 +122,7 @@ fun setPasswordValidator(view: EditText, textField: MutableLiveData<String>) {
 @BindingAdapter("updateProgress")
 fun updateProgress(view: ProgressBar, progressFlag: MutableLiveData<Int>) {
     progressFlag.observeForever { field ->
-        if(field!=0 || field==100) {
+        if (field != 0 || field == 100) {
             view.visibility = View.VISIBLE
             view.progress = field
         } else {
@@ -129,15 +134,18 @@ fun updateProgress(view: ProgressBar, progressFlag: MutableLiveData<Int>) {
 
 @BindingAdapter("progressField")
 fun progressField(view: VortexProgress, progressFlag: MutableLiveData<Boolean>) {
-    progressFlag.observeForever { field -> if(field) view.showProgressBar() else view.hideProgressBar()  }
+    progressFlag.observeForever { field -> if (field) view.showProgressBar() else view.hideProgressBar() }
 }
 
 @BindingAdapter("disallowTouchEvent")
 fun disallowTouchEvent(view: RecyclerView, isDisallowed: Boolean) {
-    if(isDisallowed) {
-        view.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener {
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean { rv.parent.requestDisallowInterceptTouchEvent(isDisallowed); return false }
-            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) { }
+    if (isDisallowed) {
+        view.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                rv.parent.requestDisallowInterceptTouchEvent(isDisallowed); return false
+            }
+
+            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
             override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
         })
     }
@@ -146,46 +154,69 @@ fun disallowTouchEvent(view: RecyclerView, isDisallowed: Boolean) {
 @BindingAdapter("android:src")
 fun setImageSrc(view: ImageView, drawable: Drawable?) {
     Glide.with(view).load(drawable)
-            .listener(object : RequestListener<Drawable> {
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    scheduleStartPostponedTransition(view)
-                    return false
-                }
+        .listener(object : RequestListener<Drawable> {
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                scheduleStartPostponedTransition(view)
+                return false
+            }
 
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
-            })
-            .into(view)
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                return false
+            }
+        })
+        .into(view)
 }
 
 @BindingAdapter("android:srcBlur")
-fun setImageSrcBlurUrl(view:ImageView, url: String?) {
+fun setImageSrcBlurUrl(view: ImageView, url: String?) {
     val roundedBlurryTransform = MultiTransformation<Bitmap>(
-        BlurTransformation(20,1),
+        BlurTransformation(20, 1),
         RoundedCornersTransformation(70, 0, RoundedCornersTransformation.CornerType.ALL)
     )
 
-    Glide.with(view).load(url).apply(RequestOptions.bitmapTransform(roundedBlurryTransform).error(R.drawable.vortex_progress)).into(view)
+    Glide.with(view).load(url)
+        .apply(RequestOptions.bitmapTransform(roundedBlurryTransform).error(R.drawable.vortex_progress)).into(view)
 }
 
 @BindingAdapter("android:srcUrl")
-fun setImageSrcUrl(view: ImageView,url: String?) {
+fun setImageSrcUrl(view: ImageView, url: String?) {
     Glide.with(view).load(url).apply(RequestOptions().error(R.drawable.vortex_progress))
-            .listener(object : RequestListener<Drawable> {
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    //scheduleStartPostponedTransition(view)
-                    return false
-                }
+        .listener(object : RequestListener<Drawable> {
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                //scheduleStartPostponedTransition(view)
+                return false
+            }
 
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    view.chainAnimation {
-                        bounce() interpolator bounceInterpolator()
-                    }
-                    return false
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                view.chainAnimation {
+                    bounce() interpolator bounceInterpolator()
                 }
-            })
-            .into(view)
+                return false
+            }
+        })
+        .into(view)
 }
 
 private fun scheduleStartPostponedTransition(imageView: ImageView) {

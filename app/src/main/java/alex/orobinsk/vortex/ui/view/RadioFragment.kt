@@ -12,7 +12,7 @@ import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 
-class RadioFragment: BaseFragment<FragmentRadioBinding, RadioViewModel>(), KodeinAware {
+class RadioFragment : BaseFragment<FragmentRadioBinding, RadioViewModel>(), KodeinAware {
     override val kodein: Kodein = App.singletonKodein
     override val viewModel: RadioViewModel by viewModel()
 

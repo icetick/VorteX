@@ -11,18 +11,19 @@ import android.view.View
 import android.widget.ArrayAdapter
 import com.flaviofaria.kenburnsview.KenBurnsView
 
-class MainViewModel: BaseViewModel() {
+class MainViewModel : BaseViewModel() {
     var pagerAdapter: MainScreenAdapter? = null
     var resideAdapter: ArrayAdapter<String>? = null
-    var resideListener = object: ResideLayout.PanelSlideListener {
+    var resideListener = object : ResideLayout.PanelSlideListener {
         override fun onPanelSlide(panel: View?, slideOffset: Float) {}
         override fun onPanelOpened(panel: View?) {
-           // pagerAdapter?.pauseCurrentFragment()
+            // pagerAdapter?.pauseCurrentFragment()
             panel?.findViewById<KenBurnsView>(R.id.splashView)?.resume()
         }
+
         override fun onPanelClosed(panel: View?) {
             //pagerAdapter?.resumeCurrentFragment()
-             panel?.findViewById<KenBurnsView>(R.id.splashView)?.pause()
+            panel?.findViewById<KenBurnsView>(R.id.splashView)?.pause()
         }
     }
 

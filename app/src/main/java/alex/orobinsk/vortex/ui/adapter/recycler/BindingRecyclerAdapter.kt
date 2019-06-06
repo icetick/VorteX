@@ -16,10 +16,11 @@ import org.kodein.di.generic.instance
 import java.util.*
 
 
-class BindingRecyclerAdapter<T : ViewDataBinding, R>(val layoutId: Int,
-                                                     val actionListener: ActionListener<R>? = null,
-                                                     items: List<R> = arrayListOf())
-    : RecyclerView.Adapter<DataBindingViewHolder<T, R>>() {
+class BindingRecyclerAdapter<T : ViewDataBinding, R>(
+    val layoutId: Int,
+    val actionListener: ActionListener<R>? = null,
+    items: List<R> = arrayListOf()
+) : RecyclerView.Adapter<DataBindingViewHolder<T, R>>() {
 
     val application: App by App.singletonKodein.instance()
     val animatedViews = LinkedList<Int>()
@@ -42,8 +43,8 @@ class BindingRecyclerAdapter<T : ViewDataBinding, R>(val layoutId: Int,
     }
 
     override fun onViewDetachedFromWindow(holder: DataBindingViewHolder<T, R>) {
-  /*      holder.clearAnimation()
-        animatedViews.remove(holder.itemView.id)*/
+        /*      holder.clearAnimation()
+              animatedViews.remove(holder.itemView.id)*/
     }
 
     override fun onViewAttachedToWindow(holder: DataBindingViewHolder<T, R>) {
@@ -53,11 +54,11 @@ class BindingRecyclerAdapter<T : ViewDataBinding, R>(val layoutId: Int,
 
     private fun setAnimation(viewToAnimate: View) {
         // If the bound view wasn't previously displayed on screen, it's animated
-       // if(!animatedViews.contains(viewToAnimate.id)) {
-            val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.fade_in)
-            viewToAnimate.startAnimation(animation)
+        // if(!animatedViews.contains(viewToAnimate.id)) {
+        val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.fade_in)
+        viewToAnimate.startAnimation(animation)
         //    animatedViews.add(viewToAnimate.id)
-      //  }
+        //  }
     }
 
     override fun getItemCount(): Int = items.size

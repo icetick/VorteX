@@ -15,12 +15,14 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 
-class App: Application(), KodeinAware {
+class App : Application(), KodeinAware {
     private val preferences: PreferencesStorage by instance()
     private val expirationHandler: TokenExpireHandler by instance()
+
     companion object {
         lateinit var singletonKodein: Kodein
     }
+
     override val kodein = Kodein {
         import(AppModule.module)
         bind<App>() with singleton { this@App }
@@ -41,9 +43,11 @@ class App: Application(), KodeinAware {
     }
 
     fun enqueueTokenRefresh() {
-        if(preferences.alreadyHadToken()) {
-            WorkManager.getInstance().enqueueUniquePeriodicWork(expirationHandler.javaClass.simpleName,
-                ExistingPeriodicWorkPolicy.REPLACE, expirationHandler.work.build())
+        if (preferences.alreadyHadToken()) {
+            WorkManager.getInstance().enqueueUniquePeriodicWork(
+                expirationHandler.javaClass.simpleName,
+                ExistingPeriodicWorkPolicy.REPLACE, expirationHandler.work.build()
+            )
         }
     }
 }

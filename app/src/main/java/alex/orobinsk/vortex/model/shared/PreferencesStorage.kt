@@ -6,7 +6,7 @@ import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 
-class PreferencesStorage(override val kodein: Kodein = App.singletonKodein): KodeinAware {
+class PreferencesStorage(override val kodein: Kodein = App.singletonKodein) : KodeinAware {
     private val preferences: SharedPreferences by instance()
 
     private val token_key = "AuthToken"
@@ -24,6 +24,8 @@ class PreferencesStorage(override val kodein: Kodein = App.singletonKodein): Kod
 
     fun removeToken() = preferences.edit().remove(token_key).apply()
 
-    fun hasUnexpiredToken(): Boolean = preferences.contains(token_key) && preferences.contains(expiration_update_key) && (System.currentTimeMillis() < getLatestTokenUpdate()+getExpirationTime())
+    fun hasUnexpiredToken(): Boolean =
+        preferences.contains(token_key) && preferences.contains(expiration_update_key) && (System.currentTimeMillis() < getLatestTokenUpdate() + getExpirationTime())
+
     fun alreadyHadToken(): Boolean = preferences.contains(token_key) && preferences.contains(expiration_key)
 }

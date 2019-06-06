@@ -97,7 +97,7 @@ class DeezerAuthenticationHelper private constructor(private val context: Contex
             webView = WebView(context).apply {
                 settings.javaScriptEnabled = true
                 webViewClient =
-                        DeezerAuthenticationWebClient(listener)
+                    DeezerAuthenticationWebClient(listener)
                 loadUrl("$BASE_URL?app_id=${BuildConfig.DEEZER_APPLICATION_ID}&redirect_uri=$REDIRECT_URL&perms=$APPLICATION_PERMISSIONS")
             }
         }

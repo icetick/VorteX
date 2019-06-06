@@ -22,14 +22,14 @@ import org.kodein.di.generic.singleton
 
 object AppModule {
     val module = Kodein.Module("app") {
-       bind<MusicAPI>() with provider { ServiceGenerator.createService(MusicAPI::class.java) }
-       bind<PreferencesStorage>() with singleton { PreferencesStorage() }
-       bind<DeezerRepository>() with singleton { DeezerRepository(App.singletonKodein, Job()) }
-       bind<TokenExpireHandler>() with singleton { TokenExpireHandler(instance()) }
-       bind<MediaPlayer>() with singleton { MusicPlayer(instance()) }
+        bind<MusicAPI>() with provider { ServiceGenerator.createService(MusicAPI::class.java) }
+        bind<PreferencesStorage>() with singleton { PreferencesStorage() }
+        bind<DeezerRepository>() with singleton { DeezerRepository(App.singletonKodein, Job()) }
+        bind<TokenExpireHandler>() with singleton { TokenExpireHandler(instance()) }
+        bind<MediaPlayer>() with singleton { MusicPlayer(instance()) }
 
-       bind<ViewModelProvider.Factory>() with singleton { ViewModelFactory(kodein.direct) }
-       bind<UpdateUtils>() with singleton { UpdateUtils() }
-       bind<FirebaseConfig>() with singleton { FirebaseConfig() }
+        bind<ViewModelProvider.Factory>() with singleton { ViewModelFactory(kodein.direct) }
+        bind<UpdateUtils>() with singleton { UpdateUtils() }
+        bind<FirebaseConfig>() with singleton { FirebaseConfig() }
     }
 }

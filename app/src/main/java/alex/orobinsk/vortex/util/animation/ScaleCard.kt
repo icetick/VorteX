@@ -9,11 +9,17 @@ import android.view.MotionEvent.ACTION_CANCEL
 import android.view.MotionEvent.ACTION_DOWN
 import android.view.View
 
-fun View.setOnClickListenerWithScale(minScale: Float = 0.94f, clickDuration: Long = 80, touchDuration: Long = 300, onAnimEnd: (() -> Unit)? = null) {
+fun View.setOnClickListenerWithScale(
+    minScale: Float = 0.94f,
+    clickDuration: Long = 80,
+    touchDuration: Long = 300,
+    onAnimEnd: (() -> Unit)? = null
+) {
     initTouchAnimation(this, touchDuration)
     setOnClickListener {
         if (scaleX == minScale
-            && scaleY == minScale) {
+            && scaleY == minScale
+        ) {
             onAnimEnd?.invoke()
             return@setOnClickListener
         }

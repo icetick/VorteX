@@ -49,10 +49,10 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     private val mediaPlayer: MediaPlayer by instance()
 
     var mediaList: MediaList<TracksResponse.Data>? = null
-    set(value) {
-        field = value
-        initMediaPlayer()
-    }
+        set(value) {
+            field = value
+            initMediaPlayer()
+        }
 
     companion object {
         const val DEFAULT_ITEMSET = "defItems"
@@ -65,17 +65,18 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     private fun initMediaPlayer() {
         try {
             mediaList?.firstAvailable()?.let {
-                mediaPlayer.play(MediaModelUtils.getAllPreviews(mediaList!!), object: PlayerListener {
+                mediaPlayer.play(MediaModelUtils.getAllPreviews(mediaList!!), object : PlayerListener {
                     override fun onNextTrack() {
                         mediaList?.let { list ->
-                            if(!list.isEmpty()) {
-                                list.next()?.let {track ->
-                                    showNotification(MediaModelUtils.playerModelOf(track))                    }
+                            if (!list.isEmpty()) {
+                                list.next()?.let { track ->
+                                    showNotification(MediaModelUtils.playerModelOf(track))
                                 }
                             }
                         }
+                    }
 
-                    override fun onTrackEnded() { }
+                    override fun onTrackEnded() {}
                 })
                 showNotification(MediaModelUtils.playerModelOf(it))
             }
@@ -92,33 +93,39 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
-                notificationManager.createNotificationChannel(NotificationChannel(PLAYER_NOTIFICATION_CHANNEL_ID, "Music Player Notification Channel", NotificationManager.IMPORTANCE_LOW))
+                notificationManager.createNotificationChannel(
+                    NotificationChannel(
+                        PLAYER_NOTIFICATION_CHANNEL_ID,
+                        "Music Player Notification Channel",
+                        NotificationManager.IMPORTANCE_LOW
+                    )
+                )
             } catch (ex: RemoteException) {
 
             }
         }
-        if(!requestAudioFocus()) {
-           stopSelf()
+        if (!requestAudioFocus()) {
+            stopSelf()
         }
         intent?.hasExtra(DEFAULT_ITEMSET)?.let {
-            if(it) {
-                intent.getStringExtra(DEFAULT_ITEMSET)?.let {tracks ->
-                    val typeTokenList = object: TypeToken<List<TracksResponse.Data>>(){}.type
+            if (it) {
+                intent.getStringExtra(DEFAULT_ITEMSET)?.let { tracks ->
+                    val typeTokenList = object : TypeToken<List<TracksResponse.Data>>() {}.type
                     mediaList = MediaList.of(Gson().fromJson(tracks, typeTokenList))
                 }
                 mediaList?.isNotEmpty().let {
-                    if(notification==null) {
-                        mediaList?.current()?.let {track ->
+                    if (notification == null) {
+                        mediaList?.current()?.let { track ->
                             showNotification(MediaModelUtils.playerModelOf(track))
                         }
                     }
                 }
             } else {
-                when(intent.action) {
+                when (intent.action) {
                     RESUME_PAUSE_TOOGLE_TAG -> {
-                       pauseResumeToggle()
+                        pauseResumeToggle()
                     }
                     NEXT_TAG -> {
                         next()
@@ -135,7 +142,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
                 }
             }
         } ?: run {
-            when(intent?.action) {
+            when (intent?.action) {
                 RESUME_PAUSE_TOOGLE_TAG -> {
                     pauseResumeToggle()
                 }
@@ -171,7 +178,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         when (focusState) {
             AudioManager.AUDIOFOCUS_GAIN -> {
                 mediaPlayer.let {
-                    if(!it.isPlaying()) {
+                    if (!it.isPlaying()) {
                         it.resume()
                     }
                 }
@@ -179,7 +186,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
             }
             AudioManager.AUDIOFOCUS_LOSS -> {
                 mediaPlayer.let {
-                    if(it.isPlaying()) {
+                    if (it.isPlaying()) {
                         it.pause()
                     }
                 }
@@ -187,13 +194,13 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ->
                 mediaPlayer.let {
-                    if(it.isPlaying()){
+                    if (it.isPlaying()) {
                         it.pause()
                     }
                 }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
                 mediaPlayer.let {
-                    if(it.isPlaying()) {
+                    if (it.isPlaying()) {
                         it.setVolume(0.1f)
                     }
                 }
@@ -203,7 +210,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     @Suppress("DEPRECATION")
     private fun requestAudioFocus(): Boolean {
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val playbackAttributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -231,10 +238,10 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
 
     fun showNotification(model: PlayerNotificationModel) {
         val builder = NotificationCompat.Builder(this, PLAYER_NOTIFICATION_CHANNEL_ID)
-       /* val openIntent = Intent(this, MainActivity::class.java)
-        val contentIntent =
-            PendingIntent.getActivity(this, 0, openIntent, PendingIntent.FLAG_IMMUTABLE)
-        builder.setContentIntent(contentIntent)*/
+        /* val openIntent = Intent(this, MainActivity::class.java)
+         val contentIntent =
+             PendingIntent.getActivity(this, 0, openIntent, PendingIntent.FLAG_IMMUTABLE)
+         builder.setContentIntent(contentIntent)*/
         builder.setSmallIcon(R.drawable.ic_stars)
         builder.setContentTitle("Vortex").setContentText("is Playing now").setOngoing(true)
         builder.priority = NotificationCompat.PRIORITY_HIGH
@@ -273,17 +280,28 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         builder?.let { notification = builder.build() }
 
         Glide.with(this).asBitmap().load(model?.image).listener(object : RequestListener<Bitmap?> {
-            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap?>?, isFirstResource: Boolean): Boolean {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Bitmap?>?,
+                isFirstResource: Boolean
+            ): Boolean {
                 e?.printStackTrace()
                 return false
             }
 
-            override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap?>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+            override fun onResourceReady(
+                resource: Bitmap?,
+                model: Any?,
+                target: Target<Bitmap?>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
                 notificationManager.notify(PLAYER_NOTIFICATION_ID, notification)
                 return false
             }
         }).into(NotificationTarget(this, R.id.image, remoteViews, notification, PLAYER_NOTIFICATION_ID))
-        startForeground(PLAYER_NOTIFICATION_ID,notification)
+        startForeground(PLAYER_NOTIFICATION_ID, notification)
     }
 
     private fun getPendingSelfIntent(context: Context, action: String): PendingIntent {
@@ -300,7 +318,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
         val model = MediaModelUtils.playerModelOf(mediaList!!.current()!!)
 
         mediaPlayer.isPlaying().let {
-            if(it) {
+            if (it) {
                 mediaPlayer.pause()
                 model.pauseResumeToggleIcon = R.drawable.ic_play_circle_outline
             } else {
@@ -312,11 +330,10 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     }
 
 
-
     override fun next() {
         mediaList?.let {
-            if(!it.isEmpty()) {
-                it.next()?.let {track ->
+            if (!it.isEmpty()) {
+                it.next()?.let { track ->
                     mediaPlayer.next()
                 }
             }
@@ -326,8 +343,8 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
 
     override fun previous() {
         mediaList?.let {
-            if(!it.isEmpty()) {
-                it.previous()?.let {track ->
+            if (!it.isEmpty()) {
+                it.previous()?.let { track ->
                     mediaPlayer.previous()
                 }
             }
@@ -337,7 +354,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
 
     private fun stopMedia() {
         mediaPlayer?.let {
-            if(it.isPlaying()) {
+            if (it.isPlaying()) {
                 it.pause()
             }
         }

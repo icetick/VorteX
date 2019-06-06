@@ -19,9 +19,9 @@ import java.lang.Exception
 class SplashLoginViewModel : BaseViewModel() {
     val application: App by instance()
     val preferences: PreferencesStorage by instance()
-    val androidID by lazy {MutableLiveData<String>()}
-    val userName by lazy {MutableLiveData<String>()}
-    val password by lazy {MutableLiveData<String>()}
+    val androidID by lazy { MutableLiveData<String>() }
+    val userName by lazy { MutableLiveData<String>() }
+    val password by lazy { MutableLiveData<String>() }
     val updateProgress by lazy { MutableLiveData<Int>() }
     val loginSucceeded by lazy { MutableLiveData<Boolean>() }
     val afterLogoAnimationEnabled by lazy { MutableLiveData<Boolean>() }
@@ -53,13 +53,14 @@ class SplashLoginViewModel : BaseViewModel() {
         it.hideKeyboard()
 
         if (!validateFields()) {
-            when(currentApi) {
+            when (currentApi) {
                 MusicApiType.DEEZER -> {
                     val deezerAuthenticator = DeezerAuthenticationHelper.with(it.context)
                     deezerAuthenticator.authenticate(defaultEmail, defaultPassword) { authenticationCode ->
                         GlobalScope.launch(Dispatchers.Main) {
                             deezerAuthenticator.removeWebView()
-                            val tokenResponse = withContext(Dispatchers.IO) { deezerAuthenticator.getTokenResponse(authenticationCode) }
+                            val tokenResponse =
+                                withContext(Dispatchers.IO) { deezerAuthenticator.getTokenResponse(authenticationCode) }
                             preferences.storeExpirationTime(tokenResponse.expirationTime)
                             onLoginSucceded(tokenResponse.token)
                         }

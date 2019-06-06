@@ -17,7 +17,7 @@ class ServiceGenerator {
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
 
-        fun<S> createService(servicesClass: Class<S>): S {
+        fun <S> createService(servicesClass: Class<S>): S {
             return createService(servicesClass, null)
         }
 

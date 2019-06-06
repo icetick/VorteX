@@ -28,12 +28,13 @@ class AnimationSets {
         class HesitateInterpolator : Interpolator {
             override fun getInterpolation(t: Float): Float {
                 val x = 2.0f * t - 1.0f
-                return 0.5f * (x/2)
+                return 0.5f * (x / 2)
             }
         }
+
         class AccelerateDecelerateSlowInterpolator : Interpolator {
             override fun getInterpolation(t: Float): Float {
-                return (Math.cos((t/2 * Math.PI) / 3.0f).toFloat())
+                return (Math.cos((t / 2 * Math.PI) / 3.0f).toFloat())
             }
         }
 
@@ -42,23 +43,24 @@ class AnimationSets {
 
 fun View.chainAnimation(currentSize: Int? = null, animations: () -> ArrayDeque<Animation?>) {
     val initialSize = currentSize ?: animations.invoke().size
-    animations.invoke().let {queue ->
-        if(queue.isEmpty()) {
+    animations.invoke().let { queue ->
+        if (queue.isEmpty()) {
             return
         } else {
             val firstAnimation = queue.poll()
-            if(queue.isEmpty()) {
+            if (queue.isEmpty()) {
                 startAnimation(firstAnimation)
             } else {
-                firstAnimation?.setAnimationListener(object: Animation.AnimationListener {
+                firstAnimation?.setAnimationListener(object : Animation.AnimationListener {
                     override fun onAnimationEnd(animation: Animation?) {
                         startAnimation(queue.poll())
                         chainAnimation(initialSize) { queue }
                     }
+
                     override fun onAnimationRepeat(animation: Animation?) {}
                     override fun onAnimationStart(animation: Animation?) {}
                 })
-                if(initialSize-queue.size==1) {
+                if (initialSize - queue.size == 1) {
                     startAnimation(firstAnimation)
                 }
             }
@@ -66,9 +68,9 @@ fun View.chainAnimation(currentSize: Int? = null, animations: () -> ArrayDeque<A
     }
 }
 
-infix fun (() -> Animation?).and(animation: ()-> Animation?): ArrayDeque<Animation?> {
+infix fun (() -> Animation?).and(animation: () -> Animation?): ArrayDeque<Animation?> {
     val queue = ArrayDeque<Animation?>()
-    if(queue.isEmpty() && queue.peek()!=this) {
+    if (queue.isEmpty() && queue.peek() != this) {
         queue.add(this.invoke())
     }
     queue.add(animation.invoke())
@@ -81,56 +83,65 @@ infix fun ArrayDeque<Animation?>.and(animation: () -> Animation?): ArrayDeque<An
 }
 
 infix fun ArrayDeque<Animation?>.then(block: () -> Unit): ArrayDeque<Animation?> {
-    this.last?.setAnimationListener(object: Animation.AnimationListener {
+    this.last?.setAnimationListener(object : Animation.AnimationListener {
         override fun onAnimationRepeat(animation: Animation?) {}
         override fun onAnimationStart(animation: Animation?) {}
-        override fun onAnimationEnd(animation: Animation?) { block.invoke() }
+        override fun onAnimationEnd(animation: Animation?) {
+            block.invoke()
+        }
     })
     return this
 }
 
 
 infix fun ArrayDeque<Animation?>.before(block: () -> Unit): ArrayDeque<Animation?> {
-    this.last?.setAnimationListener(object: Animation.AnimationListener {
+    this.last?.setAnimationListener(object : Animation.AnimationListener {
         override fun onAnimationRepeat(animation: Animation?) {}
         override fun onAnimationStart(animation: Animation?) {
             block.invoke()
         }
-        override fun onAnimationEnd(animation: Animation?) { }
+
+        override fun onAnimationEnd(animation: Animation?) {}
     })
     return this
 }
 
 infix fun (() -> Animation?).interpolator(interpolator: Interpolator): ArrayDeque<Animation?> = ArrayDeque<Animation?>()
-        .apply { add(this@interpolator.invoke().apply { this?.interpolator = interpolator }) }
+    .apply { add(this@interpolator.invoke().apply { this?.interpolator = interpolator }) }
 
-infix fun ArrayDeque<Animation?>.interpolator(interpolator: Interpolator): ArrayDeque<Animation?> = apply { forEach { it?.interpolator = interpolator } }
+infix fun ArrayDeque<Animation?>.interpolator(interpolator: Interpolator): ArrayDeque<Animation?> =
+    apply { forEach { it?.interpolator = interpolator } }
 
 fun Animation.animateViewChain(vararg views: View): Animation {
-    for(item in 0 until views.size) {
+    for (item in 0 until views.size) {
         this.setAnimationListener(null)
-        this.apply { setAnimationListener(object: Animation.AnimationListener {
-            override fun onAnimationRepeat(animation: Animation?) {}
+        this.apply {
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {}
 
-            override fun onAnimationEnd(animation: Animation?) {
-                if(item!=views.size-1)
-                views[item+1].startAnimation(this@animateViewChain)
+                override fun onAnimationEnd(animation: Animation?) {
+                    if (item != views.size - 1)
+                        views[item + 1].startAnimation(this@animateViewChain)
 
-                views[item].visibility = View.VISIBLE
-            }
+                    views[item].visibility = View.VISIBLE
+                }
 
-            override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationStart(animation: Animation?) {}
 
-        }) }
+            })
+        }
         views[item].startAnimation(this)
     }
     return this
 }
+
 infix fun Animation?.then(block: () -> Unit): Animation? {
-    this?.setAnimationListener(object: Animation.AnimationListener {
+    this?.setAnimationListener(object : Animation.AnimationListener {
         override fun onAnimationRepeat(animation: Animation?) {}
         override fun onAnimationStart(animation: Animation?) {}
-        override fun onAnimationEnd(animation: Animation?) { block.invoke() }
+        override fun onAnimationEnd(animation: Animation?) {
+            block.invoke()
+        }
     })
     return this
 }

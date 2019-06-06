@@ -31,7 +31,10 @@ class TokenExpireWorker(private val context: Context, workerParameters: WorkerPa
                         prefs.storeToken(deezerTokenResponse.token)
                         prefs.storeExpirationTime(deezerTokenResponse.expirationTime.toLong())
                         prefs.storeLatestTokenUpdate(System.currentTimeMillis())
-                        Log.i(this::class.java.simpleName, "Token updated: "+deezerTokenResponse.token+" at time: "+Date(System.currentTimeMillis()))
+                        Log.i(
+                            this::class.java.simpleName,
+                            "Token updated: " + deezerTokenResponse.token + " at time: " + Date(System.currentTimeMillis())
+                        )
                     }
                 }
             }

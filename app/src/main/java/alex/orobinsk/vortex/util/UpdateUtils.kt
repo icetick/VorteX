@@ -42,8 +42,7 @@ class UpdateUtils {
 
     fun storeTempFilesPath(context: Context, apk: File) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        preferences.
-            edit().putString("tempUpdateFile", apk.absolutePath).apply()
+        preferences.edit().putString("tempUpdateFile", apk.absolutePath).apply()
     }
 
     fun clearUpdateData(context: Context) {
@@ -60,5 +59,5 @@ class UpdateUtils {
 
     fun updateCacheExisting(context: Context) = PreferenceManager
         .getDefaultSharedPreferences(context)
-        .getString("tempUpdateFile", null)!=null
+        .getString("tempUpdateFile", null) != null
 }
