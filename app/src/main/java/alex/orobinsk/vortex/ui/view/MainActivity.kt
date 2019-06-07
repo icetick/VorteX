@@ -9,6 +9,7 @@ import alex.orobinsk.vortex.ui.adapter.viewpager.MainScreenAdapter
 import alex.orobinsk.vortex.ui.base.BaseActivity
 import alex.orobinsk.vortex.ui.base.FragmentFactory
 import alex.orobinsk.vortex.ui.viewModel.MainViewModel
+import alex.orobinsk.vortex.ui.viewModel.MediaViewModel
 import alex.orobinsk.vortex.util.MediaList
 import alex.orobinsk.vortex.util.ViewModelFactory
 import android.content.ComponentName

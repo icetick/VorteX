@@ -15,4 +15,5 @@
     <string name="exit_message">Quit</string>
     <string name="exit_yes">Yes</string>
     <string name="exit_no">No</string>
+    <string name="radio">Radio</string>
 </resources>

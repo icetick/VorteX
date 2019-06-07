@@ -10,10 +10,13 @@ import alex.orobinsk.vortex.ui.widgets.ToolbarModel
 import android.view.View
 import android.widget.ArrayAdapter
 import com.flaviofaria.kenburnsview.KenBurnsView
+import org.kodein.di.generic.instance
 
 class MainViewModel : BaseViewModel() {
     var pagerAdapter: MainScreenAdapter? = null
     var resideAdapter: ArrayAdapter<String>? = null
+
+
     var resideListener = object : ResideLayout.PanelSlideListener {
         override fun onPanelSlide(panel: View?, slideOffset: Float) {}
         override fun onPanelOpened(panel: View?) {
@@ -28,6 +31,5 @@ class MainViewModel : BaseViewModel() {
     }
 
     override fun onCreated() {
-
     }
 }

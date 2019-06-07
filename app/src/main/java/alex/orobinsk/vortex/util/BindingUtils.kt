@@ -27,12 +27,14 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
@@ -65,7 +67,7 @@ fun <T> setListItems(
 ) {
     items.observeForever {
         it?.let { list ->
-            recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 2)
+            recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
             recyclerView.adapter = BindingRecyclerAdapter<ViewDataBinding, T>(layoutItem, callbackHandler, list)
         }
     }
@@ -153,7 +155,7 @@ fun disallowTouchEvent(view: RecyclerView, isDisallowed: Boolean) {
 
 @BindingAdapter("android:src")
 fun setImageSrc(view: ImageView, drawable: Drawable?) {
-    Glide.with(view).load(drawable)
+    Glide.with(view).load(drawable).diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         .listener(object : RequestListener<Drawable> {
             override fun onResourceReady(
                 resource: Drawable?,
