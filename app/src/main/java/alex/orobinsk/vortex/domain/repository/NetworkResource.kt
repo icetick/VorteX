@@ -44,14 +44,14 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
                         )
                     }
                 }
-                if (dbCall() != null) {
-                    result.addSource(dbCall().mutableLiveData()) { newData ->
-                        setValue(
-                            Resource.success(newData)
-                        )
+                launch(Dispatchers.IO) {
+                    if (dbCall() != null) {
+                        result.addSource(dbCall().mutableLiveData()) { newData ->
+                            setValue(Resource.success(newData))
+                        }
+                    } else {
+                        setValue(Resource.success(response))
                     }
-                } else {
-                    setValue(Resource.success(response))
                 }
             }
         }
