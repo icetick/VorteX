@@ -1,7 +1,6 @@
 package alex.orobinsk.vortex.domain.repository
 
 import androidx.annotation.MainThread
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -79,20 +78,12 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
         coroutineContext.cancel()
     }
 
-    @WorkerThread
     private fun processResponse(response: Resource<ResultType>): ResultType? {
         return response.data
     }
 
-    @WorkerThread
     protected abstract fun saveNetworkCallResult(item: ResultType)
-
-    @MainThread
     protected abstract fun shouldFetch(data: ResultType?): Boolean
-
-    @MainThread
     protected abstract fun dbCall(): ResultType?
-
-    @MainThread
     protected abstract fun networkCall(): Deferred<ResultType>
 }
