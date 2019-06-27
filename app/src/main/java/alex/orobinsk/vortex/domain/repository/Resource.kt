@@ -1,10 +1,10 @@
 package alex.orobinsk.vortex.domain.repository
 
-data class Resource<ResultType>(var status: Status, var data: ResultType? = null, var errorMessage: String? = null) {
+data class Resource<R>(var status: Status, var data: R? = null, var errorMessage: String? = null) {
     companion object {
-        fun <ResultType> success(data: ResultType): Resource<ResultType> = Resource(Status.SUCCESS, data)
-        fun <ResultType> loading(): Resource<ResultType> = Resource(Status.LOADING)
-        fun <ResultType> error(message: String?): Resource<ResultType> = Resource(Status.ERROR, errorMessage = message)
+        fun <R> success(data: R): Resource<R> = Resource(Status.SUCCESS, data)
+        fun <R> loading(): Resource<R> = Resource(Status.LOADING)
+        fun <R> error(message: String?): Resource<R> = Resource(Status.ERROR, errorMessage = message)
     }
 }
 

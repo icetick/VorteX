@@ -7,13 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-abstract class NetworkResource<ResultType> constructor(override val coroutineContext: CoroutineContext) :
+abstract class NetworkResource<R> constructor(override val coroutineContext: CoroutineContext) :
     CoroutineScope {
-    private val result = MediatorLiveData<Resource<ResultType?>>()
+    private val result = MediatorLiveData<Resource<R?>>()
 
     init {
         result.value = Resource.loading()
-        val dbSource = MutableLiveData<ResultType>()
+        val dbSource = MutableLiveData<R>()
         dbSource.value = this.dbCall()
         result.addSource(dbSource) { data ->
             result.removeSource(dbSource)
@@ -25,7 +25,7 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
         }
     }
 
-    private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
+    private fun fetchFromNetwork(dbSource: LiveData<R>) {
         val apiResponse = networkCall()
         val exceptionHandler = CoroutineExceptionHandler { coroutineContext: CoroutineContext, throwable: Throwable ->
             onFetchFailed()
@@ -38,7 +38,7 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
                 result.removeSource(fetchedData)
                 result.removeSource(dbSource)
                 launch(Dispatchers.IO) {
-                    processResponse(Resource.success(response))?.let { requestType: ResultType ->
+                    processResponse(Resource.success(response))?.let { requestType: R ->
                         saveNetworkCallResult(
                             requestType
                         )
@@ -56,18 +56,18 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
     }
 
     @MainThread
-    private fun setValue(newValue: Resource<ResultType?>) {
+    private fun setValue(newValue: Resource<R?>) {
         if (result.value != newValue) result.value = newValue
     }
 
     protected fun onFetchFailed() {}
 
-    fun asLiveData(): LiveData<Resource<ResultType?>> {
+    fun asLiveData(): LiveData<Resource<R?>> {
         return result
     }
 
-    fun ResultType?.mutableLiveData(): MutableLiveData<ResultType> {
-        val data = MutableLiveData<ResultType>()
+    fun R?.mutableLiveData(): MutableLiveData<R> {
+        val data = MutableLiveData<R>()
         data.value = this
         return data
     }
@@ -76,12 +76,12 @@ abstract class NetworkResource<ResultType> constructor(override val coroutineCon
         coroutineContext.cancel()
     }
 
-    private fun processResponse(response: Resource<ResultType>): ResultType? {
+    private fun processResponse(response: Resource<R>): R? {
         return response.data
     }
 
-    protected abstract fun saveNetworkCallResult(item: ResultType)
-    protected abstract fun shouldFetch(data: ResultType?): Boolean
-    protected abstract fun dbCall(): ResultType?
-    protected abstract fun networkCall(): Deferred<ResultType>
+    protected abstract fun saveNetworkCallResult(item: R)
+    protected abstract fun shouldFetch(data: R?): Boolean
+    protected abstract fun dbCall(): R?
+    protected abstract fun networkCall(): Deferred<R>
 }

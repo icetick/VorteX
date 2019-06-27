@@ -24,7 +24,6 @@ class BindingRecyclerAdapter<T : ViewDataBinding, S>(
 ) : RecyclerView.Adapter<DataBindingViewHolder<T, S>>() {
 
     val application: App by App.singletonKodein.instance()
-    val animatedViews = LinkedList<Int>()
 
     var items = items
         set(value) {
@@ -54,12 +53,8 @@ class BindingRecyclerAdapter<T : ViewDataBinding, S>(
     }
 
     private fun setAnimation(viewToAnimate: View) {
-        // If the bound view wasn't previously displayed on screen, it's animated
-        // if(!animatedViews.contains(viewToAnimate.id)) {
-        val animation = AnimationUtils.loadAnimation(viewToAnimate.context, R.anim.abc_fade_in)
+        val animation = AnimationUtils.loadAnimation(viewToAnimate.context, R.anim.slide_up_fade)
         viewToAnimate.startAnimation(animation)
-        //    animatedViews.add(viewToAnimate.id)
-        //  }
     }
 
     override fun getItemCount(): Int = items.size
