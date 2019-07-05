@@ -2,6 +2,7 @@ package alex.orobinsk.vortex.util
 
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.ui.adapter.recycler.BindingRecyclerAdapter
+import alex.orobinsk.vortex.ui.viewModel.PlayerState
 import alex.orobinsk.vortex.ui.widgets.ActionListener
 import alex.orobinsk.vortex.ui.widgets.ParallaxTransformer
 import alex.orobinsk.vortex.ui.widgets.ResideLayout
@@ -13,6 +14,7 @@ import alex.orobinsk.vortex.util.animation.interpolator
 import alex.orobinsk.vortex.util.animation.setOnClickListenerWithScale
 import android.app.Activity
 import android.graphics.Bitmap
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
@@ -29,6 +31,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -39,6 +42,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
@@ -77,6 +81,29 @@ fun <T> setListItems(
 fun <T> scaleTapListener(view: CardView, block: () -> Unit) {
     view.setOnClickListenerWithScale {
         block.invoke()
+    }
+}
+
+@BindingAdapter("stateMedia")
+fun changePlayMediaState(view: FloatingActionButton, state: MutableLiveData<PlayerState>) {
+    state.observeForever { playState ->
+        val animation: AnimatedVectorDrawableCompat?
+        when(playState) {
+            PlayerState.PAUSE -> {
+                animation = AnimatedVectorDrawableCompat.create(view.context, R.drawable.avd_resume)
+            }
+            PlayerState.PLAYING -> {
+                animation = AnimatedVectorDrawableCompat.create(view.context, R.drawable.avd_pause)
+            }
+            PlayerState.STOPPED -> {
+                animation = null
+            }
+            else -> {
+                animation = null
+            }
+        }
+        view.setImageDrawable(animation)
+        (view.drawable as Animatable).start()
     }
 }
 

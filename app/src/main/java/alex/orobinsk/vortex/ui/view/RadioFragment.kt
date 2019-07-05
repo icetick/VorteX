@@ -4,13 +4,16 @@ import alex.orobinsk.vortex.App
 import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.databinding.FragmentRadioBinding
 import alex.orobinsk.vortex.ui.base.BaseFragment
+import alex.orobinsk.vortex.ui.viewModel.PlayerState
 import alex.orobinsk.vortex.ui.viewModel.RadioViewModel
 import alex.orobinsk.vortex.util.toast
+import android.graphics.drawable.Animatable
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.fragment_radio.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 
-class RadioFragment : BaseFragment<FragmentRadioBinding, RadioViewModel>(), KodeinAware {
+class RadioFragment : BaseFragment<FragmentRadioBinding, RadioViewModel>(),PlayableFragment, KodeinAware {
     override val kodein: Kodein = App.singletonKodein
     override val viewModel: RadioViewModel by viewModel()
 
@@ -25,6 +28,10 @@ class RadioFragment : BaseFragment<FragmentRadioBinding, RadioViewModel>(), Kode
                 toast(it)
             })
         }
+    }
+
+    override fun playFirstTrack() {
+        viewModel.playFirstTrack()
     }
 
     override fun onReleaseResources() {

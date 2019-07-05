@@ -9,6 +9,17 @@ class MediaViewModel: BaseViewModel() {
 
     override fun onCreated() {
         currentMediaName.postValue("Some Music")
+        currentPlayState.postValue(PlayerState.PAUSE)
+    }
+
+    fun toggleMediaState() {
+        currentPlayState.value?.let {
+            when(it) {
+                PlayerState.PLAYING -> currentPlayState.postValue(PlayerState.PAUSE)
+                PlayerState.PAUSE -> currentPlayState.postValue(PlayerState.PLAYING)
+                PlayerState.STOPPED -> currentPlayState.postValue(PlayerState.PLAYING)
+            }
+        }
     }
 
 }
