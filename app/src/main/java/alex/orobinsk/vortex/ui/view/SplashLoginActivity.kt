@@ -55,7 +55,7 @@ class SplashLoginActivity : BaseActivity<ActivitySplashBinding, SplashLoginViewM
     }
 
     private fun fetchUpdateInfo(progressLiveData: MutableLiveData<Int>) {
-        remoteConfig.fetchLatestVersionCode(this) {
+       /* remoteConfig.fetchLatestVersionCode(this) {
             if (it.toInt() > BuildConfig.VERSION_CODE) {
                 AlertDialog.Builder(this@SplashLoginActivity)
                     .setMessage("New update is available")
@@ -63,7 +63,7 @@ class SplashLoginActivity : BaseActivity<ActivitySplashBinding, SplashLoginViewM
                         updateUtils.selfUpdate(this@SplashLoginActivity, progressLiveData)
                     }.setNegativeButton("Cancel", null).show()
             }
-        }
+        }*/
     }
 
     override fun onReleaseResources() {

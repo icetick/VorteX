@@ -14,11 +14,15 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "0.0.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
     }
     sourceSets {
-        main.java.srcDirs += 'build/generated/source/kaptKotlin/debug'
+        test { java.srcDirs = ['src/test/java'] }
+        androidTest { java.srcDirs = ['src/androidTest/java'] }
+    }
+    testOptions {
+        animationsDisabled = true
     }
     buildTypes {
         debug {
@@ -60,6 +64,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlinVersion"
@@ -73,7 +78,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    implementation "androidx.viewpager2:viewpager2:1.0.0-alpha05"
+    implementation "androidx.viewpager2:viewpager2:1.0.0-alpha06"
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
@@ -100,10 +105,12 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
 
     implementation "com.google.firebase:firebase-firestore:$rootProject.firebaseVersion"
-    implementation 'com.google.firebase:firebase-storage:17.0.0'
-    implementation 'com.google.firebase:firebase-auth:17.0.0'
-    implementation 'com.google.firebase:firebase-config:17.0.0'
+    implementation 'com.google.firebase:firebase-storage:18.0.0'
+    implementation 'com.google.firebase:firebase-auth:18.0.0'
+    implementation 'com.google.firebase:firebase-config:18.0.0'
+
     // Testing dependencies
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$rootProject.espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"

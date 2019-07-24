@@ -55,7 +55,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinA
     }
 
     override fun onDestroy() {
-        servicePlayer.onDestroy()
+        if(::servicePlayer.isInitialized) {
+            servicePlayer.onDestroy()
+        }
         super.onDestroy()
     }
 

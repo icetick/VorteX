@@ -30,12 +30,12 @@ class MainViewModel : BaseViewModel() {
         override fun onPanelSlide(panel: View?, slideOffset: Float) {}
         override fun onPanelOpened(panel: View?) {
             // pagerAdapter?.pauseCurrentFragment()
-            panel?.findViewById<KenBurnsView>(R.id.splashView)?.resume()
+           // panel?.findViewById<KenBurnsView>(R.id.splashView)?.resume()
         }
 
         override fun onPanelClosed(panel: View?) {
             //pagerAdapter?.resumeCurrentFragment()
-            panel?.findViewById<KenBurnsView>(R.id.splashView)?.pause()
+            //panel?.findViewById<KenBurnsView>(R.id.splashView)?.pause()
         }
     }
 

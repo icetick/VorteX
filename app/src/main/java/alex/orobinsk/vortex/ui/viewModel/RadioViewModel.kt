@@ -40,9 +40,9 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     fun fetchRadioPlaylist(id: String, callback: (() -> Unit)? = null) {
         val trackList: MutableList<TracksResponse.Data> = arrayListOf()
 
-        deezerRepository.getRadioTracks(id).observeForever {
-            if (it.status.isSuccessful()) {
-                it.data?.data?.forEach { track ->
+        deezerRepository.getRadioTracks(id).observeForever { resource ->
+            if (resource.status.isSuccessful()) {
+                resource.data?.data?.forEach { track ->
                     trackList.add(track)
                     /* if(checkIfMusicAvailable(track.link)) {trackList.add(track.preview)}*/
                 }.apply { currentTracklist.value = trackList; callback?.invoke() }
