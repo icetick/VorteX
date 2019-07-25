@@ -7,18 +7,19 @@ import alex.orobinsk.vortex.domain.repository.DeezerRepository
 import alex.orobinsk.vortex.model.shared.PreferencesStorage
 import alex.orobinsk.vortex.player.MediaPlayer
 import alex.orobinsk.vortex.player.MusicPlayer
+import alex.orobinsk.vortex.ui.viewModel.MediaViewModel
 import alex.orobinsk.vortex.util.FirebaseConfig
 import alex.orobinsk.vortex.util.TokenExpireHandler
 import alex.orobinsk.vortex.util.UpdateUtils
 import alex.orobinsk.vortex.util.ViewModelFactory
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.Job
 import org.kodein.di.Kodein
+import org.kodein.di.bindings.WeakContextScope
 import org.kodein.di.direct
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
+import org.kodein.di.generic.*
 
 object AppModule {
     val module = Kodein.Module("app") {
@@ -31,5 +32,6 @@ object AppModule {
         bind<ViewModelProvider.Factory>() with singleton { ViewModelFactory(kodein.direct) }
         bind<UpdateUtils>() with singleton { UpdateUtils() }
         bind<FirebaseConfig>() with singleton { FirebaseConfig() }
+       // bind<MediaViewModel>() with scoped(WeakContextScope<FragmentActivity>()).singleton { ViewModelProviders.of(context, instance()).get(MediaViewModel::class.java) }
     }
 }

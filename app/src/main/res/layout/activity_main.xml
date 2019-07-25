@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -36,12 +36,46 @@
 
         </FrameLayout>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:nestedScrollingEnabled="false"
-            android:layout_alignParentTop="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}" />
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
+            <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/mainViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_alignParentTop="true"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:parallaxViewPagerAdapter="@{viewModel.pagerAdapter}" />
+
+            <com.google.android.material.bottomappbar.BottomAppBar
+                    android:id="@+id/bottom_app_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:fabCradleVerticalOffset="@dimen/fab_play_offset"
+                    app:fabCradleRoundedCornerRadius="@dimen/margin_fields"
+                    app:fabCradleMargin="@dimen/fab_play_margin"
+                    app:fabAlignmentMode="end"
+                    app:navigationIcon="@drawable/ic_reorder">
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@{viewModel.mediaViewModel.currentMediaName}"
+                          android:gravity="center_vertical"/>
+            </com.google.android.material.bottomappbar.BottomAppBar>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:src="@drawable/ic_play_arrow"
+                    android:onClick="@{viewModel.onPlayClick}"
+                    app:stateMedia="@{viewModel.mediaViewModel.currentPlayState}"
+                    app:layout_anchor="@id/bottom_app_bar"/>
+            <!--android:src="@drawable/ic_play_arrow"-->
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </alex.orobinsk.vortex.ui.widgets.ResideLayout>
 </layout>

@@ -19,28 +19,39 @@ class RadioViewModel : BaseViewModel(), ActionListener<RadioResponse.Data> {
     val message: MutableLiveData<String> = MutableLiveData()
     val player = MediaPlayer()
 
-    val onPlayClick = View.OnClickListener {
-        postActivityTracks.postValue(true)
-    }
-
     fun checkIfMusicAvailable(track: String): Boolean {
         return track.isNotEmpty() && track.isNotBlank()
     }
 
     override fun onClick(data: RadioResponse.Data) {
-        var trackList: MutableList<TracksResponse.Data> = arrayListOf()
+        fetchRadioPlaylist(data.id) {
+            postActivityTracks.postValue(true)
+        }
+    }
 
-        deezerRepository.getRadioTracks(data.id).observeForever {
-            if (it.status.isSuccessful()) {
-                it.data?.data?.forEach { track ->
+    fun playFirstTrack() {
+        radioResponse.value?.first()?.id?.let { firstAvailableRadio ->
+            fetchRadioPlaylist(firstAvailableRadio) {
+                postActivityTracks.postValue(true)
+            }
+        }
+    }
+
+    fun fetchRadioPlaylist(id: String, callback: (() -> Unit)? = null) {
+        val trackList: MutableList<TracksResponse.Data> = arrayListOf()
+
+        deezerRepository.getRadioTracks(id).observeForever { resource ->
+            if (resource.status.isSuccessful()) {
+                resource.data?.data?.forEach { track ->
                     trackList.add(track)
                     /* if(checkIfMusicAvailable(track.link)) {trackList.add(track.preview)}*/
-                }.apply { currentTracklist.postValue(trackList); onPlayClick.onClick(null) }
+                }.apply { currentTracklist.value = trackList; callback?.invoke() }
             }
         }
     }
 
     override fun onCreated() {
+
         deezerRepository.getRadioResponse().observeForever { response ->
             when (response.status) {
                 Status.ERROR -> message.postValue(response.errorMessage ?: "")

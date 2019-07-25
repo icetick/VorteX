@@ -5,6 +5,8 @@ import alex.orobinsk.vortex.R
 import alex.orobinsk.vortex.domain.model.TracksResponse
 import alex.orobinsk.vortex.player.MediaPlayer
 import alex.orobinsk.vortex.player.PlayerListener
+import alex.orobinsk.vortex.ui.viewModel.MediaViewModel
+import alex.orobinsk.vortex.ui.viewModel.PlayerState
 import alex.orobinsk.vortex.util.MediaList
 import alex.orobinsk.vortex.util.NotificationPlayer
 import alex.orobinsk.vortex.util.MediaModelUtils
@@ -47,6 +49,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     private var notification: Notification? = null
     private val PLAYER_NOTIFICATION_CHANNEL_ID: String = "music_channel_007"
     private val mediaPlayer: MediaPlayer by instance()
+    var mediaViewModel: MediaViewModel? = null
 
     var mediaList: MediaList<TracksResponse.Data>? = null
         set(value) {
@@ -164,10 +167,12 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mediaPlayer.releasePlayer()
         removeAudioFocus()
         stopForeground(true)
+        stopSelf()
+
+        super.onDestroy()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -244,7 +249,7 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
          builder.setContentIntent(contentIntent)*/
         builder.setSmallIcon(R.drawable.ic_stars)
         builder.setContentTitle("Vortex").setContentText("is Playing now").setOngoing(true)
-        builder.priority = NotificationCompat.PRIORITY_HIGH
+        builder.priority = NotificationCompat.PRIORITY_MIN
         builder.setChannelId(PLAYER_NOTIFICATION_CHANNEL_ID)
         builder.setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_stars))
         return updateNotification(model, builder)
@@ -321,9 +326,11 @@ class MusicPlayerService : Service(), AudioManager.OnAudioFocusChangeListener, N
             if (it) {
                 mediaPlayer.pause()
                 model.pauseResumeToggleIcon = R.drawable.ic_play_circle_outline
+                mediaViewModel?.currentPlayState?.postValue(PlayerState.PLAYING)
             } else {
                 mediaPlayer.resume()
                 model.pauseResumeToggleIcon = R.drawable.ic_pause_circle_outline
+                mediaViewModel?.currentPlayState?.postValue(PlayerState.PAUSE)
             }
         }
         showNotification(model)

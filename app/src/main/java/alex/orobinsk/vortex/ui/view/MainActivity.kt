@@ -9,6 +9,7 @@ import alex.orobinsk.vortex.ui.adapter.viewpager.MainScreenAdapter
 import alex.orobinsk.vortex.ui.base.BaseActivity
 import alex.orobinsk.vortex.ui.base.FragmentFactory
 import alex.orobinsk.vortex.ui.viewModel.MainViewModel
+import alex.orobinsk.vortex.ui.viewModel.MediaViewModel
 import alex.orobinsk.vortex.util.MediaList
 import alex.orobinsk.vortex.util.ViewModelFactory
 import android.content.ComponentName
@@ -19,6 +20,7 @@ import android.os.Build
 import android.os.IBinder
 import android.widget.ArrayAdapter
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
@@ -36,17 +38,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinA
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicPlayerService.LocalBinder
             servicePlayer = binder.service
+            servicePlayer.mediaViewModel = viewModel.mediaViewModel
             isMusicPlayerBound = true
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             isMusicPlayerBound = false
+            servicePlayer.mediaViewModel = null
         }
 
         override fun onBindingDied(name: ComponentName?) {
             isMusicPlayerBound = false
+            servicePlayer.mediaViewModel = null
             super.onBindingDied(name)
         }
+    }
+
+    override fun onDestroy() {
+        if(::servicePlayer.isInitialized) {
+            servicePlayer.onDestroy()
+        }
+        super.onDestroy()
     }
 
     override fun init() {
@@ -56,6 +68,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), KodeinA
                 ArrayAdapter(applicationContext, R.layout.item_reside_menu, arrayOf("Main", "Settings", "Exit"))
             pagerAdapter?.add(FragmentFactory.create<RadioFragment>())
             pagerAdapter?.notifyDataSetChanged()
+            playClicked.observeForever {clicked ->
+                if(clicked) {
+                    servicePlayer?.mediaList?.current()?.let {
+                        servicePlayer.pauseResumeToggle()
+                    } ?: run {
+                        val currentFragment = pagerAdapter?.getCurrentFragment(mainViewPager) as PlayableFragment
+                        currentFragment.playFirstTrack()
+                    }
+                }
+            }
         }
     }
 

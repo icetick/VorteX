@@ -7,8 +7,15 @@
     <dimen name="margin_fields_button">20dp</dimen>
     <dimen name="button_height_login">45dp</dimen>
     <dimen name="margin_status_bar_height">26dp</dimen>
-    <dimen name="radio_card_height">200dp</dimen>
+    <dimen name="radio_card_height">250dp</dimen>
     <dimen name="margin_card_text_title_horizontal">15dp</dimen>
     <dimen name="margin_card_text_title_vertical">10dp</dimen>
     <dimen name="margin_menu">50dp</dimen>
+    <dimen name="fab_play_margin">20dp</dimen>
+    <dimen name="fab_play_offset">15dp</dimen>
+    <dimen name="margin_card">2dp</dimen>
+    <dimen name="title_text_size">26sp</dimen>
+    <dimen name="title_margin_top">26dp</dimen>
+    <dimen name="title_container_height">150dp</dimen>
+    <dimen name="activity_horizontal_margin">100dp</dimen>
 </resources>

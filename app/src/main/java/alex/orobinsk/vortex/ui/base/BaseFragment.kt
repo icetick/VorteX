@@ -1,6 +1,7 @@
 package alex.orobinsk.vortex.ui.base
 
 import alex.orobinsk.vortex.BR
+import alex.orobinsk.vortex.R
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+        addContainerPaddings()
         return binding?.root
     }
 
@@ -40,6 +42,20 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
         init()
     }
 
+    private fun addContainerPaddings() {
+        binding?.root?.findViewById<View>(R.id.container)?.setPadding(
+            0,
+            baseActivity?.getStatusBarHeight() ?: 0,
+            0,
+            0
+        )
+        binding?.root?.findViewById<View>(R.id.appbar)?.setPadding(
+            0,
+            baseActivity?.getStatusBarHeight() ?: 0,
+            0,
+            0
+        )
+    }
 
     fun performDataBinding() {
         binding?.setVariable(BR.viewModel, viewModel)
